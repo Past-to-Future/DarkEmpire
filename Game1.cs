@@ -157,7 +157,6 @@ namespace DarkEmpire
 
             }
 
-            
             base.Update(gameTime);
         }
 
