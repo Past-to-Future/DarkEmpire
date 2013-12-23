@@ -25,7 +25,7 @@ namespace DarkEmpire
         Texture2D platformerTex;
         Texture2D npcSprite;
         Npc[] npc = new Npc[900];
-        Npc[] theHero = new Npc[5];
+        Npc[] theHero = new Npc[6];
         InputState inputstate;
         PlayerIndex controlIndex;
         int tileWidth; //width of a sprite tile
@@ -71,6 +71,9 @@ namespace DarkEmpire
             theHero[0] = new Npc(1, 3, new Vector2(screenWidth * 0.2f, screenHeight * .1f), 5.0f);
             theHero[1] = new Npc(2, 3, new Vector2(screenWidth * 0.3f, screenHeight * .3f), 5.0f);
             theHero[2] = new Npc(3, 3, new Vector2(screenWidth * 0.1f, screenHeight * .5f), 5.0f);
+            theHero[3] = new Npc(1, 2, new Vector2(screenWidth * 0.5f, screenHeight * .1f), 5.0f);
+            theHero[4] = new Npc(2, 2, new Vector2(screenWidth * 0.6f, screenHeight * .3f), 5.0f);
+            theHero[5] = new Npc(3, 2, new Vector2(screenWidth * 0.4f, screenHeight * .5f), 5.0f);
 
             tileWidth = map.TileWidth;  
             tileHeight = map.TileHeight;
@@ -200,7 +203,7 @@ namespace DarkEmpire
                         spriteBatch.Draw(platformerTex, new Vector2(tile.X * 70, tile.Y * 70), rec, Color.White);
                     }
                 }
-                for (int i = 0; i < 3; i++)
+               for (int i = 0; i < 6; i++)
                 {
                     spriteBatch.Draw(npcSprite, theHero[i].position, theHero[i].rect, Color.White, 0.0f, Vector2.Zero, theHero[i].Scale, SpriteEffects.None, 0.0f);
                 }
