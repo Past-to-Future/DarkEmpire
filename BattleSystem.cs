@@ -54,14 +54,7 @@ namespace DarkEmpire
             }
             
             DrawBackGroundRectangle();
-            
-            for (int i = 0; i < 3; i++)
-            {
-                spriteBatch.Draw(Game1.npcSprite, Game1.theHero[i].position, Game1.theHero[i].rect, Color.White, 0.0f, Vector2.Zero, Game1.theHero[i].scale, SpriteEffects.None, 0.0f);
-                // theHero[i].health = (float)rand.NextDouble(); //lets see the health change in real time...
-                Game1.theHero[i].DrawHealthAboveWithOutline();
-                Game1.theHero[i].DrawHealthCornerWithOutline();
-            }
+            Game1.heroParty.draw();
             spriteBatch.End();
         }
     }

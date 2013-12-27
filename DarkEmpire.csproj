@@ -37,7 +37,9 @@
   <ItemGroup>
     <Compile Include="BattleSystem.cs" />
     <Compile Include="Game1.cs" />
+    <Compile Include="HeroParty.cs" />
     <Compile Include="InputState.cs" />
+    <Compile Include="KeyboardInput.cs" />
     <Compile Include="Npc.cs" />
     <Compile Include="Tiled\ImageLayer.cs" />
     <Compile Include="Tiled\Layer.cs" />
