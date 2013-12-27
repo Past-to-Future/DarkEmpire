@@ -15,13 +15,14 @@ namespace DarkEmpire
     public class BattleSystem
     {
         public static Texture2D pixel = new Texture2D(Game1.graphics.GraphicsDevice, 1, 1); //create 1x1 pixel texture
-        TmxMap battlemap;
-        public bool activeBattle;
         public static SpriteFont battleText;
-
+        public bool activeBattle;
+        List<Color> backgroundColors = new List<Color>();
+        List<Color> borderColors = new List<Color>();
+        TmxMap battlemap;
+        Texture2D texture;
         int width;
         int height;
-        Texture2D texture;
 
         public BattleSystem()
         {
@@ -109,61 +110,70 @@ namespace DarkEmpire
 
         public void initialize()
         {
+            pixel.SetData(new[] { Color.White }); //make it white so we can color it
+            battlemap = new TmxMap("Content\\battleMap.tmx");
+            battleText = Game1.instance.Content.Load<SpriteFont>("BattleSystemFont"); //cannot edit in mono, import the .spritefont included into a dummy xna project and edit, bring .xnb back over
+
+            SetBackGroundTexture();
+        }
+
+        public void SetBackGroundTexture()
+        {
             width = (int)(Game1.screenWidth * 0.425f);
             height = (int)(Game1.screenHeight * .20f);
 
-             texture = new Texture2D(Game1.graphics.GraphicsDevice, width, height, false, SurfaceFormat.Color);
-             Color[] color = new Color[width * height];
-             List<Color> backgroundColors = new List<Color>();
-             List<Color> borderColors = new List<Color>();
-             borderColors.Add(Color.Purple);
-             borderColors.Add(Color.Orange);
-             backgroundColors.Add(Color.Red);
-             backgroundColors.Add(Color.Blue);
-             backgroundColors.Add(Color.Yellow);
-             backgroundColors.Add(Color.Green);
-             int borderThickness = 5;
-             int borderShadow = 2;
-             int borderRadius = 12;
-             int initialShadowIntensity = 10;
-             int finalShadowIntensity = 15;
-             for (int x = 0; x < texture.Width; x++)
-             {
-                 for (int y = 0; y < texture.Height; y++)
-                 {
-                     switch (backgroundColors.Count)
-                     {
-                         case 4:
-                             Color leftColor0 = Color.Lerp(backgroundColors[0], backgroundColors[1], ((float)y / (width - 1)));
-                             Color rightColor0 = Color.Lerp(backgroundColors[2], backgroundColors[3], ((float)y / (height - 1)));
-                             color[x + width * y] = Color.Lerp(leftColor0, rightColor0, ((float)x / (width - 1)));
-                             break;
-                         case 3:
-                             Color leftColor1 = Color.Lerp(backgroundColors[0], backgroundColors[1], ((float)y / (width - 1)));
-                             Color rightColor1 = Color.Lerp(backgroundColors[1], backgroundColors[2], ((float)y / (height - 1)));
-                             color[x + width * y] = Color.Lerp(leftColor1, rightColor1, ((float)x / (width - 1)));
-                             break;
-                         case 2:
-                             color[x + width * y] = Color.Lerp(backgroundColors[0], backgroundColors[1], ((float)x / (width - 1)));
-                             break;
-                         default:
-                             color[x + width * y] = backgroundColors[0];
-                             break;
-                     }
-                     color[x + width * y] = ColorBorder(x, y, width, height, borderThickness, borderRadius, borderShadow, color[x + width * y], borderColors, initialShadowIntensity, finalShadowIntensity);
-                 }
-             }
+            int borderThickness = 5;
+            int borderShadow = 2;
+            int borderRadius = 12;
+            int initialShadowIntensity = 10;
+            int finalShadowIntensity = 15;
+            float transparency = 0.5f;
 
-             texture.SetData<Color>(color);
+            texture = new Texture2D(Game1.graphics.GraphicsDevice, width, height, false, SurfaceFormat.Color);
+            Color[] color = new Color[width * height];
 
-             pixel.SetData(new[] { Color.White }); //make it white so we can color it
-             battlemap = new TmxMap("Content\\battleMap.tmx");
-             battleText = Game1.instance.Content.Load<SpriteFont>("BattleSystemFont"); //cannot edit in mono, import the .spritefont included into a dummy xna project and edit, bring .xnb back over
+            borderColors.Add(Color.Purple);
+            borderColors.Add(Color.Orange);
+            backgroundColors.Add(Color.Red);
+            backgroundColors.Add(Color.Blue);
+            backgroundColors.Add(Color.Yellow);
+            backgroundColors.Add(Color.Green);
+
+            for (int x = 0; x < texture.Width; x++)
+            {
+                for (int y = 0; y < texture.Height; y++)
+                {
+                    switch (backgroundColors.Count)
+                    {
+                        case 4:
+                            Color leftColor0 = Color.Lerp(backgroundColors[0], backgroundColors[1], ((float)y / (width - 1)));
+                            Color rightColor0 = Color.Lerp(backgroundColors[2], backgroundColors[3], ((float)y / (height - 1)));
+                            color[x + width * y] = Color.Lerp(leftColor0, rightColor0, ((float)x / (width - 1)));
+                            break;
+                        case 3:
+                            Color leftColor1 = Color.Lerp(backgroundColors[0], backgroundColors[1], ((float)y / (width - 1)));
+                            Color rightColor1 = Color.Lerp(backgroundColors[1], backgroundColors[2], ((float)y / (height - 1)));
+                            color[x + width * y] = Color.Lerp(leftColor1, rightColor1, ((float)x / (width - 1)));
+                            break;
+                        case 2:
+                            color[x + width * y] = Color.Lerp(backgroundColors[0], backgroundColors[1], ((float)x / (width - 1)));
+                            break;
+                        default:
+                            color[x + width * y] = backgroundColors[0];
+                            break;
+                    }
+                    color[x + width * y] = ColorBorder(x, y, width, height, borderThickness, borderRadius, borderShadow, color[x + width * y], borderColors, initialShadowIntensity, finalShadowIntensity);
+                    color[x + width * y].A *= (byte)(transparency * 255);
+                }
+            }
+
+            texture.SetData<Color>(color);
         }
 
         public void DrawBackGroundRectangle()
         {
             SpriteBatch spriteBatch = Game1.spriteBatch;
+            spriteBatch.Draw(texture, new Vector2(Game1.screenWidth * 0.05f, Game1.screenHeight * .75f - Game1.screenHeight * .05f), new Rectangle(0, 0, (int)(Game1.screenWidth * 0.425f), (int)(Game1.screenHeight * .20f)), Color.White);
             spriteBatch.Draw(texture, new Vector2(Game1.screenWidth * 0.5f, Game1.screenHeight * .75f - Game1.screenHeight * .05f), new Rectangle(0, 0, (int)(Game1.screenWidth * 0.425f), (int)(Game1.screenHeight * .20f)), Color.White);
         }
 

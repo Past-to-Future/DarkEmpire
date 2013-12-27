@@ -103,5 +103,29 @@ namespace DarkEmpire
 
         }
 
+        public void DrawHealthCornerLeft()
+        {
+            SpriteBatch spriteBatch = Game1.spriteBatch;
+
+            /*Health Bar Botom Right Corner*/
+            spriteBatch.Draw(BattleSystem.pixel, new Vector2(Game1.screenWidth * 0.25f, Game1.screenHeight * .75f + Game1.screenHeight * .05f * partyPosition), new Rectangle(0, 0, (int)(health * Game1.screenWidth * 0.2f), 25), Color.Green);
+            spriteBatch.Draw(BattleSystem.pixel, new Vector2(Game1.screenWidth * 0.25f + Game1.screenWidth * 0.2f * health, Game1.screenHeight * .75f + Game1.screenHeight * .05f * partyPosition), new Rectangle(0, 0, (int)(Game1.screenWidth * 0.2f * (1.0f - health)), 25), Color.Red);
+        }
+
+        public void DrawHealthCornerLeftWithOutline(int thicknessOfBorder = 2)
+        {
+            SpriteBatch spriteBatch = Game1.spriteBatch;
+
+            //Draw Without Outline
+            DrawHealthCornerLeft();
+            //Draw Outline
+            spriteBatch.DrawString(BattleSystem.battleText, name, new Vector2(Game1.screenWidth * 0.075f, Game1.screenHeight * .75f + Game1.screenHeight * .05f * partyPosition), Color.Black);
+            spriteBatch.Draw(BattleSystem.pixel, new Vector2(Game1.screenWidth * 0.25f, Game1.screenHeight * .75f + Game1.screenHeight * .05f * partyPosition), new Rectangle(0, 0, (int)(Game1.screenWidth * 0.2f), thicknessOfBorder), Color.Black); //top
+            spriteBatch.Draw(BattleSystem.pixel, new Vector2(Game1.screenWidth * 0.25f, Game1.screenHeight * .75f + Game1.screenHeight * .05f * partyPosition), new Rectangle(0, 0, thicknessOfBorder, 25), Color.Black); //left
+            spriteBatch.Draw(BattleSystem.pixel, new Vector2(Game1.screenWidth * 0.25f + Game1.screenWidth * 0.2f - thicknessOfBorder, Game1.screenHeight * .75f + Game1.screenHeight * .05f * partyPosition), new Rectangle(0, 0, thicknessOfBorder, 25), Color.Black); //right
+            spriteBatch.Draw(BattleSystem.pixel, new Vector2(Game1.screenWidth * 0.25f, Game1.screenHeight * .75f + Game1.screenHeight * .05f * partyPosition + 25 - thicknessOfBorder), new Rectangle(0, 0, (int)(Game1.screenWidth * 0.2f), thicknessOfBorder), Color.Black); //bottom
+
+        }
+
     }
 }
