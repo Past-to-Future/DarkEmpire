@@ -19,26 +19,24 @@ namespace DarkEmpire
 
     public class Game1 : Game
     {
-        public GraphicsDeviceManager graphics;
-        public SpriteBatch spriteBatch;
-        TmxMap map, battlemap;
-        Texture2D platformerTex;
-        Texture2D npcSprite;
-        Npc[] npc = new Npc[900];
-        Npc[] theHero = new Npc[5];
+        public static GraphicsDeviceManager graphics;
+        public static SpriteBatch spriteBatch;
+        public static int screenWidth, screenHeight; //size of screen in pixels
+        public static Game instance;
+        public static Texture2D platformerTex;
+        public static int tileWidth; //width of a sprite tile
+        public static int tileHeight; //height of a sprite tile
+        public static int tileSpacing; //spacing between sprites on sprite sheet
+        public static int tileInX; //max number of sprites along x-axis of sprite sheet
+        public static Npc[] theHero = new Npc[5];
+        public static Texture2D npcSprite;
+        public static Npc[] npc = new Npc[900];
+        public static BattleSystem battlesystem;
+
+        TmxMap map;
+
         InputState inputstate;
         PlayerIndex controlIndex;
-        int tileWidth; //width of a sprite tile
-        int tileHeight; //height of a sprite tile
-        int tileSpacing; //spacing between sprites on sprite sheet
-        int tileInX; //max number of sprites along x-axis of sprite sheet
-        static Game instance;
-        int screenWidth, screenHeight; //size of screen in pixels
-
-        public static Game Instance
-        {
-            get { return instance; }
-        }
 
         public Game1()
             : base()
@@ -57,17 +55,16 @@ namespace DarkEmpire
 
             graphics.IsFullScreen = true;  //warning going full screen doesn't stretch the graphics
             screenHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height; //not everyone has the same resolution
-            screenWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width; //not everyone has the same resolution
+            screenWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width; 
 
             graphics.PreferredBackBufferHeight = screenHeight;
             graphics.PreferredBackBufferWidth = screenWidth;
             graphics.ApplyChanges();
-
             inputstate = new InputState();
-
+            battlesystem = new BattleSystem();
+            battlesystem.initialize();
 
             map = new TmxMap("Content\\TestMap1.tmx");
-            battlemap = new TmxMap("Content\\battleMap.tmx");
             platformerTex = Content.Load<Texture2D>("Platformer");
             npcSprite = Content.Load<Texture2D>("npc_sprite");
 
@@ -77,21 +74,29 @@ namespace DarkEmpire
             theHero[0] = new Npc(1, 3, new Vector2(screenWidth * 0.2f, screenHeight * .1f), 5.0f);
             theHero[1] = new Npc(2, 3, new Vector2(screenWidth * 0.3f, screenHeight * .3f), 5.0f);
             theHero[2] = new Npc(3, 3, new Vector2(screenWidth * 0.1f, screenHeight * .5f), 5.0f);
+            
+            theHero[0].health = 0.25f;
+            theHero[1].health = 0.5f;
+            theHero[2].health = 0.75f;
+
+            theHero[0].setPartyPosition(0);
+            theHero[1].setPartyPosition(1);
+            theHero[2].setPartyPosition(2);
+
+            theHero[0].name = "Sir Francis of Normandy";
+            theHero[1].name = "Gandalf the White";
+            theHero[2].name = "Frosty the Snowman";
 
             tileWidth = map.TileWidth;
             tileHeight = map.TileHeight;
             tileSpacing = map.Tilesets[0].Spacing;
             tileInX = (int)map.Tilesets[0].Image.Width / tileWidth - 1;
-
-            Debug.WriteLine("Version: " + map.Version);
         }
 
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            this.Services.AddService(typeof(SpriteBatch), spriteBatch); //idk if this was a bad idea, never tried before
-            this.Services.AddService(typeof(GraphicsDevice), GraphicsDevice); //trying to avoid passing these over and over through functions
         }
 
         protected override void UnloadContent()
@@ -101,7 +106,6 @@ namespace DarkEmpire
 
         Random rand = new Random();
         bool powerup = false;
-        bool battleSystem = false;
         protected override void Update(GameTime gameTime)
         {
             inputstate.Update(gameTime);
@@ -119,7 +123,7 @@ namespace DarkEmpire
 
             if (inputstate.IsKeyPressed(Keys.B, null, out controlIndex))
             {
-                battleSystem = !battleSystem;
+                battlesystem.activeBattle = !battlesystem.activeBattle;
             }
 
             if (Keyboard.GetState().IsKeyDown(Keys.Down))
@@ -197,28 +201,9 @@ namespace DarkEmpire
             spriteBatch.End();
 
             //Gonna just erase the screen and draw a battle system for now for testing.
-            // All this code could be moved into better classes...battlesystem.cs and npc.cs
-            if (battleSystem)
+            if (battlesystem.activeBattle)
             {
-                GraphicsDevice.Clear(Color.White);//new Color(rand.Next(255), rand.Next(255), rand.Next(255)));
-                spriteBatch.Begin();
-
-                foreach (TmxLayer layer in battlemap.Layers)
-                {
-                    foreach (TmxLayerTile tile in layer.Tiles)
-                    {
-                        Rectangle rec = new Rectangle((tile.Gid - 1) % tileInX * tileWidth + (tile.Gid - 1) % tileInX * tileSpacing, tile.Gid / tileInX * tileHeight + tile.Gid / tileInX * tileSpacing, tileWidth, tileHeight);
-                        spriteBatch.Draw(platformerTex, new Vector2(tile.X * 70, tile.Y * 70), rec, Color.White);
-                    }
-                }
-                for (int i = 0; i < 3; i++)
-                {
-                    spriteBatch.Draw(npcSprite, theHero[i].position, theHero[i].rect, Color.White, 0.0f, Vector2.Zero, theHero[i].Scale, SpriteEffects.None, 0.0f);
-                    theHero[i].health = (float)rand.NextDouble(); //lets see the health change in real time...
-                    theHero[i].DrawHealthWithOutline();
-                }
-                spriteBatch.End();
-
+                battlesystem.draw();
             }
 
             base.Draw(gameTime);
