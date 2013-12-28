@@ -24,6 +24,8 @@ namespace DarkEmpire
         TmxMap map, battlemap;
         Texture2D platformerTex;
         Texture2D npcSprite;
+        Texture2D battleline;
+        Rectangle battleline_req = new Rectangle(350, 720, 700, 150);
         Npc[] npc = new Npc[900];
         Npc[] theHero = new Npc[6];
         InputState inputstate;
@@ -64,6 +66,7 @@ namespace DarkEmpire
             battlemap = new TmxMap("Content\\battleMap.tmx");
             platformerTex = Content.Load<Texture2D>("Platformer");
             npcSprite = Content.Load<Texture2D>("npc_sprite");
+            battleline = Content.Load<Texture2D>("Line Dark Empire");
             
             for(int i = 1; i <= 899; i ++)
                 npc[i] = new Npc(i%9, 1, new Vector2(i*2,i+rand.Next(-100,400)));
@@ -206,7 +209,10 @@ namespace DarkEmpire
                for (int i = 0; i < 6; i++)
                 {
                     spriteBatch.Draw(npcSprite, theHero[i].position, theHero[i].rect, Color.White, 0.0f, Vector2.Zero, theHero[i].Scale, SpriteEffects.None, 0.0f);
+                    
                 }
+
+               spriteBatch.Draw(battleline, battleline_req, Color.White);
                 spriteBatch.End();
 
             }
