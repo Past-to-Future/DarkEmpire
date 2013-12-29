@@ -27,8 +27,8 @@ namespace DarkEmpire
         Texture2D texture;
         int width;
         int height;
-        Thread battleThread;
-        Thread attackThread;
+        public Thread battleThread;
+        public Thread attackThread;
 
         public BattleSystem()
         {

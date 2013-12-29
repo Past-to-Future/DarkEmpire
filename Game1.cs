@@ -100,7 +100,11 @@ namespace DarkEmpire
             keyboardInput.Update(gameTime);
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            {
                 Exit();
+                battlesystem.attackThread.Abort();
+                battlesystem.battleThread.Abort();
+            }
 
             base.Update(gameTime);
         }
