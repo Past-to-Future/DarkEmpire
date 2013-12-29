@@ -63,11 +63,12 @@ namespace DarkEmpire
             graphics.PreferredBackBufferWidth = screenWidth;
             graphics.ApplyChanges();
 
+            heroParty = new HeroParty();
+
             keyboardInput = new KeyboardInput();
             keyboardInput.initialize();
             battlesystem = new BattleSystem();
             battlesystem.initialize();
-            heroParty = new HeroParty();
 
             map = new TmxMap("Content\\TestMap1.tmx");
             platformerTex = Content.Load<Texture2D>("Platformer");

@@ -15,7 +15,7 @@ namespace DarkEmpire
 {
     public class HeroParty
     {
-        Npc[] theHero;
+        public static Npc[] theHero;
         Npc[] theEnemy;
 
         public HeroParty()
