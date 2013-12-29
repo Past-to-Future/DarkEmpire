@@ -55,9 +55,9 @@ namespace DarkEmpire
              while (true)
              {
                  int[] attack = new int[3];
-                 attack[0] = 0;
-                 attack[1] = rand.Next(1000);
-                 attack[2] = whoIsAttacking;
+                 attack[0] = 0; //which skill
+                 attack[1] = rand.Next(1000); //time remaining
+                 attack[2] = whoIsAttacking; //which npc
                  battleQueue.Add(attack);
                  whoIsAttacking = (whoIsAttacking + 1) % 3;
                  Thread.Sleep(2000);
