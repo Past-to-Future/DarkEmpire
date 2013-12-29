@@ -10,6 +10,8 @@ using DarkEmpire.Tiled;
 using System.IO;
 using System.Reflection;
 using System.Diagnostics;
+using System.Threading;
+using System.Collections;
 namespace DarkEmpire
 {
     public class BattleSystem
@@ -19,15 +21,78 @@ namespace DarkEmpire
         public bool activeBattle;
         List<Color> backgroundColors = new List<Color>();
         List<Color> borderColors = new List<Color>();
+        List<int[]> battleQueue = new List<int[]>();
+
         TmxMap battlemap;
         Texture2D texture;
         private Texture2D actionMenuTexture;
         int width;
         int height;
+        public Thread battleThread;
+        public Thread attackThread;
 
         public BattleSystem()
         {
             activeBattle = false;
+        }
+
+         public void initialize()
+        {
+            pixel.SetData(new[] { Color.White }); //make it white so we can color it
+            battlemap = new TmxMap("Content\\battleMap.tmx");
+            battleText = Game1.instance.Content.Load<SpriteFont>("BattleSystemFont"); //cannot edit in mono, import the .spritefont included into a dummy xna project and edit, bring .xnb back over
+            battleThread =  new Thread(new ThreadStart(DoBattle));
+            attackThread = new Thread(new ThreadStart(DoAttack));
+            battleThread.Start();
+            attackThread.Start();
+
+            SetBackGroundTexture();
+        }
+
+         Random rand = new Random();
+         private void DoAttack()
+         {
+             int whoIsAttacking = 0;
+             while (true)
+             {
+                 int[] attack = new int[3];
+                 attack[0] = 0; //which skill
+                 attack[1] = rand.Next(1000); //time remaining
+                 attack[2] = whoIsAttacking; //which npc
+                 battleQueue.Add(attack);
+                 whoIsAttacking = (whoIsAttacking + 1) % 3;
+                 Thread.Sleep(2000);
+             }
+         }
+
+        private void DoBattle()
+        {
+            while (true)
+            {
+                sort();
+                if (battleQueue.Count > 0)
+                {
+                    battleQueue[0][1] -= 100;
+                    if (battleQueue[0][1] <= 0)
+                    {
+                        HeroParty.theHero[(int)battleQueue[0][2]].position.X += 50;
+                        battleQueue.Remove(battleQueue[0]);
+                    }
+                }
+                Thread.Sleep(100);
+            }
+        }
+
+        public void sort()
+        {
+            for(int i = 0; i < battleQueue.Count - 1; i++){
+                if (battleQueue[i][1] > battleQueue[i + 1][1])
+                {
+                    var dummy = battleQueue[i];
+                    battleQueue[i] = battleQueue[i + 1];
+                    battleQueue[i + 1] = dummy;
+                }
+            }
         }
 
         private Color ColorBorder(int x, int y, int width, int height, int borderThickness, int borderRadius, int borderShadow, Color initialColor, List<Color> borderColors, float initialShadowIntensity, float finalShadowIntensity)
@@ -117,7 +182,6 @@ namespace DarkEmpire
             actionMenuTexture = Game1.instance.Content.Load<Texture2D>("menuBackground");
             SetBackGroundTexture();
         }
-
         public void SetBackGroundTexture()
         {
             width = (int)(Game1.screenWidth * 0.425f);

@@ -63,11 +63,12 @@ namespace DarkEmpire
             graphics.PreferredBackBufferWidth = screenWidth;
             graphics.ApplyChanges();
 
+            heroParty = new HeroParty();
+
             keyboardInput = new KeyboardInput();
             keyboardInput.initialize();
             battlesystem = new BattleSystem();
             battlesystem.initialize();
-            heroParty = new HeroParty();
 
             map = new TmxMap("Content\\TestMap1.tmx");
             platformerTex = Content.Load<Texture2D>("Platformer");
@@ -99,7 +100,11 @@ namespace DarkEmpire
             keyboardInput.Update(gameTime);
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            {
                 Exit();
+                battlesystem.attackThread.Abort();
+                battlesystem.battleThread.Abort();
+            }
 
             base.Update(gameTime);
         }
