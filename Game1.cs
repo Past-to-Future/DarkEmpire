@@ -33,12 +33,12 @@ namespace DarkEmpire
         public static BattleSystem battlesystem;
         public static bool powerup = false;
         public static HeroParty heroParty;
-
+        Texture2D battleline;
+        Rectangle battleline_req = new Rectangle(350, 720, 700, 150);
         Random rand = new Random();
 
         TmxMap map;
         KeyboardInput keyboardInput;
-        
 
         public Game1()
             : base()
@@ -78,6 +78,7 @@ namespace DarkEmpire
                 npc[i] = new Npc(i % 9, 1, new Vector2(i * 2, i + rand.Next(-100, 400)));
 
 
+            battleline = Content.Load<Texture2D>("Line Dark Empire");
             tileWidth = map.TileWidth;
             tileHeight = map.TileHeight;
             tileSpacing = map.Tilesets[0].Spacing;

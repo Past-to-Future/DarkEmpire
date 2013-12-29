@@ -85,6 +85,9 @@
     </Content>
     <Content Include="Content\menuBackground.png" />
     <Content Include="Content\healthbars.png" />
+    <Content Include="Content\Line Dark Empire.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\npc_sprite.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

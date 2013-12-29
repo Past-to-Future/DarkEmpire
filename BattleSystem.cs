@@ -26,6 +26,8 @@ namespace DarkEmpire
         TmxMap battlemap;
         Texture2D texture;
         private Texture2D actionMenuTexture;
+        Texture2D battleline;
+        Rectangle battleline_req = new Rectangle(350, 720, 700, 150);
         int width;
         int height;
         public Thread battleThread;
@@ -46,6 +48,8 @@ namespace DarkEmpire
             battleThread.Start();
             attackThread.Start();
 
+            actionMenuTexture = Game1.instance.Content.Load<Texture2D>("menuBackground");
+            battleline = Game1.instance.Content.Load<Texture2D>("Line Dark Empire");
             SetBackGroundTexture();
         }
 
@@ -174,14 +178,6 @@ namespace DarkEmpire
             return Color.Lerp(color, Color.Black, shadowIntensity);
         }
 
-        public void initialize()
-        {
-            pixel.SetData(new[] { Color.White }); //make it white so we can color it
-            battlemap = new TmxMap("Content\\battleMap.tmx");
-            battleText = Game1.instance.Content.Load<SpriteFont>("BattleSystemFont"); //cannot edit in mono, import the .spritefont included into a dummy xna project and edit, bring .xnb back over
-            actionMenuTexture = Game1.instance.Content.Load<Texture2D>("menuBackground");
-            SetBackGroundTexture();
-        }
         public void SetBackGroundTexture()
         {
             width = (int)(Game1.screenWidth * 0.425f);
@@ -247,9 +243,9 @@ namespace DarkEmpire
             int menuHeight = (int)(Game1.screenHeight *0.4f);
             SpriteBatch spriteBatch = Game1.spriteBatch;
             Color[] menuColor = new Color[menuWidth * menuHeight];
-            spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.Opaque, SamplerState.LinearWrap,
+            spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend, SamplerState.LinearWrap,
     DepthStencilState.Default, RasterizerState.CullNone);
-            spriteBatch.Draw(actionMenuTexture, new Vector2(Game1.screenWidth * 0.5f, Game1.screenHeight * .4f - Game1.screenHeight * .05f), new Rectangle(0, 0, (int)(Game1.screenWidth * 0.45f), (int)(Game1.screenHeight * .40f)), Color.Azure);
+            spriteBatch.Draw(actionMenuTexture, new Vector2(Game1.screenWidth * 0.5f, Game1.screenHeight * .4f - Game1.screenHeight * .05f), new Rectangle(0, 0, (int)(Game1.screenWidth * 0.45f), (int)(Game1.screenHeight * .40f)), Color.White * .5f);
             spriteBatch.End();
         }
         public void draw()
@@ -270,7 +266,9 @@ namespace DarkEmpire
             
             DrawBackGroundRectangle();
             Game1.heroParty.draw();
+            spriteBatch.Draw(battleline, battleline_req, Color.White);
             spriteBatch.End();
+           
             DrawActionMenu();
         }
     }
