@@ -14,9 +14,9 @@ using System.Diagnostics;
 
 namespace DarkEmpire
 {
-    class KeyboardInput
+    public class KeyboardInput
     {
-        InputState inputstate;
+        public InputState inputstate;
         PlayerIndex controlIndex;
 
         public KeyboardInput()
@@ -38,12 +38,12 @@ namespace DarkEmpire
 
             if (inputstate.IsKeyPressed(Keys.P, null, out controlIndex))
             {
-                Game1.powerup = !Game1.powerup;
+                PlayingState.powerup = !PlayingState.powerup;
             }
 
             if (inputstate.IsKeyPressed(Keys.B, null, out controlIndex))
             {
-                Game1.battlesystem.activeBattle = !Game1.battlesystem.activeBattle;
+                PlayingState.battlesystem.activeBattle = !PlayingState.battlesystem.activeBattle;
             }
 
             if (Keyboard.GetState().IsKeyDown(Keys.Down))
@@ -65,30 +65,30 @@ namespace DarkEmpire
 
             for (int i = 1; i <= 899; i++)
             {
-                Game1.npc[i].frame = (Game1.npc[i].frame + 1) % 3;
+                PlayingState.npc[i].frame = (PlayingState.npc[i].frame + 1) % 3;
 
                 if (ymove > 0)
-                    Game1.npc[i].changeDirection(1);
+                    PlayingState.npc[i].changeDirection(1);
                 if (ymove < 0)
-                    Game1.npc[i].changeDirection(4);
+                    PlayingState.npc[i].changeDirection(4);
                 if (ymove == 0 && xmove > 0)
-                    Game1.npc[i].changeDirection(3);
+                    PlayingState.npc[i].changeDirection(3);
                 if (ymove == 0 && xmove < 0)
-                    Game1.npc[i].changeDirection(2);
+                    PlayingState.npc[i].changeDirection(2);
 
-                Game1.npc[i].position += new Vector2(xmove, ymove);
+                PlayingState.npc[i].position += new Vector2(xmove, ymove);
 
-                if (Game1.npc[i].position.X >= Game1.screenWidth)
-                    Game1.npc[i].position.X = 0;
-                if (Game1.npc[i].position.X < 0)
-                    Game1.npc[i].position.X = Game1.screenWidth - 32;
-                if (Game1.npc[i].position.Y >= Game1.screenHeight)
-                    Game1.npc[i].position.Y = 0;
-                if (Game1.npc[i].position.Y < 0)
-                    Game1.npc[i].position.Y = Game1.screenHeight - 32;
+                if (PlayingState.npc[i].position.X >= Game1.instance.Width)
+                    PlayingState.npc[i].position.X = 0;
+                if (PlayingState.npc[i].position.X < 0)
+                    PlayingState.npc[i].position.X = Game1.instance.Width - 32;
+                if (PlayingState.npc[i].position.Y >= Game1.instance.Height)
+                    PlayingState.npc[i].position.Y = 0;
+                if (PlayingState.npc[i].position.Y < 0)
+                    PlayingState.npc[i].position.Y = Game1.instance.Height - 32;
 
             }
-
+        
         }
     }
 }

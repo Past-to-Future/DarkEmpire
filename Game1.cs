@@ -11,15 +11,80 @@ using DarkEmpire.Tiled;
 using System.IO;
 using System.Reflection;
 using System.Diagnostics;
+using OpenTK;
 
 #endregion
 
 namespace DarkEmpire
 {
 
-    public class Game1 : Game
+    public class Game1 : DarkEmpireGame
     {
-        public static GraphicsDeviceManager graphics;
+        SpriteBatch spriteBatch;
+        public static Game1 instance;
+
+        public Game1()
+            : base()
+        {
+            instance = this;
+            Content.RootDirectory = "Content";
+        }
+
+        public SpriteBatch SpriteBatch
+        {
+            get { return spriteBatch; }
+            set { spriteBatch = value; }
+        }
+
+        protected override void Initialize()
+        {
+            this.IsMouseVisible = true;
+            this.IsFixedTimeStep = true;
+            this.TargetElapsedTime = System.TimeSpan.FromMilliseconds(1000 / 30f); //30 fps 
+            base.Initialize();
+        }
+
+        protected override void LoadContent()
+        {
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+            TitleState _state = new TitleState();
+            _state.Game = this;
+            _state.Initialize();
+            _state.LoadContent();
+            StateManager.ActiveState = _state;
+        }
+
+        protected override void UnloadContent()
+        {
+
+        }
+
+        protected override void Update(GameTime gameTime)
+        {
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+                Exit();
+
+            base.Update(gameTime);
+        }
+
+        protected override void Draw(GameTime gameTime)
+        {
+            GraphicsDevice.Clear(Color.CornflowerBlue);
+
+            base.Draw(gameTime);
+        }
+    }
+}
+
+
+        
+        
+        
+        
+        
+        
+        
+        /*public static GraphicsDeviceManager graphics;
         public static SpriteBatch spriteBatch;
         public static int screenWidth, screenHeight; //size of screen in pixels
         public static Game instance;
@@ -37,7 +102,7 @@ namespace DarkEmpire
         Random rand = new Random();
 
         TmxMap map;
-        KeyboardInput keyboardInput;
+        public static KeyboardInput keyboardInput;
         
 
         public Game1()
@@ -147,4 +212,4 @@ namespace DarkEmpire
 
 
     }
-}
+}*/
