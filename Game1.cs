@@ -12,6 +12,7 @@ using System.IO;
 using System.Reflection;
 using System.Diagnostics;
 
+
 #endregion
 
 namespace DarkEmpire
@@ -25,7 +26,14 @@ namespace DarkEmpire
         Texture2D platformerTex;
         Texture2D npcSprite;
         Texture2D battleline;
-        Rectangle battleline_req = new Rectangle(350, 720, 700, 150);
+        Rectangle battleline_rec = new Rectangle(350, 720, 700, 150);
+        Texture2D option_box;
+        Texture2D actor_box;
+        Texture2D actor1_box;
+        Texture2D currency_box;
+        
+        private SpriteFont font;
+        //SpriteFont font = Content.Load<SpriteFont>("courier");
         Npc[] npc = new Npc[900];
         Npc[] theHero = new Npc[6];
         InputState inputstate;
@@ -67,6 +75,13 @@ namespace DarkEmpire
             platformerTex = Content.Load<Texture2D>("Platformer");
             npcSprite = Content.Load<Texture2D>("npc_sprite");
             battleline = Content.Load<Texture2D>("Line Dark Empire");
+            option_box = Content.Load<Texture2D>("box");
+            actor_box = Content.Load<Texture2D>("box1");
+            actor1_box = Content.Load<Texture2D>("box3");
+            currency_box = Content.Load<Texture2D>("box2");
+           // text_box = Content.Load<Texture2D>("text");
+            font = Content.Load<SpriteFont>("text");
+            //font = Content.Load<SpriteFont>("spinwerad");
             
             for(int i = 1; i <= 899; i ++)
                 npc[i] = new Npc(i%9, 1, new Vector2(i*2,i+rand.Next(-100,400)));
@@ -100,6 +115,7 @@ namespace DarkEmpire
         Random rand = new Random();
         bool powerup = false;
         bool battleSystem = false;
+        bool menu = false;
         protected override void Update(GameTime gameTime)
         {
             inputstate.Update(gameTime);
@@ -109,6 +125,11 @@ namespace DarkEmpire
 
             int ymove = 0;
             int xmove = 0;
+
+            if (inputstate.IsKeyPressed(Keys.M, null, out controlIndex))
+            {
+                menu = !menu;
+            }
 
             if (inputstate.IsKeyPressed(Keys.P, null, out controlIndex))
             {
@@ -212,9 +233,40 @@ namespace DarkEmpire
                     
                 }
 
-               spriteBatch.Draw(battleline, battleline_req, Color.White);
+               spriteBatch.Draw(battleline, battleline_rec, Color.White);
                 spriteBatch.End();
 
+            }
+
+            if (menu)
+            { GraphicsDevice.Clear(Color.CornflowerBlue);
+            spriteBatch.Begin();
+            Rectangle option_box_rec = new Rectangle(0, 0, 98, 220);
+            Rectangle actor_box_rec = new Rectangle(350, 50, 800, 600);
+            Rectangle actor1_box_rec = new Rectangle(350, 50, 800, 600);
+            //Rectangle currency_box_rec = new Rectangle(50, 700, 200, 50);
+            Rectangle currency_box_rec = new Rectangle(0, 0, 401, 92);
+          //  Rectangle text_box_rec = new Rectangle(95, 60, 100, 40);
+            //spriteBatch.Draw(option_box, option_box_rec, Color.White);
+            //spriteBatch.Draw(actor_box, actor_box_rec, Color.White);
+            //spriteBatch.Draw(currency_box, currency_box_rec, Color.White);
+           // spriteBatch.Draw(text_box, text_box_rec, Color.White);
+            //MspriteBatch.Draw(currency_box, new Vector2(screenWidth * 0.026f, screenHeight * 0.63f), currency_box_rec, Color.White, 0.0f, Vector2.Zero, 0.5f, SpriteEffects.None, 0.0f);
+
+            spriteBatch.Draw(currency_box, new Vector2(screenWidth * 0.026f, screenHeight * 0.56f), currency_box_rec, Color.White, 0.0f, Vector2.Zero, 0.5f, SpriteEffects.None, 0.0f);
+            spriteBatch.Draw(option_box, new Vector2(screenWidth * 0.026f, screenHeight * 0.046f), option_box_rec, Color.White, 0.0f, Vector2.Zero, 2.04f, SpriteEffects.None, 0.0f);
+            spriteBatch.Draw(actor1_box, new Vector2(screenWidth * 0.182f, screenHeight * 0.046f), actor1_box_rec, Color.White, 0.0f, Vector2.Zero, 1.001f, SpriteEffects.None, 0.0f);
+
+
+
+            spriteBatch.DrawString(font, "Status", new Vector2(100, 80), Color.Black);
+            spriteBatch.DrawString(font, "Items", new Vector2(100, 140), Color.Black);
+            spriteBatch.DrawString(font, "Equipment", new Vector2(100, 200), Color.Black);
+            spriteBatch.DrawString(font, "Magic", new Vector2(100, 260), Color.Black);
+            spriteBatch.DrawString(font, "Abilities", new Vector2(100, 320), Color.Black);
+            spriteBatch.DrawString(font, "Options", new Vector2(100, 380), Color.Black);
+            spriteBatch.End();
+            
             }
 
             base.Draw(gameTime);
