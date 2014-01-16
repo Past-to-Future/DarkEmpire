@@ -49,6 +49,14 @@ namespace DarkEmpire
             : base()
         {
             graphics = new GraphicsDeviceManager(this);
+            graphics.PreferredBackBufferWidth = 896;
+            graphics.PreferredBackBufferHeight = 504;
+            float asp_ratio_screen = (float)graphics.PreferredBackBufferWidth / (float)graphics.PreferredBackBufferHeight;
+            graphics.IsFullScreen = false;
+            screenHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+            screenWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            graphics.ApplyChanges();
+            
             Content.RootDirectory = "Content";
         }
 
@@ -59,13 +67,17 @@ namespace DarkEmpire
             this.IsFixedTimeStep = true;
             this.TargetElapsedTime = System.TimeSpan.FromMilliseconds(1000 / 30f);
 
-            graphics.IsFullScreen = true;  //warning going full screen doesn't stretch the graphics
-            screenHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height; //not everyone has the same resolution
-            screenWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width; //not everyone has the same resolution
+           // graphics.IsFullScreen = false;  //warning going full screen doesn't stretch the graphics
+            
+            //screenHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height; //not everyone has the same resolution
+            //screenWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width; //not everyone has the same resolution
 
-            graphics.PreferredBackBufferHeight = screenHeight; 
-            graphics.PreferredBackBufferWidth = screenWidth;
-            graphics.ApplyChanges();
+
+
+            //graphics.PreferredBackBufferWidth = 896;
+            //graphics.PreferredBackBufferHeight = 1000;
+            //graphics.IsFullScreen = false;
+            //graphics.ApplyChanges();
 
             inputstate = new InputState();
 
@@ -139,6 +151,15 @@ namespace DarkEmpire
             if (inputstate.IsKeyPressed(Keys.B, null, out controlIndex))
             {
                 battleSystem = !battleSystem;
+            }
+
+            if (inputstate.IsKeyPressed(Keys.F, null, out controlIndex))
+            {
+                graphics.IsFullScreen = !graphics.IsFullScreen;
+                screenWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+                //screenHeight = (int)((float)GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height/1.77) ;
+                screenHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+               graphics.ApplyChanges();
             }
 
             if (Keyboard.GetState().IsKeyDown(Keys.Down))
@@ -239,34 +260,76 @@ namespace DarkEmpire
             }
 
             if (menu)
-            { GraphicsDevice.Clear(Color.CornflowerBlue);
-            spriteBatch.Begin();
-            Rectangle option_box_rec = new Rectangle(0, 0, 98, 220);
-            Rectangle actor_box_rec = new Rectangle(350, 50, 800, 600);
-            Rectangle actor1_box_rec = new Rectangle(350, 50, 800, 600);
-            //Rectangle currency_box_rec = new Rectangle(50, 700, 200, 50);
-            Rectangle currency_box_rec = new Rectangle(0, 0, 401, 92);
-          //  Rectangle text_box_rec = new Rectangle(95, 60, 100, 40);
-            //spriteBatch.Draw(option_box, option_box_rec, Color.White);
-            //spriteBatch.Draw(actor_box, actor_box_rec, Color.White);
-            //spriteBatch.Draw(currency_box, currency_box_rec, Color.White);
-           // spriteBatch.Draw(text_box, text_box_rec, Color.White);
-            //MspriteBatch.Draw(currency_box, new Vector2(screenWidth * 0.026f, screenHeight * 0.63f), currency_box_rec, Color.White, 0.0f, Vector2.Zero, 0.5f, SpriteEffects.None, 0.0f);
-
-            spriteBatch.Draw(currency_box, new Vector2(screenWidth * 0.026f, screenHeight * 0.56f), currency_box_rec, Color.White, 0.0f, Vector2.Zero, 0.5f, SpriteEffects.None, 0.0f);
-            spriteBatch.Draw(option_box, new Vector2(screenWidth * 0.026f, screenHeight * 0.046f), option_box_rec, Color.White, 0.0f, Vector2.Zero, 2.04f, SpriteEffects.None, 0.0f);
-            spriteBatch.Draw(actor1_box, new Vector2(screenWidth * 0.182f, screenHeight * 0.046f), actor1_box_rec, Color.White, 0.0f, Vector2.Zero, 1.001f, SpriteEffects.None, 0.0f);
+            {
+                GraphicsDevice.Clear(Color.CornflowerBlue);
+                
 
 
+                
+                //graphics.PreferredBackBufferHeight = 504;
+               // graphics.IsFullScreen = false;
+                
 
-            spriteBatch.DrawString(font, "Status", new Vector2(100, 80), Color.Black);
-            spriteBatch.DrawString(font, "Items", new Vector2(100, 140), Color.Black);
-            spriteBatch.DrawString(font, "Equipment", new Vector2(100, 200), Color.Black);
-            spriteBatch.DrawString(font, "Magic", new Vector2(100, 260), Color.Black);
-            spriteBatch.DrawString(font, "Abilities", new Vector2(100, 320), Color.Black);
-            spriteBatch.DrawString(font, "Options", new Vector2(100, 380), Color.Black);
-            spriteBatch.End();
-            
+
+                
+
+                Rectangle option_box_rec = new Rectangle(0, 0, 98, 220);
+                Rectangle actor_box_rec = new Rectangle(350, 50, 200, 150);
+                Rectangle actor1_box_rec = new Rectangle(350, 50, 800, 600);
+                Rectangle currency_box_rec = new Rectangle(0, 0, 401, 92);
+
+                
+                float asp_ratio_actor_coordinates = (float)actor_box_rec.X / (float)actor_box_rec.Y;
+                float asp_ratio_actor_dimentions = (float)actor_box_rec.Width / (float)actor_box_rec.Height;
+                float asp_ratio_sc_act_coordinates = (float)graphics.PreferredBackBufferWidth / (float)actor_box_rec.X;
+                float asp_ratio_sc_act_dimentions = (float)graphics.PreferredBackBufferWidth / (float)actor_box_rec.Width;
+
+                if (graphics.IsFullScreen == false)
+                {
+                    
+                    spriteBatch.Begin();
+                    //Rectangle currency_box_rec = new Rectangle(50, 700, 200, 50);
+                    //Rectangle text_box_rec = new Rectangle(95, 60, 100, 40);
+                //    spriteBatch.Draw(option_box, option_box_rec, Color.White);
+                    spriteBatch.Draw(actor_box, actor_box_rec, Color.White);
+                //    spriteBatch.Draw(currency_box, currency_box_rec, Color.White);
+                    //spriteBatch.Draw(text_box, text_box_rec, Color.White);
+                    //spriteBatch.Draw(currency_box, new Vector2(screenWidth * 0.026f, screenHeight * 0.63f), currency_box_rec, Color.White, 0.0f, Vector2.Zero, 0.5f, SpriteEffects.None, 0.0f);
+
+                    //spriteBatch.Draw(currency_box, new Vector2(screenWidth * 0.026f, screenHeight * 0.56f), currency_box_rec, Color.White, 0.0f, Vector2.Zero, 0.5f, SpriteEffects.None, 0.0f);
+                     //spriteBatch.Draw(option_box, new Vector2(screenWidth * 0.026f, screenHeight * 0.046f), option_box_rec, Color.White, 0.0f, Vector2.Zero, 2.04f, SpriteEffects.None, 0.0f);
+                    // spriteBatch.Draw(actor1_box, new Vector2(screenWidth * 0.182f, screenHeight * 0.046f), actor1_box_rec, Color.White, 0.0f, Vector2.Zero, 1.001f, SpriteEffects.None, 0.0f);
+
+
+
+               //     spriteBatch.DrawString(font, "Status", new Vector2(100, 80), Color.Black);
+                //    spriteBatch.DrawString(font, "Items", new Vector2(100, 140), Color.Black);
+                //    spriteBatch.DrawString(font, "Equipment", new Vector2(100, 200), Color.Black);
+                //    spriteBatch.DrawString(font, "Magic", new Vector2(100, 260), Color.Black);
+                //    spriteBatch.DrawString(font, "Abilities", new Vector2(100, 320), Color.Black);
+                 //   spriteBatch.DrawString(font, "Options", new Vector2(100, 380), Color.Black);
+                    spriteBatch.End();
+
+                }
+                
+                else {
+                //    string[] lines = { "First line", "Second line", "Third line","Fourth Line" };
+                    
+                    spriteBatch.Begin();
+                    actor_box_rec.Width = (int) ((float)screenWidth/asp_ratio_sc_act_dimentions);
+                    actor_box_rec.Height = (int)((float)actor_box_rec.Width/asp_ratio_actor_dimentions);
+                    actor_box_rec.X = (int)((float)screenWidth / asp_ratio_sc_act_coordinates);
+                    actor_box_rec.Y = (int)((float)actor_box_rec.X / asp_ratio_actor_coordinates);
+                    spriteBatch.Draw(actor_box, actor_box_rec, Color.White);
+                    spriteBatch.End();
+
+                    
+                  //  lines[0]="Width = " +actor_box_rec.Width.ToString();
+                  //  lines[1] = "Height = "+actor_box_rec.Height.ToString();
+                   // lines[2] = "X = " + actor_box_rec.X.ToString();
+                   // lines[3] = "Y = " + actor_box_rec.Y.ToString();
+                   // System.IO.File.WriteAllLines(@"C:\Users\anast_000\Desktop\Resolution.txt", lines);
+                }
             }
 
             base.Draw(gameTime);
