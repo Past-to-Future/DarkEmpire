@@ -36,11 +36,17 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="BattleSystem.cs" />
+    <Compile Include="DarkEmpireGame.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="HeroParty.cs" />
     <Compile Include="InputState.cs" />
     <Compile Include="KeyboardInput.cs" />
+    <Compile Include="Level.cs" />
+    <Compile Include="Manager.cs" />
     <Compile Include="Npc.cs" />
+    <Compile Include="PlayingState.cs" />
+    <Compile Include="State.cs" />
+    <Compile Include="StateManager.cs" />
     <Compile Include="Tiled\ImageLayer.cs" />
     <Compile Include="Tiled\Layer.cs" />
     <Compile Include="Tiled\ObjectGroup.cs" />
@@ -49,6 +55,7 @@
     <Compile Include="Tiled\TiledCore.cs" />
     <Compile Include="Tiled\Map.cs" />
     <Compile Include="Tiled\TileSet.cs" />
+    <Compile Include="TitleState.cs" />
     <Compile Include="Zlib\CRC32.cs" />
     <Compile Include="Zlib\Deflate.cs" />
     <Compile Include="Zlib\GZipStream.cs" />
@@ -84,6 +91,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\menuBackground.png" />
+    <Content Include="Content\background.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\healthbars.png" />
     <Content Include="Content\Line Dark Empire.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -94,10 +104,16 @@
     <Content Include="Content\Platformer.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\selectButton.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\startButton.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\TestMap1.tmx">
+    <Content Include="Content\Level1.tmx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
@@ -119,6 +135,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Content\BattleSystem.spritefont" />
+    <Content Include="Content\console.xnb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

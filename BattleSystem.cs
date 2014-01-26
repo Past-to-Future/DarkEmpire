@@ -16,13 +16,13 @@ namespace DarkEmpire
 {
     public class BattleSystem
     {
-        public static Texture2D pixel = new Texture2D(Game1.graphics.GraphicsDevice, 1, 1); //create 1x1 pixel texture
+        public static Texture2D pixel = new Texture2D(Game1.instance.GraphicsDevice, 1, 1); //create 1x1 pixel texture
         public static SpriteFont battleText;
+        SpriteBatch spriteBatch = Game1.instance.SpriteBatch;
         public bool activeBattle;
         List<Color> backgroundColors = new List<Color>();
         List<Color> borderColors = new List<Color>();
         List<int[]> battleQueue = new List<int[]>();
-
         TmxMap battlemap;
         Texture2D texture;
         private Texture2D actionMenuTexture;
@@ -40,6 +40,7 @@ namespace DarkEmpire
 
          public void initialize()
         {
+            
             pixel.SetData(new[] { Color.White }); //make it white so we can color it
             battlemap = new TmxMap("Content\\battleMap.tmx");
             battleText = Game1.instance.Content.Load<SpriteFont>("BattleSystemFont"); //cannot edit in mono, import the .spritefont included into a dummy xna project and edit, bring .xnb back over
@@ -63,6 +64,7 @@ namespace DarkEmpire
                  attack[0] = 0; //which skill
                  attack[1] = rand.Next(1000); //time remaining
                  attack[2] = whoIsAttacking; //which npc
+                 sort();
                  battleQueue.Add(attack);
                  whoIsAttacking = (whoIsAttacking + 1) % 3;
                  Thread.Sleep(2000);
@@ -73,7 +75,6 @@ namespace DarkEmpire
         {
             while (true)
             {
-                sort();
                 if (battleQueue.Count > 0)
                 {
                     battleQueue[0][1] -= 100;
@@ -180,8 +181,8 @@ namespace DarkEmpire
 
         public void SetBackGroundTexture()
         {
-            width = (int)(Game1.screenWidth * 0.425f);
-            height = (int)(Game1.screenHeight * .20f);
+            width = (int)(Game1.instance.Width * 0.425f);
+            height = (int)(Game1.instance.Height * .20f);
 
             int borderThickness = 5;
             int borderShadow = 2;
@@ -190,7 +191,7 @@ namespace DarkEmpire
             int finalShadowIntensity = 15;
             float transparency = 0.5f;
 
-            texture = new Texture2D(Game1.graphics.GraphicsDevice, width, height, false, SurfaceFormat.Color);
+            texture = new Texture2D(Game1.instance.GraphicsDevice, width, height, false, SurfaceFormat.Color);
             Color[] color = new Color[width * height];
 
             borderColors.Add(Color.Purple);
@@ -233,43 +234,36 @@ namespace DarkEmpire
 
         public void DrawBackGroundRectangle()
         {
-            SpriteBatch spriteBatch = Game1.spriteBatch;
-            spriteBatch.Draw(texture, new Vector2(Game1.screenWidth * 0.05f, Game1.screenHeight * .75f - Game1.screenHeight * .05f), new Rectangle(0, 0, (int)(Game1.screenWidth * 0.425f), (int)(Game1.screenHeight * .20f)), Color.White);
-            spriteBatch.Draw(texture, new Vector2(Game1.screenWidth * 0.5f, Game1.screenHeight * .75f - Game1.screenHeight * .05f), new Rectangle(0, 0, (int)(Game1.screenWidth * 0.425f), (int)(Game1.screenHeight * .20f)), Color.White);
+            SpriteBatch spriteBatch = Game1.instance.SpriteBatch;
+            spriteBatch.Draw(texture, new Vector2(Game1.instance.Width * 0.05f, Game1.instance.Height * .75f - Game1.instance.Height * .05f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.425f), (int)(Game1.instance.Height * .20f)), Color.White);
+            spriteBatch.Draw(texture, new Vector2(Game1.instance.Width * 0.5f, Game1.instance.Height * .75f - Game1.instance.Height * .05f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.425f), (int)(Game1.instance.Height * .20f)), Color.White);
         }
         public void DrawActionMenu()
         {
-            int menuWidth = (int) (Game1.screenWidth * 0.45f);
-            int menuHeight = (int)(Game1.screenHeight *0.4f);
-            SpriteBatch spriteBatch = Game1.spriteBatch;
+            int menuWidth = (int) (Game1.instance.Width * 0.45f);
+            int menuHeight = (int)(Game1.instance.Height *0.4f);
+            SpriteBatch spriteBatch = Game1.instance.SpriteBatch;
             Color[] menuColor = new Color[menuWidth * menuHeight];
             spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend, SamplerState.LinearWrap,
     DepthStencilState.Default, RasterizerState.CullNone);
-            spriteBatch.Draw(actionMenuTexture, new Vector2(Game1.screenWidth * 0.5f, Game1.screenHeight * .4f - Game1.screenHeight * .05f), new Rectangle(0, 0, (int)(Game1.screenWidth * 0.45f), (int)(Game1.screenHeight * .40f)), Color.White * .5f);
+            spriteBatch.Draw(actionMenuTexture, new Vector2(Game1.instance.Width * 0.5f, Game1.instance.Height * .4f - Game1.instance.Height * .05f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.45f), (int)(Game1.instance.Height * .40f)), Color.White * .5f);
             spriteBatch.End();
         }
         public void draw()
         {
-            Game1.graphics.GraphicsDevice.Clear(Color.White);//new Color(rand.Next(255), rand.Next(255), rand.Next(255)));
-            SpriteBatch spriteBatch = Game1.spriteBatch;
-
-            spriteBatch.Begin();
-
+            Game1.instance.GraphicsDevice.Clear(Color.White);//new Color(rand.Next(255), rand.Next(255), rand.Next(255)));
             foreach (TmxLayer layer in battlemap.Layers)
             {
                 foreach (TmxLayerTile tile in layer.Tiles)
                 {
-                    Rectangle rec = new Rectangle((tile.Gid - 1) % Game1.tileInX * Game1.tileWidth + (tile.Gid - 1) % Game1.tileInX * Game1.tileSpacing, tile.Gid / Game1.tileInX * Game1.tileHeight + tile.Gid / Game1.tileInX * Game1.tileSpacing, Game1.tileWidth, Game1.tileHeight);
-                    spriteBatch.Draw(Game1.platformerTex, new Vector2(tile.X * 70, tile.Y * 70), rec, Color.White);
+                    Rectangle rec = new Rectangle((tile.Gid - 1) % Level.tileInX * Level.tileWidth + (tile.Gid - 1) % Level.tileInX * Level.tileSpacing, tile.Gid / Level.tileInX * Level.tileHeight + tile.Gid / Level.tileInX * Level.tileSpacing, Level.tileWidth, Level.tileHeight);
+                    spriteBatch.Draw(PlayingState.level.platformerTex, new Vector2(tile.X * 70, tile.Y * 70), rec, Color.White);
                 }
             }
-            
+
             DrawBackGroundRectangle();
-            Game1.heroParty.draw();
-            spriteBatch.Draw(battleline, battleline_req, Color.White);
-            spriteBatch.End();
-           
-            DrawActionMenu();
+
+            PlayingState.heroParty.draw();
         }
     }
 }
