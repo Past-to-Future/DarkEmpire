@@ -177,7 +177,7 @@ namespace DarkEmpire
         public void SetBackGroundTexture()
         {
             width = (int)(Game1.instance.Width * 0.425f);
-            height = (int)(Game1.instance.Height * .20f);
+            height = (int)(Game1.instance.Height * .25f);
 
             int borderThickness = 5;
             int borderShadow = 2;
@@ -230,8 +230,8 @@ namespace DarkEmpire
         public void DrawBackGroundRectangle()
         {
             SpriteBatch spriteBatch = Game1.instance.SpriteBatch;
-            spriteBatch.Draw(texture, new Vector2(Game1.instance.Width * 0.05f, Game1.instance.Height * .75f - Game1.instance.Height * .05f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.425f), (int)(Game1.instance.Height * .20f)), Color.White);
-            spriteBatch.Draw(texture, new Vector2(Game1.instance.Width * 0.5f, Game1.instance.Height * .75f - Game1.instance.Height * .05f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.425f), (int)(Game1.instance.Height * .20f)), Color.White);
+            spriteBatch.Draw(texture, new Vector2(Game1.instance.Width * 0.05f, Game1.instance.Height * .70f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.425f), (int)(Game1.instance.Height * .25f)), Color.White);
+            spriteBatch.Draw(texture, new Vector2(Game1.instance.Width * 0.5f, Game1.instance.Height * .70f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.425f), (int)(Game1.instance.Height * .25f)), Color.White);
         }
 
         public void draw()

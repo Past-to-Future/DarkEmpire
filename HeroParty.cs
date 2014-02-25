@@ -34,9 +34,9 @@ namespace DarkEmpire
             theHero[1].setPartyPosition(1);
             theHero[2].setPartyPosition(2);
 
-            theHero[0].name = "Sir Francis of Normandy";
-            theHero[1].name = "Gandalf the White";
-            theHero[2].name = "Frosty the Snowman";
+            theHero[0].name = "The Hero";
+            theHero[1].name = "The Hero: Warrior";
+            theHero[2].name = "The Hero: Wizard from the North";
 
             theEnemy = new Npc[5];
             theEnemy[0] = new Npc(5, 2, new Vector2(Game1.instance.Width * 0.7f, Game1.instance.Height * .1f), 5.0f);
@@ -68,6 +68,11 @@ namespace DarkEmpire
                 theEnemy[i].DrawHealthAboveWithOutline();
                 theEnemy[i].DrawHealthCornerWithOutline();
             }
+        }
+
+        public void swap(Npc hero1, Npc hero2)
+        {
+
         }
     }
 }

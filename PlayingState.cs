@@ -23,8 +23,9 @@ namespace DarkEmpire
         private SpriteFont _spriteFont;
         public static Npc[] npc = new Npc[900];
         public static BattleSystem battlesystem;
+        public static Menu menu;
         public static bool powerup = false;
-        public static HeroParty heroParty;
+        public static  HeroParty heroParty;
         public static KeyboardInput keyboardInput;
         public static Level level;
         public static PlayingState instance;
@@ -39,6 +40,8 @@ namespace DarkEmpire
             level = new Level("Level1");
             battlesystem = new BattleSystem();
             battlesystem.initialize();
+            menu = new Menu();
+            menu.Initialize();
 
             for (int i = 1; i <= 899; i++)
                 npc[i] = new Npc(i % 9, 1, new Vector2(i * 2, i + rand.Next(-100, 400)));
@@ -89,6 +92,13 @@ namespace DarkEmpire
                 _spriteBatch.Begin(); 
                 _game.GraphicsDevice.Clear(Color.CornflowerBlue); 
                 battlesystem.draw();
+                _spriteBatch.End();
+            }
+
+            if (menu.activeMenu)
+            {
+                _spriteBatch.Begin(); 
+                menu.Draw();
                 _spriteBatch.End();
             }
         }

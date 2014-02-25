@@ -40,7 +40,7 @@ namespace DarkEmpire
             partyPosition = 1;
             name = "dummy";
             //Has to be set to spritesheet and coordinated with artist
-            rect = new Rectangle((characterID - 1) % 4 * 32 * 3 + (frame) * 32, characterID / 5 * 32 * 4 + (directionFace - 1) % 4 * 32, 32, 32);
+            rect = new Rectangle((characterID - 1) % 4 * 60 * 3 + (frame) * 60, characterID / 5 * 60 * 4 + (directionFace - 1) % 4 * 60, 60, 60);
         }
 
         public void setPartyPosition(int position)
@@ -51,7 +51,7 @@ namespace DarkEmpire
         public void changeDirection(int dFace)
         {
             directionFace = dFace;
-            rect = new Rectangle((characterID - 1) % 4 * 32 * 3 + (frame) * 32, characterID / 5 * 32 * 4 + (directionFace - 1) % 4 * 32, 32, 32);
+            rect = new Rectangle((characterID - 1) % 4 * 60 * 3 + (frame) * 60, characterID / 5 * 60 * 4 + (directionFace - 1) % 4 * 60, 60, 60);
         }
 
         Random rand = new Random();

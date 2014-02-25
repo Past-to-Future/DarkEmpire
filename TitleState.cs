@@ -109,7 +109,7 @@ namespace DarkEmpire
             _spriteBatch.Draw(_startButton, startButton, _startColor);
             _spriteBatch.Draw(_selectButton, selectButton, _selectColor);
 
-            _spriteBatch.DrawString(_spriteFont, "Dark Empire\n Press Space Bar", new Vector2(_game.GraphicsDevice.Viewport.Width * 0.15f, _game.GraphicsDevice.Viewport.Height * .35f), Color.White, 0.0f, new Vector2(0,0), 5f, SpriteEffects.None, 0.0f);
+            _spriteBatch.DrawString(_spriteFont, "Dark Empire\n Press Space Bar", new Vector2(_game.GraphicsDevice.Viewport.Width * 0.15f, _game.GraphicsDevice.Viewport.Height * .35f), Color.White, 0.0f, new Vector2(0,0), 1f, SpriteEffects.None, 0.0f);
             _spriteBatch.End();
         }
 

@@ -10,6 +10,7 @@ using DarkEmpire.Tiled;
 using System.IO;
 using System.Reflection;
 using System.Diagnostics;
+using Microsoft.Xna.Framework.Audio;
 
 
 namespace DarkEmpire
@@ -18,6 +19,8 @@ namespace DarkEmpire
     {
         public InputState inputstate;
         PlayerIndex controlIndex;
+        SoundEffect soundEngine;
+        SoundEffectInstance soundEngineInstance;
 
         public KeyboardInput()
         {
@@ -27,14 +30,49 @@ namespace DarkEmpire
         public void initialize()
         {
             inputstate = new InputState();
+            soundEngine = Game1.instance.Content.Load<SoundEffect>("misc_menu");
+            soundEngineInstance = soundEngine.CreateInstance();
         }
 
+        int count = 0;
+        int xmove = 0, ymove = 0;
         public void Update(GameTime gameTime)
         {
             inputstate.Update(gameTime);
 
-            int ymove = 0;
-            int xmove = 0;
+
+            ymove = 0;
+            xmove = 0;
+
+            if (inputstate.IsKeyPressed(Keys.R, null, out controlIndex))
+            {
+                int _width = 896;
+                int _height = 504;
+                float ratio = _width / _height;
+                Game1.instance.Graphics.PreferredBackBufferHeight = (int)_height;
+                Game1.instance.Graphics.PreferredBackBufferWidth = (int)_width;
+                Game1.instance.Graphics.ApplyChanges();
+            }
+
+            if (inputstate.IsKeyPressed(Keys.T, null, out controlIndex))
+            {
+                int screenHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+                int screenWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+                Game1.instance.Graphics.PreferredBackBufferHeight = screenHeight;
+                Game1.instance.Graphics.PreferredBackBufferWidth = screenWidth;
+                //Game1.instance.Graphics.IsFullScreen = true;
+                Game1.instance.Graphics.ApplyChanges();
+            }
+
+            if (inputstate.IsKeyPressed(Keys.U, null, out controlIndex))
+            {
+                //Game1.instance.Graphics.IsFullScreen = false;
+                int screenHeight = 504;
+                int screenWidth = 896;
+                Game1.instance.Graphics.PreferredBackBufferHeight = screenHeight;
+                Game1.instance.Graphics.PreferredBackBufferWidth = screenWidth;
+                Game1.instance.Graphics.ApplyChanges();
+            }
 
             if (inputstate.IsKeyPressed(Keys.P, null, out controlIndex))
             {
@@ -46,6 +84,11 @@ namespace DarkEmpire
                 PlayingState.battlesystem.activeBattle = !PlayingState.battlesystem.activeBattle;
             }
 
+            if (inputstate.IsKeyPressed(Keys.M, null, out controlIndex))
+            {
+                PlayingState.menu.activeMenu = !PlayingState.menu.activeMenu;
+            }
+
             if (Keyboard.GetState().IsKeyDown(Keys.Down))
             {
                 ymove = 1;
@@ -54,6 +97,8 @@ namespace DarkEmpire
             {
                 ymove = -1;
             }
+            else
+                ymove = 0;
             if (Keyboard.GetState().IsKeyDown(Keys.Right))
             {
                 xmove = 1;
@@ -62,34 +107,85 @@ namespace DarkEmpire
             {
                 xmove = -1;
             }
+            count++;
 
-            for (int i = 1; i <= 899; i++)
+            if (inputstate.IsKeyPressed(Keys.Enter, null, out controlIndex))
             {
-                PlayingState.npc[i].frame = (PlayingState.npc[i].frame + 1) % 3;
-
-                if (ymove > 0)
-                    PlayingState.npc[i].changeDirection(1);
-                if (ymove < 0)
-                    PlayingState.npc[i].changeDirection(4);
-                if (ymove == 0 && xmove > 0)
-                    PlayingState.npc[i].changeDirection(3);
-                if (ymove == 0 && xmove < 0)
-                    PlayingState.npc[i].changeDirection(2);
-
-                PlayingState.npc[i].position += new Vector2(xmove, ymove);
-
-                if (PlayingState.npc[i].position.X >= Game1.instance.Width)
-                    PlayingState.npc[i].position.X = 0;
-                if (PlayingState.npc[i].position.X < 0)
-                    PlayingState.npc[i].position.X = Game1.instance.Width - 32;
-                if (PlayingState.npc[i].position.Y >= Game1.instance.Height)
-                    PlayingState.npc[i].position.Y = 0;
-                if (PlayingState.npc[i].position.Y < 0)
-                    PlayingState.npc[i].position.Y = Game1.instance.Height - 32;
-
+               PlayingState.menu.selectCharacter = !PlayingState.menu.selectCharacter;
             }
-        
+
+            if (inputstate.IsKeyPressed(Keys.Back, null, out controlIndex))
+            {
+                PlayingState.menu.selectCharacter = false;
+            }
+
+            if (PlayingState.menu.activeMenu == false)
+            {
+                if (count >= 2)
+                {
+                    for (int i = 1; i <= 899; i++)
+                    {
+                        PlayingState.npc[i].frame = (PlayingState.npc[i].frame + 1) % 3;
+
+                        if (ymove > 0)
+                            PlayingState.npc[i].changeDirection(1);
+                        if (ymove < 0)
+                            PlayingState.npc[i].changeDirection(4);
+                        if (ymove == 0 && xmove > 0)
+                            PlayingState.npc[i].changeDirection(3);
+                        if (ymove == 0 && xmove < 0)
+                            PlayingState.npc[i].changeDirection(2);
+
+                        PlayingState.npc[i].position += new Vector2(xmove, ymove);
+
+                        if (PlayingState.npc[i].position.X >= Game1.instance.Width)
+                            PlayingState.npc[i].position.X = 0;
+                        if (PlayingState.npc[i].position.X < 0)
+                            PlayingState.npc[i].position.X = Game1.instance.Width - 60;
+                        if (PlayingState.npc[i].position.Y >= Game1.instance.Height)
+                            PlayingState.npc[i].position.Y = 0;
+                        if (PlayingState.npc[i].position.Y < 0)
+                            PlayingState.npc[i].position.Y = Game1.instance.Height - 60;
+
+                    }
+                }
+            }
+
+            else
+            {
+
+                if (PlayingState.menu.selectCharacter && xmove != 0)
+                {
+                    if (count >= 3)
+                    {
+                        count = 0;
+                        soundEngineInstance.Stop();
+                        soundEngineInstance.Play();
+                        PlayingState.menu.characterSelection += xmove;
+                        if (PlayingState.menu.characterSelection > 3)
+                            PlayingState.menu.characterSelection = 1;
+                        else if (PlayingState.menu.characterSelection < 1)
+                            PlayingState.menu.characterSelection = 3;
+                    }
+                }
+
+                if (ymove != 0 && !PlayingState.menu.selectCharacter)
+                {
+                    if (count >= 2)
+                    {
+                        count = 0;
+                        soundEngineInstance.Stop();
+                        soundEngineInstance.Play();
+                        PlayingState.menu.menuSelection += ymove;
+                        if (PlayingState.menu.menuSelection < 1)
+                            PlayingState.menu.menuSelection = 9;
+                        if (PlayingState.menu.menuSelection > 9)
+                            PlayingState.menu.menuSelection = 1;
+                    }
+                }
+            }
         }
+    
     }
 }
 

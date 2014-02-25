@@ -43,8 +43,10 @@
     <Compile Include="KeyboardInput.cs" />
     <Compile Include="Level.cs" />
     <Compile Include="Manager.cs" />
+    <Compile Include="Menu.cs" />
     <Compile Include="Npc.cs" />
     <Compile Include="PlayingState.cs" />
+    <Compile Include="soundEngine.cs" />
     <Compile Include="State.cs" />
     <Compile Include="StateManager.cs" />
     <Compile Include="Tiled\ImageLayer.cs" />
@@ -94,6 +96,21 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\healthbars.png" />
+    <Content Include="Content\Jasmine.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Maxum.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Menu.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\misc_menu.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\npc_sprite.backup.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\npc_sprite.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -104,6 +121,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\startButton.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\WizardGirl.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Icon.ico" />

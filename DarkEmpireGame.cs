@@ -21,19 +21,22 @@ namespace DarkEmpire
 
         private StorageDevice _storageDevice;
         private float _width, _height;
+        public static float ratio_w, ratio_h;
 
         public DarkEmpireGame()
             : base()
         {
             _graphics = new GraphicsDeviceManager(this);
 
-            _width = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width; //896;
+            _width = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width; //896
             _height = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height; //504;
-            float ratio = _width/_height; 
-            _graphics.PreferredBackBufferHeight = (int)_height;
-            _graphics.PreferredBackBufferWidth = (int)_width;
-            _graphics.IsFullScreen = true;// false;
+            ratio_w = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 896;
+            ratio_h = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 504;
+            _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+            _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            _graphics.IsFullScreen = true;
             _graphics.ApplyChanges();
+
             Content.RootDirectory = "Content";
 
             _stateManager = new StateManager(this);
