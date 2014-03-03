@@ -20,7 +20,7 @@ namespace DarkEmpire
         public static Texture2D pixel = new Texture2D(Game1.instance.GraphicsDevice, 1, 1); //create 1x1 pixel texture
         public bool activeMenu, selectCharacter;
         public int menuSelection, characterSelection;
-        public Texture2D background;
+        public Texture2D background, box_background, white_background, backbone;
         public Texture2D[] c = new Texture2D[3];
         public SpriteFont menuText;
 
@@ -34,7 +34,10 @@ namespace DarkEmpire
 
         public void Initialize()
         {
-            background = Game1.instance.Content.Load<Texture2D>("Menu");
+            background = Game1.instance.Content.Load<Texture2D>("background");
+            box_background = Game1.instance.Content.Load<Texture2D>("light backbone");
+            white_background = Game1.instance.Content.Load<Texture2D>("background white");
+            backbone = Game1.instance.Content.Load<Texture2D>("backbone");
             menuText = Game1.instance.Content.Load<SpriteFont>("console");
             c[0] = Game1.instance.Content.Load<Texture2D>("Maxum");
             c[1] = Game1.instance.Content.Load<Texture2D>("Jasmine");
@@ -48,12 +51,13 @@ namespace DarkEmpire
         {
             SpriteBatch spriteBatch = Game1.instance.SpriteBatch;
             Rectangle screenRect = new Rectangle(0, 0, Game1.instance.GraphicsDevice.Viewport.Width, Game1.instance.GraphicsDevice.Viewport.Height);
+            spriteBatch.Draw(white_background, screenRect, Color.White);
             spriteBatch.Draw(background, screenRect, Color.White);
+            spriteBatch.Draw(box_background, screenRect, new Color(Color.White, 0.9f));
             float seperation = .0625f;
 
             String status = "Status";
             Vector2 statusSize = menuText.MeasureString(status);
-            Vector2 statusSizename;
 
             if(menuSelection <10)
                 spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.06f, Game1.instance.Height * (.1825f+(menuSelection-1)*0.063492f)), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.17f), (int)(Game1.instance.Height * 0.0476f)), new Color(Color.Green, 0.1f));
@@ -171,6 +175,7 @@ namespace DarkEmpire
 
             shadowText(spriteBatch, "XP", new Vector2(Game1.instance.Width * .765f, Game1.instance.Height * .74f), statusSize * 1.5f);
             shadowText(spriteBatch, (HeroParty.theHero[2].health * 100).ToString() + "/100", new Vector2(Game1.instance.Width * .86f, Game1.instance.Height * .74f), statusSize * 1.5f);
+            spriteBatch.Draw(backbone, screenRect, Color.White);
 
         }
 
