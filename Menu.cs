@@ -117,8 +117,8 @@ namespace DarkEmpire
             shadowText(spriteBatch, HeroParty.theHero[1].name, new Vector2(Game1.instance.Width * .56f, Game1.instance.Height * .685f), statusSize);
 
             //[Solid health bars]
-            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.56f, Game1.instance.Height * .83f), new Rectangle(0, 0, (int)(HeroParty.theHero[0].health * Game1.instance.Width * 0.16f + 1), 25), Color.Green);
-            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.56f + Game1.instance.Width * 0.16f * HeroParty.theHero[0].health, Game1.instance.Height * .83f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f * (1.0f - HeroParty.theHero[0].health)), 25), Color.Red);
+            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.56f, Game1.instance.Height * .83f), new Rectangle(0, 0, (int)(HeroParty.theHero[1].health * Game1.instance.Width * 0.16f + 1), 25), Color.Green);
+            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.56f + Game1.instance.Width * 0.16f * HeroParty.theHero[1].health, Game1.instance.Height * .83f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f * (1.0f - HeroParty.theHero[1].health)), 25), Color.Red);
 
             //[Outline of health bars]
             spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.56f, Game1.instance.Height * .83f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f), 2), Color.Black); //top
@@ -147,8 +147,8 @@ namespace DarkEmpire
 
             shadowText(spriteBatch, HeroParty.theHero[2].name, new Vector2(Game1.instance.Width * .76f, Game1.instance.Height * .685f), statusSize);
             //[Solid health bars]
-            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.76f, Game1.instance.Height * .83f), new Rectangle(0, 0, (int)(HeroParty.theHero[0].health * Game1.instance.Width * 0.16f + 1), 25), Color.Green);
-            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.76f + Game1.instance.Width * 0.16f * HeroParty.theHero[0].health, Game1.instance.Height * .83f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f * (1.0f - HeroParty.theHero[0].health)), 25), Color.Red);
+            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.76f, Game1.instance.Height * .83f), new Rectangle(0, 0, (int)(HeroParty.theHero[2].health * Game1.instance.Width * 0.16f + 1), 25), Color.Green);
+            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.76f + Game1.instance.Width * 0.16f * HeroParty.theHero[2].health, Game1.instance.Height * .83f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f * (1.0f - HeroParty.theHero[2].health)), 25), Color.Red);
 
             //[Outline of health bars]
             spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.76f, Game1.instance.Height * .83f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f), 2), Color.Black); //top
