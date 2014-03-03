@@ -127,11 +127,11 @@ namespace DarkEmpire
             spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.56f, Game1.instance.Height * .83f + 25 - 2), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f), 2), Color.Black); //bottom
 
             shadowText(spriteBatch, "HP", new Vector2(Game1.instance.Width * .565f, Game1.instance.Height * .81f), statusSize * 1.5f);
-            shadowText(spriteBatch, (HeroParty.theHero[0].health * 100).ToString() + "/100", new Vector2(Game1.instance.Width * .66f, Game1.instance.Height * .81f), statusSize * 1.5f);
+            shadowText(spriteBatch, (HeroParty.theHero[1].health * 100).ToString() + "/100", new Vector2(Game1.instance.Width * .66f, Game1.instance.Height * .81f), statusSize * 1.5f);
 
             //[Solid XP bars]
-            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.56f, Game1.instance.Height * .76f), new Rectangle(0, 0, (int)(HeroParty.theHero[0].health * Game1.instance.Width * 0.16f + 1), 25), Color.Green);
-            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.56f + Game1.instance.Width * 0.16f * HeroParty.theHero[0].health, Game1.instance.Height * .76f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f * (1.0f - HeroParty.theHero[0].health)), 25), Color.Red);
+            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.56f, Game1.instance.Height * .76f), new Rectangle(0, 0, (int)(HeroParty.theHero[1].health * Game1.instance.Width * 0.16f + 1), 25), Color.Green);
+            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.56f + Game1.instance.Width * 0.16f * HeroParty.theHero[1].health, Game1.instance.Height * .76f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f * (1.0f - HeroParty.theHero[1].health)), 25), Color.Red);
 
             //[Outline of XP bars]
             spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.56f, Game1.instance.Height * .76f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f), 2), Color.Black); //top
@@ -140,7 +140,7 @@ namespace DarkEmpire
             spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.56f, Game1.instance.Height * .76f + 25 - 2), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f), 2), Color.Black); //bottom
 
             shadowText(spriteBatch, "XP", new Vector2(Game1.instance.Width * .565f, Game1.instance.Height * .74f), statusSize*1.5f);
-            shadowText(spriteBatch, (HeroParty.theHero[0].health * 100).ToString() + "/100", new Vector2(Game1.instance.Width * .66f, Game1.instance.Height * .74f), statusSize*1.5f);
+            shadowText(spriteBatch, (HeroParty.theHero[1].health * 100).ToString() + "/100", new Vector2(Game1.instance.Width * .66f, Game1.instance.Height * .74f), statusSize*1.5f);
 
 
             /*Character 3*/
@@ -157,11 +157,11 @@ namespace DarkEmpire
             spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.76f, Game1.instance.Height * .83f + 25 - 2), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f), 2), Color.Black); //bottom
 
             shadowText(spriteBatch, "HP", new Vector2(Game1.instance.Width * .765f, Game1.instance.Height * .81f), statusSize * 1.5f);
-            shadowText(spriteBatch, (HeroParty.theHero[0].health * 100).ToString() + "/100", new Vector2(Game1.instance.Width * .86f, Game1.instance.Height * .81f), statusSize * 1.5f);
+            shadowText(spriteBatch, (HeroParty.theHero[2].health * 100).ToString() + "/100", new Vector2(Game1.instance.Width * .86f, Game1.instance.Height * .81f), statusSize * 1.5f);
 
             //[Solid XP bars]
-            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.76f, Game1.instance.Height * .76f), new Rectangle(0, 0, (int)(HeroParty.theHero[0].health * Game1.instance.Width * 0.16f + 1), 25), Color.Green);
-            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.76f + Game1.instance.Width * 0.16f * HeroParty.theHero[0].health, Game1.instance.Height * .76f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f * (1.0f - HeroParty.theHero[0].health)), 25), Color.Red);
+            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.76f, Game1.instance.Height * .76f), new Rectangle(0, 0, (int)(HeroParty.theHero[2].health * Game1.instance.Width * 0.16f + 1), 25), Color.Green);
+            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.76f + Game1.instance.Width * 0.16f * HeroParty.theHero[2].health, Game1.instance.Height * .76f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f * (1.0f - HeroParty.theHero[2].health)), 25), Color.Red);
 
             //[Outline of XP bars]
             spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.76f, Game1.instance.Height * .76f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f), 2), Color.Black); //top
@@ -170,7 +170,7 @@ namespace DarkEmpire
             spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.76f, Game1.instance.Height * .76f + 25 - 2), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f), 2), Color.Black); //bottom
 
             shadowText(spriteBatch, "XP", new Vector2(Game1.instance.Width * .765f, Game1.instance.Height * .74f), statusSize * 1.5f);
-            shadowText(spriteBatch, (HeroParty.theHero[0].health * 100).ToString() + "/100", new Vector2(Game1.instance.Width * .86f, Game1.instance.Height * .74f), statusSize * 1.5f);
+            shadowText(spriteBatch, (HeroParty.theHero[2].health * 100).ToString() + "/100", new Vector2(Game1.instance.Width * .86f, Game1.instance.Height * .74f), statusSize * 1.5f);
 
         }
 
