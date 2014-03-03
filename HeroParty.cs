@@ -35,8 +35,8 @@ namespace DarkEmpire
             theHero[2].setPartyPosition(2);
 
             theHero[0].name = "The Hero";
-            theHero[1].name = "The Hero: Warrior";
-            theHero[2].name = "The Hero: Wizard from the North";
+            theHero[1].name = "The Warrior";
+            theHero[2].name = "The Magician";
 
             theEnemy = new Npc[5];
             theEnemy[0] = new Npc(5, 2, new Vector2(Game1.instance.Width * 0.7f, Game1.instance.Height * .1f), 5.0f);
@@ -70,9 +70,11 @@ namespace DarkEmpire
             }
         }
 
-        public void swap(Npc hero1, Npc hero2)
+        public static void swap(int hero1, int hero2)
         {
-
+            Npc dummy = theHero[hero1-1];
+            theHero[hero1-1] = theHero[hero2-1];
+            theHero[hero2-1] = dummy;
         }
     }
 }

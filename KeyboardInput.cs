@@ -21,6 +21,8 @@ namespace DarkEmpire
         PlayerIndex controlIndex;
         SoundEffect soundEngine;
         SoundEffectInstance soundEngineInstance;
+        int characterSelection1 = 0;
+        int characterSelection2 = 0;
 
         public KeyboardInput()
         {
@@ -111,7 +113,29 @@ namespace DarkEmpire
 
             if (inputstate.IsKeyPressed(Keys.Enter, null, out controlIndex))
             {
-               PlayingState.menu.selectCharacter = !PlayingState.menu.selectCharacter;
+                if (PlayingState.menu.characterSelection == 10)
+                    PlayingState.menu.selectCharacter = false;
+                else if (PlayingState.menu.menuSelection < 7 && !PlayingState.menu.selectCharacter)
+                {
+                    PlayingState.menu.selectCharacter = true;
+                    characterSelection1 = 0;
+                    characterSelection2 = 0;
+                }
+
+                else if (PlayingState.menu.selectCharacter)
+                {
+                    if(characterSelection1 == 0)
+                        characterSelection1 = PlayingState.menu.characterSelection;
+                    else if(characterSelection2 == 0)
+                        characterSelection2 = PlayingState.menu.characterSelection;
+                    if (characterSelection1 != 0 && characterSelection2 != 0)
+                    {
+                        HeroParty.swap(characterSelection1, characterSelection2);
+                        characterSelection1 = 0;
+                        characterSelection2 = 0;
+                    }
+                }
+
             }
 
             if (inputstate.IsKeyPressed(Keys.Back, null, out controlIndex))
@@ -153,6 +177,10 @@ namespace DarkEmpire
 
             else
             {
+                /*Menu is active*/
+
+
+                /*Pick character*/
 
                 if (PlayingState.menu.selectCharacter && xmove != 0)
                 {
@@ -168,7 +196,23 @@ namespace DarkEmpire
                             PlayingState.menu.characterSelection = 3;
                     }
                 }
+                /*Toggle between pick character and back button*/
+                if (PlayingState.menu.selectCharacter && ymove != 0)
+                {
+                    if (count >= 3)
+                    {
+                        count = 0;
+                        soundEngineInstance.Stop();
+                        soundEngineInstance.Play();
+                        if (PlayingState.menu.characterSelection == 10)
+                            PlayingState.menu.characterSelection = 1;
+                        else
+                            PlayingState.menu.characterSelection = 10;
+                    }
+                }
 
+                
+                /*Main menu options*/
                 if (ymove != 0 && !PlayingState.menu.selectCharacter)
                 {
                     if (count >= 2)
@@ -178,8 +222,8 @@ namespace DarkEmpire
                         soundEngineInstance.Play();
                         PlayingState.menu.menuSelection += ymove;
                         if (PlayingState.menu.menuSelection < 1)
-                            PlayingState.menu.menuSelection = 9;
-                        if (PlayingState.menu.menuSelection > 9)
+                            PlayingState.menu.menuSelection = 10;
+                        if (PlayingState.menu.menuSelection > 10)
                             PlayingState.menu.menuSelection = 1;
                     }
                 }

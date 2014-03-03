@@ -123,7 +123,6 @@ namespace DarkEmpire
             spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.25f, Game1.instance.Height * .75f + Game1.instance.Height * .05f * partyPosition), new Rectangle(0, 0, thicknessOfBorder, 25), Color.Black); //left
             spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.25f + Game1.instance.Width * 0.2f - thicknessOfBorder, Game1.instance.Height * .75f + Game1.instance.Height * .05f * partyPosition), new Rectangle(0, 0, thicknessOfBorder, 25), Color.Black); //right
             spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.25f, Game1.instance.Height * .75f + Game1.instance.Height * .05f * partyPosition + 25 - thicknessOfBorder), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.2f), thicknessOfBorder), Color.Black); //bottom
-
         }
 
     }
