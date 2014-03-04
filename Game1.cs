@@ -29,8 +29,10 @@ namespace DarkEmpire
         Rectangle battleline_rec = new Rectangle(350, 720, 700, 150);
         Texture2D option_box;
         Texture2D actor_box;
+        Texture2D actor_box_full;
         Texture2D actor1_box;
         Texture2D currency_box;
+        
         
         private SpriteFont font;
         //SpriteFont font = Content.Load<SpriteFont>("courier");
@@ -43,19 +45,28 @@ namespace DarkEmpire
         int tileSpacing; //spacing between sprites on sprite sheet
         int tileInX; //max number of sprites along x-axis of sprite sheet
 
-        int screenWidth, screenHeight; //size of screen in pixels
+        int screenWidth, screenHeight, pscreenWidth, pscreenHeight, cscreenWidth, cscreenHeight; //size of screen in pixels
 
         public Game1()
             : base()
         {
             graphics = new GraphicsDeviceManager(this);
+            
             graphics.PreferredBackBufferWidth = 896;
             graphics.PreferredBackBufferHeight = 504;
-            float asp_ratio_screen = (float)graphics.PreferredBackBufferWidth / (float)graphics.PreferredBackBufferHeight;
+
+            
+            //float asp_ratio_screen = (float)graphics.PreferredBackBufferWidth / (float)graphics.PreferredBackBufferHeight;
             graphics.IsFullScreen = false;
             screenHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
             screenWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+        //    pscreenHeight = graphics.PreferredBackBufferHeight;
+        //    pscreenWidth = graphics.PreferredBackBufferWidth;
+         //   cscreenHeight = graphics.PreferredBackBufferHeight;
+          //  cscreenWidth = graphics.PreferredBackBufferWidth; 
+
             graphics.ApplyChanges();
+
             
             Content.RootDirectory = "Content";
         }
@@ -89,6 +100,7 @@ namespace DarkEmpire
             battleline = Content.Load<Texture2D>("Line Dark Empire");
             option_box = Content.Load<Texture2D>("box");
             actor_box = Content.Load<Texture2D>("box1");
+            actor_box_full = Content.Load<Texture2D>("box1");
             actor1_box = Content.Load<Texture2D>("box3");
             currency_box = Content.Load<Texture2D>("box2");
            // text_box = Content.Load<Texture2D>("text");
@@ -109,6 +121,7 @@ namespace DarkEmpire
             tileHeight = map.TileHeight;
             tileSpacing = map.Tilesets[0].Spacing;
             tileInX = (int)map.Tilesets[0].Image.Width / tileWidth - 1;
+
 
             Debug.WriteLine("Version: " + map.Version);
         }
@@ -156,10 +169,28 @@ namespace DarkEmpire
             if (inputstate.IsKeyPressed(Keys.F, null, out controlIndex))
             {
                 graphics.IsFullScreen = !graphics.IsFullScreen;
-                screenWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-                //screenHeight = (int)((float)GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height/1.77) ;
-                screenHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-               graphics.ApplyChanges();
+               // graphics.ToggleFullScreen();
+                
+             //   if (graphics.IsFullScreen==true)
+             //  {
+             //     graphics.PreferredBackBufferWidth = 1920;
+             //     graphics.PreferredBackBufferHeight = 1080;
+                  
+                    
+            //    }
+//
+             //   if (graphics.IsFullScreen == false)
+            //    {
+            //        graphics.PreferredBackBufferWidth = 896;
+            //        graphics.PreferredBackBufferHeight = 504;
+                    
+             //   }
+                graphics.ApplyChanges();
+                    //string[] lines = { "First line", "Second line"};
+                   // lines[0] = "Window Width = " + screenWidth;
+                   // lines[1] = "Window Height = " + screenHeight;
+                   // System.IO.File.WriteAllLines(@"C:\Users\anast_000\Desktop\Resolution3.txt", lines);
+                
             }
 
             if (Keyboard.GetState().IsKeyDown(Keys.Down))
@@ -208,20 +239,61 @@ namespace DarkEmpire
             base.Update(gameTime);
         }
 
+        private Rectangle transform_graphics(Rectangle rect, int screenW, int screenH) {
+
+            string[] lines = { "First line", "Second line", "Third line", "Fourth Line", "FIFTH", "SIXTH","Seventh", "Eighth","Ninth","Tenth", "Eleventh", "Twelveth", "13","14", "15", "16" };
+
+            float asp_ratio_actor_coordinates = (float)rect.X / (float)rect.Y;
+            float asp_ratio_actor_dimentions = (float)rect.Width / (float)rect.Height;
+            float asp_ratio_sc_act_coordinates = (float)896 / (float)rect.X;
+            float asp_ratio_sc_act_dimentions = (float)896 / (float)rect.Width;
+
+
+           // lines[12] = "Previous Width = " +rect.Width.ToString();
+           // lines[13] = "Previous Height = " + rect.Height.ToString();
+           // lines[14] = "Previous X = " +rect.X.ToString();
+           // lines[15] = "Previous Y = "+ rect.Y.ToString();
+
+            Rectangle rect2 = new Rectangle(0,0,0,0);
+
+            rect2.Width = (int)((float)screenW / asp_ratio_sc_act_dimentions);
+            rect2.Height = (int)((float)rect2.Width / asp_ratio_actor_dimentions);
+            rect2.X = (int)((float)screenW / asp_ratio_sc_act_coordinates);
+            rect2.Y = (int)((float)rect2.X / asp_ratio_actor_coordinates);
+
+            lines[0] = "Width = " + rect.Width.ToString();
+            lines[1] = "Height = " + rect.Height.ToString();
+            lines[2] = "X = " + rect.X.ToString();
+            lines[3] = "Y = " + rect.Y.ToString();
+            lines[4] = "Previous Window Width = " + screenW;
+            lines[5] = "Previous Window Height = " + screenH;
+            lines[6] = "asp_ratio_actor_coordinates = rect.X / rect.Y = " + asp_ratio_actor_coordinates.ToString();
+            lines[7] = "asp_ratio_actor_dimentions = rect.Width / rect.Height = " + asp_ratio_actor_dimentions.ToString();
+            lines[8] = "asp_ratio_sc_act_coordinates = screenW / rect.X = " + asp_ratio_sc_act_coordinates.ToString();
+            lines[9] = "asp_ratio_sc_act_dimentions = screenW / rect.Width = " + asp_ratio_sc_act_dimentions.ToString();
+            lines[10] = "Current Window Width = " + screenW;
+            lines[11] = "Current Window Height = " + screenH;
+            
+
+            System.IO.File.WriteAllLines(@"C:\Users\anast_000\Desktop\Resolution_tranform.txt", lines);
+
+            return rect2;
+        
+        }
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.White);
             
             spriteBatch.Begin();
 
-            //If layers are going to be used, need to check which order they draw in, this may do it backwards (easy fix)
+          //  If layers are going to be used, need to check which order they draw in, this may do it backwards (easy fix)
             foreach (TmxLayer layer in map.Layers){
                 foreach (TmxLayerTile tile in layer.Tiles)
                 {
-                    //Rec stores the section of the sprite sheet only containing the texture of the sprite we want
+                   //Rec stores the section of the sprite sheet only containing the texture of the sprite we want
                     Rectangle rec = new Rectangle((tile.Gid - 1) % tileInX * tileWidth + (tile.Gid - 1) % tileInX * tileSpacing, tile.Gid / tileInX * tileHeight + tile.Gid / tileInX * tileSpacing, tileWidth, tileHeight);
-                    spriteBatch.Draw(platformerTex, new Vector2(tile.X*70, tile.Y*70), rec, Color.White);
-                }
+                   spriteBatch.Draw(platformerTex, new Vector2(tile.X*70, tile.Y*70), rec, Color.White);
+               }
             }
 
             for (int i = 1; i <= 899; i++)
@@ -237,7 +309,8 @@ namespace DarkEmpire
             //Gonna just erase the screen and draw a battle system for now for testing.
             if (battleSystem)
             {
-                GraphicsDevice.Clear(Color.White);//new Color(rand.Next(255), rand.Next(255), rand.Next(255)));
+                GraphicsDevice.Clear(Color.White);
+                new Color(rand.Next(255), rand.Next(255), rand.Next(255));
                 spriteBatch.Begin();
 
                 foreach (TmxLayer layer in battlemap.Layers)
@@ -268,31 +341,37 @@ namespace DarkEmpire
                 
                 //graphics.PreferredBackBufferHeight = 504;
                // graphics.IsFullScreen = false;
-                
 
+                //graphics.PreferredBackBufferWidth = 896;
+                //graphics.PreferredBackBufferHeight = 504;
 
                 
 
                 Rectangle option_box_rec = new Rectangle(0, 0, 98, 220);
-                Rectangle actor_box_rec = new Rectangle(350, 50, 200, 150);
-                Rectangle actor1_box_rec = new Rectangle(350, 50, 800, 600);
-                Rectangle currency_box_rec = new Rectangle(0, 0, 401, 92);
+                Rectangle actor_box_rec = new Rectangle(448, 50, 200, 150);
+                Rectangle actor_box_rec_full = transform_graphics(actor_box_rec, 1920,1080);
+                Rectangle actor1_box_rec = new Rectangle(600, 50, 800, 600);
+                Rectangle currency_box_rec = new Rectangle(700, 700, 401, 92);
 
                 
-                float asp_ratio_actor_coordinates = (float)actor_box_rec.X / (float)actor_box_rec.Y;
-                float asp_ratio_actor_dimentions = (float)actor_box_rec.Width / (float)actor_box_rec.Height;
-                float asp_ratio_sc_act_coordinates = (float)graphics.PreferredBackBufferWidth / (float)actor_box_rec.X;
-                float asp_ratio_sc_act_dimentions = (float)graphics.PreferredBackBufferWidth / (float)actor_box_rec.Width;
+               // float asp_ratio_actor_coordinates = (float)actor_box_rec.X / (float)actor_box_rec.Y;
+               // float asp_ratio_actor_dimentions = (float)actor_box_rec.Width / (float)actor_box_rec.Height;
+              //  float asp_ratio_sc_act_coordinates = (float)graphics.PreferredBackBufferWidth / (float)actor_box_rec.X;
+               // float asp_ratio_sc_act_dimentions = (float)graphics.PreferredBackBufferWidth / (float)actor_box_rec.Width;
 
                 if (graphics.IsFullScreen == false)
                 {
-                    
+                    //string[] lines = { "First line", "Second line", "Third line", "Fourth Line", "dde", "fsre" };
+                    actor_box_rec.X = 448;
+                    actor_box_rec.Y=50;
+                    actor_box_rec.Width=200;
+                    actor_box_rec.Height=150;
                     spriteBatch.Begin();
                     //Rectangle currency_box_rec = new Rectangle(50, 700, 200, 50);
                     //Rectangle text_box_rec = new Rectangle(95, 60, 100, 40);
                 //    spriteBatch.Draw(option_box, option_box_rec, Color.White);
                     spriteBatch.Draw(actor_box, actor_box_rec, Color.White);
-                //    spriteBatch.Draw(currency_box, currency_box_rec, Color.White);
+                    spriteBatch.Draw(currency_box, currency_box_rec, Color.White);
                     //spriteBatch.Draw(text_box, text_box_rec, Color.White);
                     //spriteBatch.Draw(currency_box, new Vector2(screenWidth * 0.026f, screenHeight * 0.63f), currency_box_rec, Color.White, 0.0f, Vector2.Zero, 0.5f, SpriteEffects.None, 0.0f);
 
@@ -301,7 +380,13 @@ namespace DarkEmpire
                     // spriteBatch.Draw(actor1_box, new Vector2(screenWidth * 0.182f, screenHeight * 0.046f), actor1_box_rec, Color.White, 0.0f, Vector2.Zero, 1.001f, SpriteEffects.None, 0.0f);
 
 
-
+                 //   lines[0] = "Width = " + actor_box_rec.Width.ToString();
+                //    lines[1] = "Height = " + actor_box_rec.Height.ToString();
+                //    lines[2] = "X = " + actor_box_rec.X.ToString();
+                 //   lines[3] = "Y = " + actor_box_rec.Y.ToString();
+                  //  lines[4] = "Window Width = " + screenWidth;
+                 //   lines[5] = "Window Height = " + screenHeight;
+                  //  System.IO.File.WriteAllLines(@"C:\Users\anast_000\Desktop\Resolution1.txt", lines);
                //     spriteBatch.DrawString(font, "Status", new Vector2(100, 80), Color.Black);
                 //    spriteBatch.DrawString(font, "Items", new Vector2(100, 140), Color.Black);
                 //    spriteBatch.DrawString(font, "Equipment", new Vector2(100, 200), Color.Black);
@@ -313,22 +398,23 @@ namespace DarkEmpire
                 }
                 
                 else {
-                //    string[] lines = { "First line", "Second line", "Third line","Fourth Line" };
+                   string[] lines = { "First line", "Second line", "Third line","Fourth Line","dde","fsre" };
+
+                 //  actor_box_rec=transform_graphics(actor_box_rec, pscreenWidth,pscreenHeight, cscreenWidth,cscreenHeight);
                     
                     spriteBatch.Begin();
-                    actor_box_rec.Width = (int) ((float)screenWidth/asp_ratio_sc_act_dimentions);
-                    actor_box_rec.Height = (int)((float)actor_box_rec.Width/asp_ratio_actor_dimentions);
-                    actor_box_rec.X = (int)((float)screenWidth / asp_ratio_sc_act_coordinates);
-                    actor_box_rec.Y = (int)((float)actor_box_rec.X / asp_ratio_actor_coordinates);
-                    spriteBatch.Draw(actor_box, actor_box_rec, Color.White);
+                    spriteBatch.Draw(actor_box_full, actor_box_rec_full, Color.White);
+                    //spriteBatch.Draw(currency_box, currency_box_rec, Color.White);
                     spriteBatch.End();
 
                     
                   //  lines[0]="Width = " +actor_box_rec.Width.ToString();
                   //  lines[1] = "Height = "+actor_box_rec.Height.ToString();
-                   // lines[2] = "X = " + actor_box_rec.X.ToString();
-                   // lines[3] = "Y = " + actor_box_rec.Y.ToString();
-                   // System.IO.File.WriteAllLines(@"C:\Users\anast_000\Desktop\Resolution.txt", lines);
+                  //  lines[2] = "X = " + actor_box_rec.X.ToString();
+                  //  lines[3] = "Y = " + actor_box_rec.Y.ToString();
+                  //  lines[4] = "Window Width = " + screenWidth;
+                  //  lines[5] = "Window Height = " + screenHeight;
+                  //  System.IO.File.WriteAllLines(@"C:\Users\anast_000\Desktop\Resolution.txt", lines);
                 }
             }
 
