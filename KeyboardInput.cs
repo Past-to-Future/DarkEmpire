@@ -11,16 +11,18 @@ using System.IO;
 using System.Reflection;
 using System.Diagnostics;
 using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 
 
 namespace DarkEmpire
 {
     public class KeyboardInput
     {
-        public InputState inputstate;
-        PlayerIndex controlIndex;
-        SoundEffect soundEngine;
-        SoundEffectInstance soundEngineInstance;
+        public static InputState inputstate;
+        public static PlayerIndex controlIndex;
+        public static SoundEffect soundEngine, hit;
+        public static SoundEffectInstance soundEngineInstance, hitInstance;
+        Song heroTheme;
         int characterSelection1 = 0;
         int characterSelection2 = 0;
 
@@ -33,7 +35,11 @@ namespace DarkEmpire
         {
             inputstate = new InputState();
             soundEngine = Game1.instance.Content.Load<SoundEffect>("misc_menu");
+            hit = Game1.instance.Content.Load<SoundEffect>("hit28");
             soundEngineInstance = soundEngine.CreateInstance();
+            hitInstance = hit.CreateInstance();
+            heroTheme = Game1.instance.Content.Load<Song>("Heroes Theme_0.wav");
+            MediaPlayer.Play(heroTheme);
         }
 
         int count = 0;
@@ -147,7 +153,7 @@ namespace DarkEmpire
             {
                 if (count >= 2)
                 {
-                    for (int i = 1; i <= 899; i++)
+                    for (int i = 1; i <= 100; i++)
                     {
                         PlayingState.npc[i].frame = (PlayingState.npc[i].frame + 1) % 3;
 

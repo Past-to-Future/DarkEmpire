@@ -43,8 +43,8 @@ namespace DarkEmpire
             menu = new Menu();
             menu.Initialize();
 
-            for (int i = 1; i <= 899; i++)
-                npc[i] = new Npc(i % 9, 1, new Vector2(i * 2, i + rand.Next(-100, 400)));
+            for (int i = 1; i <= 100; i++)
+                npc[i] = new Npc(i % 4, 1, new Vector2(i * 2, i + rand.Next(-100, 400)));
         }
 
         public Texture2D npcSprite
@@ -69,6 +69,7 @@ namespace DarkEmpire
             {
                 battlesystem.attackThread.Abort();
                 battlesystem.battleThread.Abort();
+                Game.Exit();
             }
         }
 
@@ -80,7 +81,7 @@ namespace DarkEmpire
             
             level.Draw();
 
-            for (int i = 1; i <= 899; i++)
+            for (int i = 1; i <= 100; i++)
                 npc[i].draw();
 
             _spriteBatch.End(); 

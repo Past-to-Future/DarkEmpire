@@ -20,15 +20,15 @@ namespace DarkEmpire
         public static SpriteFont battleText;
         SpriteBatch spriteBatch = Game1.instance.SpriteBatch;
         public bool activeBattle;
-        List<Color> backgroundColors = new List<Color>();
-        List<Color> borderColors = new List<Color>();
-        List<int[]> battleQueue = new List<int[]>();
+        static List<int[]> battleQueue = new List<int[]>();
         TmxMap battlemap;
-        Texture2D texture;
-        int width;
-        int height;
         public Thread battleThread;
         public Thread attackThread;
+        String status = "Status";
+        Vector2 statusSize;
+        bool paused = true;
+        int[] saveAttack = null;
+        static int heroTurn = 0;
 
         public BattleSystem()
         {
@@ -45,193 +45,77 @@ namespace DarkEmpire
             attackThread = new Thread(new ThreadStart(DoAttack));
             battleThread.Start();
             attackThread.Start();
+            statusSize = battleText.MeasureString(status);
 
-            SetBackGroundTexture();
         }
 
-         Random rand = new Random();
-         private void DoAttack()
+        Random rand = new Random();
+        float moving = 0f;
+
+        private void DoAttack()
          {
-             int whoIsAttacking = 0;
              while (true)
              {
-                 int[] attack = new int[3];
-                 attack[0] = 0; //which skill
-                 attack[1] = rand.Next(1000); //time remaining
-                 attack[2] = whoIsAttacking; //which npc
-                 sort();
-                 battleQueue.Add(attack);
-                 whoIsAttacking = (whoIsAttacking + 1) % 3;
-                 Thread.Sleep(2000);
+                 /*Character needs to show attack animation*/
+                 if (saveAttack != null)
+                 {
+                     float dist = Vector2.Distance(HeroParty.theHero[saveAttack[2]].position, HeroParty.theEnemy[saveAttack[3]].position);
+                     if (dist > 64)
+                     {
+                         moving += 4 * 0.16f / dist;
+                         HeroParty.theHero[saveAttack[2]].position = Vector2.Lerp(HeroParty.theHero[saveAttack[2]].position, HeroParty.theEnemy[saveAttack[3]].position, moving);
+                     }
+                     else
+                     {
+                         KeyboardInput.hitInstance.Stop();
+                         KeyboardInput.hitInstance.Play();
+                         Thread.Sleep(200);
+                         KeyboardInput.hitInstance.Stop();
+                         KeyboardInput.hitInstance.Play();
+                         Thread.Sleep(200);
+                         KeyboardInput.hitInstance.Stop();
+                         KeyboardInput.hitInstance.Play();
+
+                         Thread.Sleep(1500);
+
+                         if (saveAttack[2] == 0)
+                             HeroParty.theHero[saveAttack[2]].position = new Vector2(Game1.instance.Width * 0.2f, Game1.instance.Height * .2f);
+                         else if (saveAttack[2] == 1)
+                             HeroParty.theHero[saveAttack[2]].position = new Vector2(Game1.instance.Width * 0.1f, Game1.instance.Height * .4f);
+                         else
+                             HeroParty.theHero[saveAttack[2]].position = new Vector2(Game1.instance.Width * 0.2f, Game1.instance.Height * .6f);
+                         saveAttack = null;
+                     }
+                 }
+                 
+                 Thread.Sleep(50);
              }
          }
 
+       
         private void DoBattle()
         {
             while (true)
             {
-                if (battleQueue.Count > 0)
+                if (paused)
                 {
-                    battleQueue[0][1] -= 100;
-                    if (battleQueue[0][1] <= 0)
+
+                }
+                else
+                {
+                    for (int i = 0; i < battleQueue.Count; i++)
                     {
-                        HeroParty.theHero[(int)battleQueue[0][2]].position.X += 50;
-                        battleQueue.Remove(battleQueue[0]);
+                        battleQueue[i][1] -= 100;
+                        if (battleQueue[i][1] <= 0)
+                        {
+                            saveAttack = battleQueue[i];
+                            battleQueue.Remove(battleQueue[i]);
+                            paused = true;
+                        }
                     }
                 }
                 Thread.Sleep(100);
             }
-        }
-
-        public void sort()
-        {
-            for(int i = 0; i < battleQueue.Count - 1; i++){
-                if (battleQueue[i][1] > battleQueue[i + 1][1])
-                {
-                    var dummy = battleQueue[i];
-                    battleQueue[i] = battleQueue[i + 1];
-                    battleQueue[i + 1] = dummy;
-                }
-            }
-        }
-
-        private Color ColorBorder(int x, int y, int width, int height, int borderThickness, int borderRadius, int borderShadow, Color initialColor, List<Color> borderColors, float initialShadowIntensity, float finalShadowIntensity)
-        {
-            Rectangle internalRectangle = new Rectangle((borderThickness + borderRadius), (borderThickness + borderRadius), width - 2 * (borderThickness + borderRadius), height - 2 * (borderThickness + borderRadius));
-
-            if (internalRectangle.Contains(x, y)) return initialColor;
-
-            Vector2 origin = Vector2.Zero;
-            Vector2 point = new Vector2(x, y);
-
-            if (x < borderThickness + borderRadius)
-            {
-                if (y < borderRadius + borderThickness)
-                    origin = new Vector2(borderRadius + borderThickness, borderRadius + borderThickness);
-                else if (y > height - (borderRadius + borderThickness))
-                    origin = new Vector2(borderRadius + borderThickness, height - (borderRadius + borderThickness));
-                else
-                    origin = new Vector2(borderRadius + borderThickness, y);
-            }
-            else if (x > width - (borderRadius + borderThickness))
-            {
-                if (y < borderRadius + borderThickness)
-                    origin = new Vector2(width - (borderRadius + borderThickness), borderRadius + borderThickness);
-                else if (y > height - (borderRadius + borderThickness))
-                    origin = new Vector2(width - (borderRadius + borderThickness), height - (borderRadius + borderThickness));
-                else
-                    origin = new Vector2(width - (borderRadius + borderThickness), y);
-            }
-            else
-            {
-                if (y < borderRadius + borderThickness)
-                    origin = new Vector2(x, borderRadius + borderThickness);
-                else if (y > height - (borderRadius + borderThickness))
-                    origin = new Vector2(x, height - (borderRadius + borderThickness));
-            }
-
-            if (!origin.Equals(Vector2.Zero))
-            {
-                float distance = Vector2.Distance(point, origin);
-
-                if (distance > borderRadius + borderThickness + 1)
-                {
-                    return Color.Transparent;
-                }
-                else if (distance > borderRadius + 1)
-                {
-                    if (borderColors.Count > 2)
-                    {
-                        float modNum = distance - borderRadius;
-
-                        if (modNum < borderThickness / 2)
-                        {
-                            return Color.Lerp(borderColors[2], borderColors[1], (float)((modNum) / (borderThickness / 2.0)));
-                        }
-                        else
-                        {
-                            return Color.Lerp(borderColors[1], borderColors[0], (float)((modNum - (borderThickness / 2.0)) / (borderThickness / 2.0)));
-                        }
-                    }
-
-
-                    if (borderColors.Count > 0)
-                        return borderColors[0];
-                }
-                else if (distance > borderRadius - borderShadow + 1)
-                {
-                    float mod = (distance - (borderRadius - borderShadow)) / borderShadow;
-                    float shadowDiff = initialShadowIntensity - finalShadowIntensity;
-                    return DarkenColor(initialColor, ((shadowDiff * mod) + finalShadowIntensity));
-                }
-            }
-
-            return initialColor;
-        }
-
-        private Color DarkenColor(Color color, float shadowIntensity)
-        {
-            return Color.Lerp(color, Color.Black, shadowIntensity);
-        }
-
-        public void SetBackGroundTexture()
-        {
-            width = (int)(Game1.instance.Width * 0.425f);
-            height = (int)(Game1.instance.Height * .25f);
-
-            int borderThickness = 5;
-            int borderShadow = 2;
-            int borderRadius = 12;
-            int initialShadowIntensity = 10;
-            int finalShadowIntensity = 15;
-            float transparency = 0.5f;
-
-            texture = new Texture2D(Game1.instance.GraphicsDevice, width, height, false, SurfaceFormat.Color);
-            Color[] color = new Color[width * height];
-
-            borderColors.Add(Color.Purple);
-            borderColors.Add(Color.Orange);
-            backgroundColors.Add(Color.Red);
-            backgroundColors.Add(Color.Blue);
-            backgroundColors.Add(Color.Yellow);
-            backgroundColors.Add(Color.Green);
-
-            for (int x = 0; x < texture.Width; x++)
-            {
-                for (int y = 0; y < texture.Height; y++)
-                {
-                    switch (backgroundColors.Count)
-                    {
-                        case 4:
-                            Color leftColor0 = Color.Lerp(backgroundColors[0], backgroundColors[1], ((float)y / (width - 1)));
-                            Color rightColor0 = Color.Lerp(backgroundColors[2], backgroundColors[3], ((float)y / (height - 1)));
-                            color[x + width * y] = Color.Lerp(leftColor0, rightColor0, ((float)x / (width - 1)));
-                            break;
-                        case 3:
-                            Color leftColor1 = Color.Lerp(backgroundColors[0], backgroundColors[1], ((float)y / (width - 1)));
-                            Color rightColor1 = Color.Lerp(backgroundColors[1], backgroundColors[2], ((float)y / (height - 1)));
-                            color[x + width * y] = Color.Lerp(leftColor1, rightColor1, ((float)x / (width - 1)));
-                            break;
-                        case 2:
-                            color[x + width * y] = Color.Lerp(backgroundColors[0], backgroundColors[1], ((float)x / (width - 1)));
-                            break;
-                        default:
-                            color[x + width * y] = backgroundColors[0];
-                            break;
-                    }
-                    color[x + width * y] = ColorBorder(x, y, width, height, borderThickness, borderRadius, borderShadow, color[x + width * y], borderColors, initialShadowIntensity, finalShadowIntensity);
-                    color[x + width * y].A *= (byte)(transparency * 255);
-                }
-            }
-
-            texture.SetData<Color>(color);
-        }
-
-        public void DrawBackGroundRectangle()
-        {
-            SpriteBatch spriteBatch = Game1.instance.SpriteBatch;
-            spriteBatch.Draw(texture, new Vector2(Game1.instance.Width * 0.05f, Game1.instance.Height * .70f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.425f), (int)(Game1.instance.Height * .25f)), Color.White);
-            spriteBatch.Draw(texture, new Vector2(Game1.instance.Width * 0.5f, Game1.instance.Height * .70f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.425f), (int)(Game1.instance.Height * .25f)), Color.White);
         }
 
         public void draw()
@@ -246,9 +130,116 @@ namespace DarkEmpire
                 }
             }
 
-            DrawBackGroundRectangle();
+            /*Menu paused waiting for user input*/
+            if (paused && saveAttack == null)
+            {
 
-            PlayingState.heroParty.draw();
+                shadowText(spriteBatch, "->", new Vector2(Game1.instance.Width * .05f , Game1.instance.Height * .8f), statusSize * 1.5f);
+                shadowText(spriteBatch, "->", new Vector2(Game1.instance.Width * .05f + Game1.instance.Width * .30f*heroTurn, Game1.instance.Height * .025f), statusSize);
+
+                if (KeyboardInput.inputstate.IsKeyPressed(Keys.Enter, null, out KeyboardInput.controlIndex))
+                {
+                    AddAttack();
+                    paused = false;
+                    heroTurn += 1;
+                    if (heroTurn == 3)
+                        heroTurn = 0;
+                }
+            }
+
+            shadowText(spriteBatch, "Attack", new Vector2(Game1.instance.Width * .08f, Game1.instance.Height * .8f), statusSize*1.5f);
+            shadowText(spriteBatch, "Item", new Vector2(Game1.instance.Width * .08f, Game1.instance.Height * .85f), statusSize*1.5f);
+            shadowText(spriteBatch, "Wait", new Vector2(Game1.instance.Width * .08f, Game1.instance.Height * .90f), statusSize*1.5f);
+
+
+            /* Names at the top*/
+            shadowText(spriteBatch, HeroParty.theHero[0].name, new Vector2(Game1.instance.Width * .08f, Game1.instance.Height * .025f), statusSize);
+            shadowText(spriteBatch, HeroParty.theHero[1].name, new Vector2(Game1.instance.Width * .38f, Game1.instance.Height * .025f), statusSize);
+            shadowText(spriteBatch, HeroParty.theHero[2].name, new Vector2(Game1.instance.Width * .68f, Game1.instance.Height * .025f), statusSize);
+
+            /*Hero One Health Bar*/
+            //[Solid health bars]
+            spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .08f, Game1.instance.Height * .10f), new Rectangle(0, 0, (int)(HeroParty.theHero[0].health * Game1.instance.Width * 0.16f + 1), 25), Color.Green);
+            spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .08f + Game1.instance.Width * 0.16f * HeroParty.theHero[0].health, Game1.instance.Height * .10f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f * (1.0f - HeroParty.theHero[0].health)), 25), Color.Red);
+
+            //[Outline of health bars]
+            spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .08f, Game1.instance.Height * .10f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f), 2), Color.Black); //top
+            spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .08f, Game1.instance.Height * .10f), new Rectangle(0, 0, 2, 25), Color.Black); //left
+            spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .08f + Game1.instance.Width * 0.16f - 2, Game1.instance.Height * .10f), new Rectangle(0, 0, 2, 25), Color.Black); //right
+            spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .08f, Game1.instance.Height * .10f + 25 - 2), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f), 2), Color.Black); //bottom
+
+            /*Hero Two Health Bar*/
+            //[Solid health bars]
+            spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .38f, Game1.instance.Height * .10f), new Rectangle(0, 0, (int)(HeroParty.theHero[0].health * Game1.instance.Width * 0.16f + 1), 25), Color.Green);
+            spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .38f + Game1.instance.Width * 0.16f * HeroParty.theHero[0].health, Game1.instance.Height * .10f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f * (1.0f - HeroParty.theHero[0].health)), 25), Color.Red);
+
+            //[Outline of health bars]
+            spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .38f, Game1.instance.Height * .10f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f), 2), Color.Black); //top
+            spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .38f, Game1.instance.Height * .10f), new Rectangle(0, 0, 2, 25), Color.Black); //left
+            spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .38f + Game1.instance.Width * 0.16f - 2, Game1.instance.Height * .10f), new Rectangle(0, 0, 2, 25), Color.Black); //right
+            spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .38f, Game1.instance.Height * .10f + 25 - 2), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f), 2), Color.Black); //bottom
+
+            /*Hero Three Health Bar*/
+            //[Solid health bars]
+            spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .68f, Game1.instance.Height * .10f), new Rectangle(0, 0, (int)(HeroParty.theHero[0].health * Game1.instance.Width * 0.16f + 1), 25), Color.Green);
+            spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .68f + Game1.instance.Width * 0.16f * HeroParty.theHero[0].health, Game1.instance.Height * .10f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f * (1.0f - HeroParty.theHero[0].health)), 25), Color.Red);
+
+            //[Outline of health bars]
+            spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .68f, Game1.instance.Height * .10f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f), 2), Color.Black); //top
+            spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .68f, Game1.instance.Height * .10f), new Rectangle(0, 0, 2, 25), Color.Black); //left
+            spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .68f + Game1.instance.Width * 0.16f - 2, Game1.instance.Height * .10f), new Rectangle(0, 0, 2, 25), Color.Black); //right
+            spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .68f, Game1.instance.Height * .10f + 25 - 2), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f), 2), Color.Black); //bottom
+
+            spriteBatch.Draw(PlayingState.instance.npcSprite, HeroParty.theHero[0].position, HeroParty.theHero[0].rect, Color.White, 0.0f, Vector2.Zero, HeroParty.theHero[0].scale, SpriteEffects.None, 0.0f);
+            spriteBatch.Draw(PlayingState.instance.npcSprite, HeroParty.theEnemy[0].position, HeroParty.theEnemy[0].rect, Color.White, 0.0f, Vector2.Zero, HeroParty.theEnemy[0].scale, SpriteEffects.None, 0.0f);
+
+            /*Draw battle bar*/
+            spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .9f, Game1.instance.Height * .10f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.025f), (int)(Game1.instance.Height * 0.8f)), Color.White); //top
+
+            for (int i = 0; i < battleQueue.Count; i++)
+            {
+                int[] attack = battleQueue[i];
+                if (attack[0] == 0)
+                {
+                   shadowText(spriteBatch, "Melee:" + i, new Vector2(Game1.instance.Width * .9f, Game1.instance.Height * .90f - (float)attack[1] / 5000f * Game1.instance.Height * .80f), statusSize * 3.0f);
+                }
+            }
+
+            /*Draw the Hero Sprites*/
+
+            for (int i = 0; i < 3; i++)
+            {
+                spriteBatch.Draw(PlayingState.instance.npcSprite, HeroParty.theHero[i].position, HeroParty.theHero[i].rect, Color.White, 0.0f, Vector2.Zero, HeroParty.theHero[i].scale, SpriteEffects.None, 0.0f);
+            }
+
+            /* Draw the Enemy Sprites*/
+
+            for (int i = 0; i < 5; i++)
+            {
+                spriteBatch.Draw(PlayingState.instance.npcSprite, HeroParty.theEnemy[i].position, HeroParty.theEnemy[i].rect, Color.White, 0.0f, Vector2.Zero, HeroParty.theEnemy[i].scale, SpriteEffects.None, 0.0f);
+                HeroParty.theEnemy[i].DrawHealthAboveCharacter();
+            }
+
+        }
+
+        public static void AddAttack()
+        {
+            int[] attack = new int[4];
+            attack[0] = 0; //which skill
+            attack[1] = 1000; //time remaining
+            attack[2] = heroTurn; //which npc doing the attack
+            attack[3] = 1; //which enemy to hit
+            battleQueue.Add(attack);
+        }
+
+        public void shadowText(SpriteBatch spriteBatch, String text, Vector2 position, Vector2 statusSize)
+        {
+            spriteBatch.DrawString(Menu.menuText, text, position + new Vector2(1, 1), Color.White, 0.0f, new Vector2(0, 0), new Vector2(Game1.instance.Width * 0.08f / statusSize.X, Game1.instance.Width * 0.08f / statusSize.X), SpriteEffects.None, 0.0f);
+            spriteBatch.DrawString(Menu.menuText, text, position + new Vector2(1, -1), Color.White, 0.0f, new Vector2(0, 0), new Vector2(Game1.instance.Width * 0.08f / statusSize.X, Game1.instance.Width * 0.08f / statusSize.X), SpriteEffects.None, 0.0f);
+            spriteBatch.DrawString(Menu.menuText, text, position + new Vector2(-1, 1), Color.White, 0.0f, new Vector2(0, 0), new Vector2(Game1.instance.Width * 0.08f / statusSize.X, Game1.instance.Width * 0.08f / statusSize.X), SpriteEffects.None, 0.0f);
+            spriteBatch.DrawString(Menu.menuText, text, position + new Vector2(-1, -1), Color.White, 0.0f, new Vector2(0, 0), new Vector2(Game1.instance.Width * 0.08f / statusSize.X, Game1.instance.Width * 0.08f / statusSize.X), SpriteEffects.None, 0.0f);
+            
+            spriteBatch.DrawString(Menu.menuText, text, position, Color.Black, 0.0f, new Vector2(0, 0), new Vector2(Game1.instance.Width * 0.08f / statusSize.X, Game1.instance.Width * 0.08f / statusSize.X), SpriteEffects.None, 0.0f);
         }
     }
 }
