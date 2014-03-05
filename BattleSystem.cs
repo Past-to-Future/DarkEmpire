@@ -21,6 +21,7 @@ namespace DarkEmpire
         SpriteBatch spriteBatch = Game1.instance.SpriteBatch;
         public bool activeBattle;
         static List<int[]> battleQueue = new List<int[]>();
+        static List<int[]> attackQueue = new List<int[]>();
         TmxMap battlemap;
         public Thread battleThread;
         public Thread attackThread;
@@ -56,9 +57,10 @@ namespace DarkEmpire
          {
              while (true)
              {
-                 /*Character needs to show attack animation*/
-                 if (saveAttack != null)
+                 if (attackQueue.Count > 0)
                  {
+                     int i = 0;
+                     saveAttack = attackQueue[i];
                      float dist = Vector2.Distance(HeroParty.theHero[saveAttack[2]].position, HeroParty.theEnemy[saveAttack[3]].position);
                      if (dist > 64)
                      {
@@ -84,10 +86,11 @@ namespace DarkEmpire
                              HeroParty.theHero[saveAttack[2]].position = new Vector2(Game1.instance.Width * 0.1f, Game1.instance.Height * .4f);
                          else
                              HeroParty.theHero[saveAttack[2]].position = new Vector2(Game1.instance.Width * 0.2f, Game1.instance.Height * .6f);
-                         saveAttack = null;
+                         attackQueue.Remove(attackQueue[i]);
                      }
                  }
-                 
+                 else
+                     paused = true;
                  Thread.Sleep(50);
              }
          }
@@ -109,15 +112,15 @@ namespace DarkEmpire
                         if (battleQueue[i][1] <= 0)
                         {
                             saveAttack = battleQueue[i];
+                            attackQueue.Add(battleQueue[i]);
                             battleQueue.Remove(battleQueue[i]);
-                            paused = true;
                         }
                     }
                 }
                 Thread.Sleep(100);
             }
         }
-
+        bool toon0, toon1, toon2;
         public void draw()
         {
             Game1.instance.GraphicsDevice.Clear(Color.White);//new Color(rand.Next(255), rand.Next(255), rand.Next(255)));
@@ -130,22 +133,47 @@ namespace DarkEmpire
                 }
             }
 
-            /*Menu paused waiting for user input*/
-            if (paused && saveAttack == null)
+
+            shadowText(spriteBatch, "->", new Vector2(Game1.instance.Width * .05f , Game1.instance.Height * .8f), statusSize * 1.5f);
+            shadowText(spriteBatch, "->", new Vector2(Game1.instance.Width * .05f + Game1.instance.Width * .30f*heroTurn, Game1.instance.Height * .025f), statusSize);
+
+            if (KeyboardInput.inputstate.IsKeyPressed(Keys.Enter, null, out KeyboardInput.controlIndex))
             {
-
-                shadowText(spriteBatch, "->", new Vector2(Game1.instance.Width * .05f , Game1.instance.Height * .8f), statusSize * 1.5f);
-                shadowText(spriteBatch, "->", new Vector2(Game1.instance.Width * .05f + Game1.instance.Width * .30f*heroTurn, Game1.instance.Height * .025f), statusSize);
-
-                if (KeyboardInput.inputstate.IsKeyPressed(Keys.Enter, null, out KeyboardInput.controlIndex))
+                if (paused)
                 {
                     AddAttack();
-                    paused = false;
-                    heroTurn += 1;
-                    if (heroTurn == 3)
-                        heroTurn = 0;
                 }
             }
+
+
+
+            int[] checkList;
+
+            toon0 = false;
+            toon1 = false;
+            toon2 = false;
+
+            for (int i = 0; i < battleQueue.Count; i++)
+            {
+                checkList = battleQueue[i];
+
+                if (checkList[2] == 0)
+                    toon0 = true;
+                else if (checkList[2] == 1)
+                    toon1 = true;
+                else if (checkList[2] == 2)
+                    toon2 = true;
+            }
+
+            if (toon0 == false)
+                heroTurn = 0;
+            else if (toon1 == false)
+                heroTurn = 1;
+            else if (toon2 == false)
+                heroTurn = 2;
+
+            if (toon0 && toon1 && toon2)
+                paused = false;
 
             shadowText(spriteBatch, "Attack", new Vector2(Game1.instance.Width * .08f, Game1.instance.Height * .8f), statusSize*1.5f);
             shadowText(spriteBatch, "Item", new Vector2(Game1.instance.Width * .08f, Game1.instance.Height * .85f), statusSize*1.5f);
