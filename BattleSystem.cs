@@ -28,8 +28,10 @@ namespace DarkEmpire
         String status = "Status";
         Vector2 statusSize;
         bool paused = true;
+        bool doBattlepause = false;
         int[] saveAttack = null;
         static int heroTurn = 0;
+        static Random rand = new Random();
 
         public BattleSystem()
         {
@@ -50,14 +52,13 @@ namespace DarkEmpire
 
         }
 
-        Random rand = new Random();
         float moving = 0f;
 
         private void DoAttack()
          {
              while (true)
              {
-                 if (attackQueue.Count > 0)
+                 if (attackQueue.Count > 0 && doBattlepause)
                  {
                      int i = 0;
                      saveAttack = attackQueue[i];
@@ -78,7 +79,7 @@ namespace DarkEmpire
                          KeyboardInput.hitInstance.Stop();
                          KeyboardInput.hitInstance.Play();
 
-                         Thread.Sleep(1500);
+                         Thread.Sleep(1250);
 
                          if (saveAttack[2] == 0)
                              HeroParty.theHero[saveAttack[2]].position = new Vector2(Game1.instance.Width * 0.2f, Game1.instance.Height * .2f);
@@ -86,12 +87,15 @@ namespace DarkEmpire
                              HeroParty.theHero[saveAttack[2]].position = new Vector2(Game1.instance.Width * 0.1f, Game1.instance.Height * .4f);
                          else
                              HeroParty.theHero[saveAttack[2]].position = new Vector2(Game1.instance.Width * 0.2f, Game1.instance.Height * .6f);
+                         Thread.Sleep(250);
                          attackQueue.Remove(attackQueue[i]);
                      }
                  }
                  else
-                     paused = true;
-                 Thread.Sleep(50);
+                 {
+                     doBattlepause = false;
+                 }
+                 Thread.Sleep(25);
              }
          }
 
@@ -100,26 +104,31 @@ namespace DarkEmpire
         {
             while (true)
             {
-                if (paused)
+                if (paused || doBattlepause)
                 {
 
                 }
                 else
                 {
+                    if (battleQueue.Count == 0)
+                        paused = true;
+
                     for (int i = 0; i < battleQueue.Count; i++)
                     {
-                        battleQueue[i][1] -= 100;
+                        battleQueue[i][1] -= 25;
                         if (battleQueue[i][1] <= 0)
                         {
                             saveAttack = battleQueue[i];
                             attackQueue.Add(battleQueue[i]);
                             battleQueue.Remove(battleQueue[i]);
+                            doBattlepause = true;
                         }
                     }
                 }
-                Thread.Sleep(100);
+                Thread.Sleep(25);
             }
         }
+
         bool toon0, toon1, toon2;
         public void draw()
         {
@@ -165,15 +174,25 @@ namespace DarkEmpire
                     toon2 = true;
             }
 
-            if (toon0 == false)
-                heroTurn = 0;
-            else if (toon1 == false)
-                heroTurn = 1;
-            else if (toon2 == false)
+            if (toon2 == false)
+            {
                 heroTurn = 2;
+                paused = true;
+            }
+            else if (toon1 == false)
+            {
+                heroTurn = 1;
+                paused = true;
+            }
+            else if (toon0 == false)
+            {
+                heroTurn = 0;
+                paused = true;
+            }
 
             if (toon0 && toon1 && toon2)
                 paused = false;
+
 
             shadowText(spriteBatch, "Attack", new Vector2(Game1.instance.Width * .08f, Game1.instance.Height * .8f), statusSize*1.5f);
             shadowText(spriteBatch, "Item", new Vector2(Game1.instance.Width * .08f, Game1.instance.Height * .85f), statusSize*1.5f);
@@ -254,7 +273,7 @@ namespace DarkEmpire
         {
             int[] attack = new int[4];
             attack[0] = 0; //which skill
-            attack[1] = 1000; //time remaining
+            attack[1] = rand.Next(5000); //time remaining
             attack[2] = heroTurn; //which npc doing the attack
             attack[3] = 1; //which enemy to hit
             battleQueue.Add(attack);
