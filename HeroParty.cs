@@ -45,11 +45,11 @@ namespace DarkEmpire
             theEnemy[3] = new Npc(5, 2, new Vector2(Game1.instance.Width * 0.7f, Game1.instance.Height * .4f), 1.0f);
             theEnemy[4] = new Npc(6, 2, new Vector2(Game1.instance.Width * 0.7f, Game1.instance.Height * .6f), 1.0f);
 
-            theEnemy[0].health = 0.05f;
-            theEnemy[1].health = 0.15f;
-            theEnemy[2].health = 0.35f;
-            theEnemy[3].health = 0.25f;
-            theEnemy[4].health = 0.45f;
+            theEnemy[0].health = 1.0f;
+            theEnemy[1].health = 1.0f;
+            theEnemy[2].health = 1.0f;
+            theEnemy[3].health = 1.0f;
+            theEnemy[4].health = 1.0f;
 
             theEnemy[0].setPartyPosition(0);
             theEnemy[1].setPartyPosition(1);

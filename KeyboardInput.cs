@@ -39,7 +39,7 @@ namespace DarkEmpire
             soundEngineInstance = soundEngine.CreateInstance();
             hitInstance = hit.CreateInstance();
             heroTheme = Game1.instance.Content.Load<Song>("Heroes Theme_0.wav");
-            MediaPlayer.Play(heroTheme);
+            //MediaPlayer.Play(heroTheme);
         }
 
         int count = 0;

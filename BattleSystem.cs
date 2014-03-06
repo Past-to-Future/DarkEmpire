@@ -16,21 +16,25 @@ namespace DarkEmpire
 {
     public class BattleSystem
     {
-        public static Texture2D pixel = new Texture2D(Game1.instance.GraphicsDevice, 1, 1); //create 1x1 pixel texture
-        public static SpriteFont battleText;
-        SpriteBatch spriteBatch = Game1.instance.SpriteBatch;
-        public bool activeBattle;
-        static List<int[]> battleQueue = new List<int[]>();
-        static List<int[]> attackQueue = new List<int[]>();
         TmxMap battlemap;
-        public Thread battleThread;
-        public Thread attackThread;
-        String status = "Status";
+        public static Texture2D pixel = new Texture2D(Game1.instance.GraphicsDevice, 1, 1); //create 1x1 pixel texture
+        public static SpriteFont battleText; //placeholder if text is different than menu (menu currently used)
+        SpriteBatch spriteBatch = Game1.instance.SpriteBatch;
+        public bool activeBattle; //Displays the battlefield
+        static List<int[]> battleQueue = new List<int[]>(); //loads attacks onto timer, if timer runs out they move to attackQueue
+        static List<int[]> attackQueue = new List<int[]>(); //responsible to show the attack
+        public Thread battleThread, attackThread; 
+        String status = "Status"; //using the size of the word 'status' as scaling, weird but keeps stuff constant
         Vector2 statusSize;
-        bool paused = true;
-        bool doBattlepause = false;
-        int[] saveAttack = null;
-        static int heroTurn = 0;
+
+        bool paused = true; //player needs to input an attack because a character is eligible to attack
+        bool doBattlepause = false; //semophore to handle the two threads
+        bool selectEnemy = false, selectItem = false, selectWait = false; //to know when player wants to select specifically the enemy to attack
+
+        static int heroTurn = 0; //which hero gets to attack now
+        static int Enemyselection = 0; //who we gonna kill with our attacks
+        static int battleMenuSelection = 0; //determines if we are using an attack, item, or waiting.
+
         static Random rand = new Random();
 
         public BattleSystem()
@@ -60,35 +64,48 @@ namespace DarkEmpire
              {
                  if (attackQueue.Count > 0 && doBattlepause)
                  {
+
                      int i = 0;
-                     saveAttack = attackQueue[i];
-                     float dist = Vector2.Distance(HeroParty.theHero[saveAttack[2]].position, HeroParty.theEnemy[saveAttack[3]].position);
-                     if (dist > 64)
+                     int[] saveAttack = attackQueue[i];
+
+                     if (saveAttack[0] == 1)
                      {
-                         moving += 4 * 0.16f / dist;
-                         HeroParty.theHero[saveAttack[2]].position = Vector2.Lerp(HeroParty.theHero[saveAttack[2]].position, HeroParty.theEnemy[saveAttack[3]].position, moving);
+                         Thread.Sleep(250);
+                         attackQueue.Remove(attackQueue[i]);
                      }
                      else
                      {
-                         KeyboardInput.hitInstance.Stop();
-                         KeyboardInput.hitInstance.Play();
-                         Thread.Sleep(200);
-                         KeyboardInput.hitInstance.Stop();
-                         KeyboardInput.hitInstance.Play();
-                         Thread.Sleep(200);
-                         KeyboardInput.hitInstance.Stop();
-                         KeyboardInput.hitInstance.Play();
 
-                         Thread.Sleep(1250);
 
-                         if (saveAttack[2] == 0)
-                             HeroParty.theHero[saveAttack[2]].position = new Vector2(Game1.instance.Width * 0.2f, Game1.instance.Height * .2f);
-                         else if (saveAttack[2] == 1)
-                             HeroParty.theHero[saveAttack[2]].position = new Vector2(Game1.instance.Width * 0.1f, Game1.instance.Height * .4f);
+                         float dist = Vector2.Distance(HeroParty.theHero[saveAttack[2]].position, HeroParty.theEnemy[saveAttack[3]].position);
+                         if (dist > 64)
+                         {
+                             moving += 4 * 0.16f / dist;
+                             HeroParty.theHero[saveAttack[2]].position = Vector2.Lerp(HeroParty.theHero[saveAttack[2]].position, HeroParty.theEnemy[saveAttack[3]].position, moving);
+                         }
                          else
-                             HeroParty.theHero[saveAttack[2]].position = new Vector2(Game1.instance.Width * 0.2f, Game1.instance.Height * .6f);
-                         Thread.Sleep(250);
-                         attackQueue.Remove(attackQueue[i]);
+                         {
+
+                             KeyboardInput.hitInstance.Stop();
+                             KeyboardInput.hitInstance.Play();
+                             Thread.Sleep(200);
+                             KeyboardInput.hitInstance.Stop();
+                             KeyboardInput.hitInstance.Play();
+                             Thread.Sleep(200);
+                             KeyboardInput.hitInstance.Stop();
+                             KeyboardInput.hitInstance.Play();
+
+                             Thread.Sleep(1250);
+
+                             if (saveAttack[2] == 0)
+                                 HeroParty.theHero[saveAttack[2]].position = new Vector2(Game1.instance.Width * 0.2f, Game1.instance.Height * .2f);
+                             else if (saveAttack[2] == 1)
+                                 HeroParty.theHero[saveAttack[2]].position = new Vector2(Game1.instance.Width * 0.1f, Game1.instance.Height * .4f);
+                             else
+                                 HeroParty.theHero[saveAttack[2]].position = new Vector2(Game1.instance.Width * 0.2f, Game1.instance.Height * .6f);
+                             Thread.Sleep(250);
+                             attackQueue.Remove(attackQueue[i]);
+                         }
                      }
                  }
                  else
@@ -106,7 +123,7 @@ namespace DarkEmpire
             {
                 if (paused || doBattlepause)
                 {
-
+                    //doing nothing! herp derp
                 }
                 else
                 {
@@ -118,7 +135,6 @@ namespace DarkEmpire
                         battleQueue[i][1] -= 25;
                         if (battleQueue[i][1] <= 0)
                         {
-                            saveAttack = battleQueue[i];
                             attackQueue.Add(battleQueue[i]);
                             battleQueue.Remove(battleQueue[i]);
                             doBattlepause = true;
@@ -143,17 +159,66 @@ namespace DarkEmpire
             }
 
 
-            shadowText(spriteBatch, "->", new Vector2(Game1.instance.Width * .05f , Game1.instance.Height * .8f), statusSize * 1.5f);
+            shadowText(spriteBatch, "->", new Vector2(Game1.instance.Width * .05f, Game1.instance.Height * .8f + Game1.instance.Height * .05f * battleMenuSelection), statusSize * 1.5f);
             shadowText(spriteBatch, "->", new Vector2(Game1.instance.Width * .05f + Game1.instance.Width * .30f*heroTurn, Game1.instance.Height * .025f), statusSize);
+
+            if (selectEnemy)
+            {
+                shadowText(spriteBatch, "->", HeroParty.theEnemy[Enemyselection].position - new Vector2(Game1.instance.Width * .05f, 0) , statusSize * 1.5f);
+            }
+
+            if (selectItem)
+            {
+                shadowText(spriteBatch, "Oak: Red! This isn't the time to use that yet!", new Vector2(Game1.instance.Width * .15f, Game1.instance.Height * .8f + Game1.instance.Height * .05f * battleMenuSelection), statusSize * 2.0f);
+            }
 
             if (KeyboardInput.inputstate.IsKeyPressed(Keys.Enter, null, out KeyboardInput.controlIndex))
             {
                 if (paused)
                 {
-                    AddAttack();
+                    if (selectEnemy)
+                    {
+                        AddAttack(0);
+                        selectEnemy = false;
+                    }
+                    else if (battleMenuSelection == 0)
+                        selectEnemy = true;
+                    else if (battleMenuSelection == 1)
+                        selectItem = !selectItem;
+                    else if (battleMenuSelection == 2)
+                        AddAttack(1);
+
+                    Enemyselection = 0;
                 }
             }
 
+            else if (KeyboardInput.inputstate.IsKeyPressed(Keys.Down, null, out KeyboardInput.controlIndex))
+            {
+                if (paused && selectEnemy)
+                {
+                    Enemyselection = (Enemyselection + 1) % 5;
+                }
+                else if (paused && selectItem == false)
+                {
+                    battleMenuSelection = (battleMenuSelection + 1) % 3 ;
+                }
+            }
+
+            else if (KeyboardInput.inputstate.IsKeyPressed(Keys.Up, null, out KeyboardInput.controlIndex))
+            {
+                if (paused && selectEnemy)
+                {
+                    Enemyselection = (Enemyselection - 1) % 5;
+                    if (Enemyselection < 0)
+                        Enemyselection = 0;
+                }
+                else if (paused && selectItem == false)
+                {
+                    battleMenuSelection = (battleMenuSelection - 1) % 3;
+                    if (battleMenuSelection < 0)
+                        battleMenuSelection = 0;
+                }
+            }
 
 
             int[] checkList;
@@ -250,6 +315,10 @@ namespace DarkEmpire
                 {
                    shadowText(spriteBatch, "Melee:" + i, new Vector2(Game1.instance.Width * .9f, Game1.instance.Height * .90f - (float)attack[1] / 5000f * Game1.instance.Height * .80f), statusSize * 3.0f);
                 }
+                else if (attack[0] == 1)
+                {
+                    shadowText(spriteBatch, "Wait:" + i, new Vector2(Game1.instance.Width * .9f, Game1.instance.Height * .90f - (float)attack[1] / 5000f * Game1.instance.Height * .80f), statusSize * 3.0f);
+                }
             }
 
             /*Draw the Hero Sprites*/
@@ -269,13 +338,13 @@ namespace DarkEmpire
 
         }
 
-        public static void AddAttack()
+        public static void AddAttack(int attackNumber)
         {
             int[] attack = new int[4];
-            attack[0] = 0; //which skill
+            attack[0] = attackNumber; //which skill
             attack[1] = rand.Next(5000); //time remaining
             attack[2] = heroTurn; //which npc doing the attack
-            attack[3] = 1; //which enemy to hit
+            attack[3] = Enemyselection; //which enemy to hit
             battleQueue.Add(attack);
         }
 
