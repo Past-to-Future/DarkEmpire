@@ -12,6 +12,8 @@ using System.Reflection;
 using System.Diagnostics;
 using System.Threading;
 using System.Collections;
+
+
 namespace DarkEmpire
 {
     public class BattleSystem
@@ -29,13 +31,26 @@ namespace DarkEmpire
 
         bool paused = true; //player needs to input an attack because a character is eligible to attack
         bool doBattlepause = false; //semophore to handle the two threads
-        bool selectEnemy = false, selectItem = false, selectWait = false; //to know when player wants to select specifically the enemy to attack
-
+        bool selectEnemy = false, selectItem = false; //to know when player wants to select specifically the enemy to attack
+        bool[] npcAttackSet = new bool[3];
         static int heroTurn = 0; //which hero gets to attack now
         static int Enemyselection = 0; //who we gonna kill with our attacks
         static int battleMenuSelection = 0; //determines if we are using an attack, item, or waiting.
 
         static Random rand = new Random();
+
+        /*Trying to reduce computations on the menu*/
+        /*Probably won't make a difference.*/
+        static float Width = Game1.instance.Width;
+        static float Height = Game1.instance.Height;
+
+        float pctH_08 = Height * .08f;
+        float pctH_10 = Height * .10f;
+        float pctW_05 = Width * .05f;
+        float pctW_08 = Width * .08f;
+        float pctW_10 = Width * .10f;
+        float pctW_20 = Width * .20f;
+        float pctW_90 = Width * .90f;
 
         public BattleSystem()
         {
@@ -104,11 +119,11 @@ namespace DarkEmpire
                              Thread.Sleep(1250);
 
                              if (saveAttack[2] == 0)
-                                 HeroParty.theHero[saveAttack[2]].position = new Vector2(Game1.instance.Width * 0.2f, Game1.instance.Height * .2f);
+                                 HeroParty.theHero[saveAttack[2]].position = new Vector2(pctW_20, Height * .2f);
                              else if (saveAttack[2] == 1)
-                                 HeroParty.theHero[saveAttack[2]].position = new Vector2(Game1.instance.Width * 0.1f, Game1.instance.Height * .4f);
+                                 HeroParty.theHero[saveAttack[2]].position = new Vector2(pctW_10, Height * .4f);
                              else
-                                 HeroParty.theHero[saveAttack[2]].position = new Vector2(Game1.instance.Width * 0.2f, Game1.instance.Height * .6f);
+                                 HeroParty.theHero[saveAttack[2]].position = new Vector2(pctW_20, Height * .6f);
                              Thread.Sleep(250);
                              attackQueue.Remove(attackQueue[i]);
                          }
@@ -151,10 +166,9 @@ namespace DarkEmpire
             }
         }
 
-        bool toon0, toon1, toon2;
         public void draw()
         {
-            Game1.instance.GraphicsDevice.Clear(Color.White);//new Color(rand.Next(255), rand.Next(255), rand.Next(255)));
+            Game1.instance.GraphicsDevice.Clear(Color.White);
             foreach (TmxLayer layer in battlemap.Layers)
             {
                 foreach (TmxLayerTile tile in layer.Tiles)
@@ -165,17 +179,17 @@ namespace DarkEmpire
             }
 
 
-            shadowText(spriteBatch, "->", new Vector2(Game1.instance.Width * .05f, Game1.instance.Height * .8f + Game1.instance.Height * .05f * battleMenuSelection), statusSize * 1.5f);
-            shadowText(spriteBatch, "->", new Vector2(Game1.instance.Width * .05f + Game1.instance.Width * .30f*heroTurn, Game1.instance.Height * .025f), statusSize);
+            shadowText(spriteBatch, "->", new Vector2(pctW_05, Height * .8f + Height * .05f * battleMenuSelection), statusSize * 1.5f);
+            shadowText(spriteBatch, "->", new Vector2(pctW_05 + Width * .30f * heroTurn, Height * .025f), statusSize);
 
             if (selectEnemy)
             {
-                shadowText(spriteBatch, "->", HeroParty.theEnemy[Enemyselection].position - new Vector2(Game1.instance.Width * .05f, 0) , statusSize * 1.5f);
+                shadowText(spriteBatch, "->", HeroParty.theEnemy[Enemyselection].position - new Vector2(pctW_05, 0), statusSize * 1.5f);
             }
 
             if (selectItem)
             {
-                shadowText(spriteBatch, "Oak: Red! This isn't the time to use that yet!", new Vector2(Game1.instance.Width * .15f, Game1.instance.Height * .8f + Game1.instance.Height * .05f * battleMenuSelection), statusSize * 2.0f);
+                shadowText(spriteBatch, "Oak: Red! This isn't the time to use that yet!", new Vector2(Width * .15f, Height * .8f + Height * .05f * battleMenuSelection), statusSize * 2.0f);
             }
 
             if (KeyboardInput.inputstate.IsKeyPressed(Keys.Enter, null, out KeyboardInput.controlIndex))
@@ -229,79 +243,78 @@ namespace DarkEmpire
 
             int[] checkList;
 
-            toon0 = false;
-            toon1 = false;
-            toon2 = false;
+            npcAttackSet[0] = npcAttackSet[1] = npcAttackSet[2] = false;
 
             for (int i = 0; i < battleQueue.Count; i++)
             {
                 checkList = battleQueue[i];
 
                 if (checkList[2] == 0)
-                    toon0 = true;
+                    npcAttackSet[0] = true;
                 else if (checkList[2] == 1)
-                    toon1 = true;
+                    npcAttackSet[1] = true;
                 else if (checkList[2] == 2)
-                    toon2 = true;
+                    npcAttackSet[2] = true;
             }
 
-            if (toon2 == false)
+            if (!npcAttackSet[2])
             {
                 heroTurn = 2;
                 paused = true;
             }
-            else if (toon1 == false)
+            else if (!npcAttackSet[1])
             {
                 heroTurn = 1;
                 paused = true;
             }
-            else if (toon0 == false)
+            else if (!npcAttackSet[0])
             {
                 heroTurn = 0;
                 paused = true;
             }
 
-            if (toon0 && toon1 && toon2)
+            if (npcAttackSet[0] && npcAttackSet[1] && npcAttackSet[2])
                 paused = false;
 
 
-            shadowText(spriteBatch, "Attack", new Vector2(Game1.instance.Width * .08f, Game1.instance.Height * .8f), statusSize*1.5f);
-            shadowText(spriteBatch, "Item", new Vector2(Game1.instance.Width * .08f, Game1.instance.Height * .85f), statusSize*1.5f);
-            shadowText(spriteBatch, "Wait", new Vector2(Game1.instance.Width * .08f, Game1.instance.Height * .90f), statusSize*1.5f);
+            shadowText(spriteBatch, "Attack", new Vector2(pctW_08, Height * .8f), statusSize * 1.5f);
+            shadowText(spriteBatch, "Item", new Vector2(pctW_08, Height * .85f), statusSize * 1.5f);
+            shadowText(spriteBatch, "Wait", new Vector2(pctW_08, Height * .90f), statusSize * 1.5f);
 
             for (int i = 0; i < 3; i++)
             {
+                float HealthBarX = pctW_08 + Width * .3f * i; 
                 //[Names at the Top]
-                shadowText(spriteBatch, HeroParty.theHero[i].name, new Vector2(Game1.instance.Width * .08f + Game1.instance.Width * .3f*i, Game1.instance.Height * .025f), statusSize);
+                shadowText(spriteBatch, HeroParty.theHero[i].name, new Vector2(HealthBarX, Game1.instance.Height * .025f), statusSize);
                 
                 //[Solid health bars]
-                spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .08f + Game1.instance.Width * .3f * i, Game1.instance.Height * .10f), new Rectangle(0, 0, (int)((HeroParty.theHero[0].health / HeroParty.theHero[0].MaxHealth()) * Game1.instance.Width * 0.16f + 1), 25), Color.Green);
-                spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .08f + Game1.instance.Width * .3f * i + Game1.instance.Width * 0.16f * HeroParty.theHero[0].health / HeroParty.theHero[0].MaxHealth(), Game1.instance.Height * .10f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f * (1.0f - HeroParty.theHero[0].health)), 25), Color.Red);
+                spriteBatch.Draw(Menu.pixel, new Vector2(HealthBarX, pctH_10), new Rectangle(0, 0, (int)(HeroParty.theHero[i].HealthPercent() * Game1.instance.Width * 0.16f + 1), 25), Color.Green);
+                spriteBatch.Draw(Menu.pixel, new Vector2(HealthBarX + Width * 0.16f * HeroParty.theHero[i].HealthPercent(), pctH_10), new Rectangle(0, 0, (int)(Width * 0.16f * (1.0f - HeroParty.theHero[i].HealthPercent() )), 25), Color.Red);
 
                 //[Outline of health bars]
-                spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .08f + Game1.instance.Width * .3f * i, Game1.instance.Height * .10f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f), 2), Color.Black); //top
-                spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .08f + Game1.instance.Width * .3f * i, Game1.instance.Height * .10f), new Rectangle(0, 0, 2, 25), Color.Black); //left
-                spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .08f + Game1.instance.Width * .3f * i + Game1.instance.Width * 0.16f - 2, Game1.instance.Height * .10f), new Rectangle(0, 0, 2, 25), Color.Black); //right
-                spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .08f + Game1.instance.Width * .3f * i, Game1.instance.Height * .10f + 25 - 2), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f), 2), Color.Black); //bottom
+                spriteBatch.Draw(Menu.pixel, new Vector2(HealthBarX, pctH_10), new Rectangle(0, 0, (int)(Width * 0.16f), 2), Color.Black); //top
+                spriteBatch.Draw(Menu.pixel, new Vector2(HealthBarX, pctH_10), new Rectangle(0, 0, 2, 25), Color.Black); //left
+                spriteBatch.Draw(Menu.pixel, new Vector2(HealthBarX + Width * 0.16f - 2, pctH_10), new Rectangle(0, 0, 2, 25), Color.Black); //right
+                spriteBatch.Draw(Menu.pixel, new Vector2(HealthBarX, pctH_10 + 25 - 2), new Rectangle(0, 0, (int)(Width * 0.16f), 2), Color.Black); //bottom
 
                 //[Draw Hero Sprites]
                 spriteBatch.Draw(PlayingState.instance.npcSprite, HeroParty.theHero[i].position, HeroParty.theHero[i].rect, Color.White, 0.0f, Vector2.Zero, HeroParty.theHero[i].scale, SpriteEffects.None, 0.0f);
 
             }
 
-            /*Draw battle bar*/
-            spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .9f, Game1.instance.Height * .10f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.025f), (int)(Game1.instance.Height * 0.8f)), Color.White); //top
+            //[Draw battle bar]
+            spriteBatch.Draw(Menu.pixel, new Vector2(pctW_90, pctH_10), new Rectangle(0, 0, (int)(Width * 0.025f), (int)(Height*.80f)), Color.White); //top
 
             for (int i = 0; i < battleQueue.Count; i++)
             {
                 int[] attack = battleQueue[i];
                 if (attack[0] == 0)
                 {
-                   shadowText(spriteBatch, "Melee:" + i, new Vector2(Game1.instance.Width * .9f, Game1.instance.Height * .90f - (float)attack[1] / 5000f * Game1.instance.Height * .80f), statusSize * 3.0f);
+                    shadowText(spriteBatch, "Melee:" + i, new Vector2(pctW_90, Height * .90f - (float)attack[1] / 5000f * Game1.instance.Height * .80f), statusSize * 3.0f);
                 }
                 else if (attack[0] == 1)
                 {
-                    shadowText(spriteBatch, "Wait:" + i, new Vector2(Game1.instance.Width * .9f, Game1.instance.Height * .90f - (float)attack[1] / 5000f * Game1.instance.Height * .80f), statusSize * 3.0f);
+                    shadowText(spriteBatch, "Wait:" + i, new Vector2(pctW_90, Height * .90f - (float)attack[1] / 5000f * Game1.instance.Height * .80f), statusSize * 3.0f);
                 }
             }
 
@@ -329,12 +342,12 @@ namespace DarkEmpire
 
         public void shadowText(SpriteBatch spriteBatch, String text, Vector2 position, Vector2 statusSize)
         {
-            spriteBatch.DrawString(Menu.menuText, text, position + new Vector2(1, 1), Color.White, 0.0f, new Vector2(0, 0), new Vector2(Game1.instance.Width * 0.08f / statusSize.X, Game1.instance.Width * 0.08f / statusSize.X), SpriteEffects.None, 0.0f);
-            spriteBatch.DrawString(Menu.menuText, text, position + new Vector2(1, -1), Color.White, 0.0f, new Vector2(0, 0), new Vector2(Game1.instance.Width * 0.08f / statusSize.X, Game1.instance.Width * 0.08f / statusSize.X), SpriteEffects.None, 0.0f);
-            spriteBatch.DrawString(Menu.menuText, text, position + new Vector2(-1, 1), Color.White, 0.0f, new Vector2(0, 0), new Vector2(Game1.instance.Width * 0.08f / statusSize.X, Game1.instance.Width * 0.08f / statusSize.X), SpriteEffects.None, 0.0f);
-            spriteBatch.DrawString(Menu.menuText, text, position + new Vector2(-1, -1), Color.White, 0.0f, new Vector2(0, 0), new Vector2(Game1.instance.Width * 0.08f / statusSize.X, Game1.instance.Width * 0.08f / statusSize.X), SpriteEffects.None, 0.0f);
-            
-            spriteBatch.DrawString(Menu.menuText, text, position, Color.Black, 0.0f, new Vector2(0, 0), new Vector2(Game1.instance.Width * 0.08f / statusSize.X, Game1.instance.Width * 0.08f / statusSize.X), SpriteEffects.None, 0.0f);
+            spriteBatch.DrawString(Menu.menuText, text, position + new Vector2(1, 1), Color.White, 0.0f, new Vector2(0, 0), new Vector2(pctW_08 / statusSize.X, pctW_08 / statusSize.X), SpriteEffects.None, 0.0f);
+            spriteBatch.DrawString(Menu.menuText, text, position + new Vector2(1, -1), Color.White, 0.0f, new Vector2(0, 0), new Vector2(pctW_08 / statusSize.X, pctW_08 / statusSize.X), SpriteEffects.None, 0.0f);
+            spriteBatch.DrawString(Menu.menuText, text, position + new Vector2(-1, 1), Color.White, 0.0f, new Vector2(0, 0), new Vector2(pctW_08 / statusSize.X, pctW_08 / statusSize.X), SpriteEffects.None, 0.0f);
+            spriteBatch.DrawString(Menu.menuText, text, position + new Vector2(-1, -1), Color.White, 0.0f, new Vector2(0, 0), new Vector2(pctW_08 / statusSize.X, pctW_08 / statusSize.X), SpriteEffects.None, 0.0f);
+
+            spriteBatch.DrawString(Menu.menuText, text, position, Color.Black, 0.0f, new Vector2(0, 0), new Vector2(pctW_08 / statusSize.X, pctW_08 / statusSize.X), SpriteEffects.None, 0.0f);
         }
     }
 }

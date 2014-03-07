@@ -29,15 +29,15 @@ namespace DarkEmpire
         public static Texture2D pixel = new Texture2D(Game1.instance.GraphicsDevice, 1, 1); //create 1x1 pixel texture
         SpriteBatch spriteBatch = Game1.instance.SpriteBatch;
 
-        public static int Strength = 1;
-        public static int Vitality = 1;
-        public static int Perception = 1;
-        public static int Agility = 1;
-        public static int Intelligence = 1;
-        public static int Charisma = 1;
-        public static int AP = 1;
-        public static int Level = 1;
-        public static int XP = 1;
+        public int Strength = 1;
+        public int Vitality = 1;
+        public int Perception = 1;
+        public int Agility = 1;
+        public int Intelligence = 1;
+        public int Charisma = 1;
+        public int AP = 1;
+        public int Level = 1;
+        public int XP = 1;
 
         public Npc(int ID, int dFace, Vector2 pos, float s = 1.0f, float role = 0)
         {
@@ -75,7 +75,7 @@ namespace DarkEmpire
             partyPosition = 1;
             name = "dummy";
             //Has to be set to spritesheet and coordinated with artist
-            rect = new Rectangle((characterID - 1) % 4 * 60 * 3 + (frame) * 60, characterID / 5 * 60 * 4 + (directionFace - 1) % 4 * 60, 60, 60);
+            rect = new Rectangle((characterID - 1) % 4 * 180 + (frame) * 60, characterID / 5 * 240 + (directionFace - 1) % 4 * 60, 60, 60);
         }
 
         public void setPartyPosition(int position)
@@ -86,7 +86,7 @@ namespace DarkEmpire
         public void changeDirection(int dFace)
         {
             directionFace = dFace;
-            rect = new Rectangle((characterID - 1) % 4 * 60 * 3 + (frame) * 60, characterID / 5 * 60 * 4 + (directionFace - 1) % 4 * 60, 60, 60);
+            rect = new Rectangle((characterID - 1) % 4 * 180 + (frame) * 60, characterID / 5 * 240 + (directionFace - 1) % 4 * 60, 60, 60);
         }
 
         Random rand = new Random();
@@ -102,20 +102,36 @@ namespace DarkEmpire
 
         public void DrawHealthAboveCharacter(int thicknessOfBorder = 2)
         {
+
             //Green = Health, Red = Lost Health
             //Bar has been set to be drawn above the sprite by 10% of the scaled height of the sprite 
-            spriteBatch.Draw(pixel, new Vector2(position.X, position.Y - 0.1f * 32 * scale), new Rectangle(0, 0, (int)(32 * scale * health / MaxHealth() ), 10), Color.Green);
-            spriteBatch.Draw(pixel, new Vector2(position.X + 32 * scale * health / MaxHealth(), position.Y - 0.1f * 32 * scale), new Rectangle(0, 0, (int)(32 * scale * (1.0f - health / MaxHealth())), 10), Color.Red);
+            spriteBatch.Draw(pixel, new Vector2(position.X, position.Y - 3.2f * scale), new Rectangle(0, 0, (int)(32 * scale * HealthPercent() ), 10), Color.Green);
+            spriteBatch.Draw(pixel, new Vector2(position.X + 32 * scale * HealthPercent(), position.Y - 3.2f * scale), new Rectangle(0, 0, (int)(32 * scale * (1.0f - health / MaxHealth())), 10), Color.Red);
 
-            spriteBatch.Draw(pixel, new Vector2(position.X, position.Y - 0.1f * 32 * scale), new Rectangle(0, 0, (int)(32 * scale), thicknessOfBorder), Color.Black); //top
-            spriteBatch.Draw(pixel, new Vector2(position.X, position.Y - 0.1f * 32 * scale), new Rectangle(0, 0, thicknessOfBorder, 10), Color.Black); //left
-            spriteBatch.Draw(pixel, new Vector2(position.X + 32 * scale - thicknessOfBorder, position.Y - 0.1f * 32 * scale), new Rectangle(0, 0, thicknessOfBorder, 10), Color.Black); //right
-            spriteBatch.Draw(pixel, new Vector2(position.X, position.Y - 0.1f * 32 * scale + 10 - thicknessOfBorder), new Rectangle(0, 0, (int)(32 * scale), thicknessOfBorder), Color.Black); //bottom
+            spriteBatch.Draw(pixel, new Vector2(position.X, position.Y - 3.2f * scale), new Rectangle(0, 0, (int)(32 * scale), thicknessOfBorder), Color.Black); //top
+            spriteBatch.Draw(pixel, new Vector2(position.X, position.Y - 3.2f * scale), new Rectangle(0, 0, thicknessOfBorder, 10), Color.Black); //left
+            spriteBatch.Draw(pixel, new Vector2(position.X + 32 * scale - thicknessOfBorder, position.Y - 3.2f * scale), new Rectangle(0, 0, thicknessOfBorder, 10), Color.Black); //right
+            spriteBatch.Draw(pixel, new Vector2(position.X, position.Y - 3.2f * scale + 10 - thicknessOfBorder), new Rectangle(0, 0, (int)(32 * scale), thicknessOfBorder), Color.Black); //bottom
         }
 
         public float MaxHealth()
         {
             return Level * (7 + 2 * Vitality);
+        }
+
+        public float HealthPercent()
+        {
+            return health / MaxHealth();
+        }
+
+        public float XPPercent()
+        {
+            return XP/200f * (float)Math.Pow(1.5f, Level - 1);
+        }
+
+        public float XPtoLvl()
+        {
+            return 200f * (float)Math.Pow(1.5f, Level - 1);
         }
     }
 }

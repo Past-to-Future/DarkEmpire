@@ -24,6 +24,14 @@ namespace DarkEmpire
         public Texture2D[] c = new Texture2D[3];
         public static SpriteFont menuText;
 
+
+        static float Width = Game1.instance.Width;
+        static float Height = Game1.instance.Height;
+        float pctW_07 = Width * .07f;
+        float pctW_08 = Width * .08f;
+        float pctW_36 = Width * .36f;
+        float seperation = .0625f; //distance between main menu boxes
+
         public Menu()
         {
             activeMenu = false;
@@ -54,7 +62,6 @@ namespace DarkEmpire
             spriteBatch.Draw(white_background, screenRect, Color.White);
             spriteBatch.Draw(background, screenRect, Color.White);
             spriteBatch.Draw(box_background, screenRect, new Color(Color.White, 0.9f));
-            float seperation = .0625f;
 
             String status = "Status";
             Vector2 statusSize = menuText.MeasureString(status);
@@ -76,120 +83,62 @@ namespace DarkEmpire
 
             /* Main Menu Boxes*/
 
-            shadowText(spriteBatch, "Status", new Vector2(Game1.instance.Width * 0.07f, Game1.instance.Height * .18f), statusSize);
-            shadowText(spriteBatch, "Item", new Vector2(Game1.instance.Width * 0.07f, Game1.instance.Height * (.18f + seperation)), statusSize);
-            shadowText(spriteBatch, "Equipment", new Vector2(Game1.instance.Width * 0.07f, Game1.instance.Height * (.18f + 2 * seperation)), statusSize);
-            shadowText(spriteBatch, "Magic", new Vector2(Game1.instance.Width * 0.07f, Game1.instance.Height * (.18f + 3 * seperation)), statusSize);
-            shadowText(spriteBatch, "Abilities", new Vector2(Game1.instance.Width * 0.07f, Game1.instance.Height * (.18f + 4 * seperation)), statusSize);
-            shadowText(spriteBatch, "Formation", new Vector2(Game1.instance.Width * 0.07f, Game1.instance.Height * (.18f + 5 * seperation)), statusSize);
-            shadowText(spriteBatch, "Back", new Vector2(Game1.instance.Width * 0.07f, Game1.instance.Height * (.18f + 10.65f * seperation)), statusSize);
+            shadowText(spriteBatch, "Status", new Vector2(pctW_07, Height * .18f), statusSize);
+            shadowText(spriteBatch, "Item", new Vector2(pctW_07, Height * (.18f + seperation)), statusSize);
+            shadowText(spriteBatch, "Equipment", new Vector2(pctW_07, Height * (.18f + 2 * seperation)), statusSize);
+            shadowText(spriteBatch, "Magic", new Vector2(pctW_07, Height * (.18f + 3 * seperation)), statusSize);
+            shadowText(spriteBatch, "Abilities", new Vector2(pctW_07, Height * (.18f + 4 * seperation)), statusSize);
+            shadowText(spriteBatch, "Formation", new Vector2(pctW_07, Height * (.18f + 5 * seperation)), statusSize);
+            shadowText(spriteBatch, "Back", new Vector2(pctW_07, Height * (.18f + 10.65f * seperation)), statusSize);
    
             
             /*Character Portraits*/
-            spriteBatch.Draw(c[HeroParty.theHero[0].characterID - 1], new Vector2(Game1.instance.Width * .35f, Game1.instance.Height * .16f), new Rectangle(0, 0, c[0].Width, c[0].Height), Color.White, 0.0f, Vector2.Zero, new Vector2(Game1.instance.Width * 0.20f / c[0].Width, Game1.instance.Height * 0.60f / c[0].Height), SpriteEffects.None, 0.0f);
-            spriteBatch.Draw(c[HeroParty.theHero[1].characterID-1], new Vector2(Game1.instance.Width * .55f, Game1.instance.Height * .16f), new Rectangle(0, 0, c[1].Width, c[1].Height), Color.White, 0.0f, Vector2.Zero, new Vector2(Game1.instance.Width * 0.20f / c[1].Width, Game1.instance.Height * 0.60f / c[1].Height), SpriteEffects.None, 0.0f);
-            spriteBatch.Draw(c[HeroParty.theHero[2].characterID-1], new Vector2(Game1.instance.Width * .74f, Game1.instance.Height * .16f), new Rectangle(0, 0, c[2].Width, c[2].Height), Color.White, 0.0f, Vector2.Zero, new Vector2(Game1.instance.Width * 0.20f / c[2].Width, Game1.instance.Height * 0.60f / c[2].Height), SpriteEffects.None, 0.0f);
+            for (int i = 0; i < 3; i++)
+            {
+                spriteBatch.Draw(c[HeroParty.theHero[i].characterID - 1], new Vector2(Width * .35f + Width*.20f * i, Height * .16f), new Rectangle(0, 0, c[i].Width, c[i].Height), Color.White, 0.0f, Vector2.Zero, new Vector2(Width * 0.20f / c[i].Width, Height * 0.60f / c[i].Height), SpriteEffects.None, 0.0f);
+                shadowText(spriteBatch, HeroParty.theHero[i].name, new Vector2(pctW_36 + Width * .20f * i, Game1.instance.Height * .685f), statusSize);
 
+                //[Solid health bars]
+                spriteBatch.Draw(pixel, new Vector2(pctW_36 + Width * .20f * i, Height * .76f), new Rectangle(0, 0, (int)(HeroParty.theHero[0].HealthPercent() * Width * 0.16f), 25), Color.Green);
+                spriteBatch.Draw(pixel, new Vector2(pctW_36 + Width * .20f * i + Width * 0.16f * HeroParty.theHero[0].HealthPercent(), Height * .76f), new Rectangle(0, 0, (int)(Width * 0.16f * (1.0f - HeroParty.theHero[0].HealthPercent())), 25), Color.Red);
 
-            /*Character 1*/
-            shadowText(spriteBatch, HeroParty.theHero[0].name, new Vector2(Game1.instance.Width * .35f, Game1.instance.Height * .685f), statusSize);
+                //[Outline of health bars]
+                spriteBatch.Draw(pixel, new Vector2(pctW_36 + Width * .20f * i, Height * .76f), new Rectangle(0, 0, (int)(Width * 0.16f), 2), Color.Black); //top
+                spriteBatch.Draw(pixel, new Vector2(pctW_36 + Width * .20f * i, Height * .76f), new Rectangle(0, 0, 2, 25), Color.Black); //left
+                spriteBatch.Draw(pixel, new Vector2(pctW_36 + Width * .20f * i + Width * 0.16f - 2, Game1.instance.Height * .76f), new Rectangle(0, 0, 2, 25), Color.Black); //right
+                spriteBatch.Draw(pixel, new Vector2(pctW_36 + Width * .20f * i, Height * .76f + 25 - 2), new Rectangle(0, 0, (int)(Width * 0.16f), 2), Color.Black); //bottom
+
+                //[Solid XP bars]
+                spriteBatch.Draw(pixel, new Vector2(pctW_36 + Width * .20f * i, Height * .83f), new Rectangle(0, 0, (int)(HeroParty.theHero[i].XPPercent() * Width * 0.16f + 1), 25), Color.Green);
+                spriteBatch.Draw(pixel, new Vector2(pctW_36 + Width * .20f * i + Width * 0.16f * HeroParty.theHero[i].XPPercent(), Height * .83f), new Rectangle(0, 0, (int)(Width * 0.16f * (1.0f - HeroParty.theHero[i].XPPercent())), 25), Color.Red);
+
+                //[Outline of XP bars]
+                spriteBatch.Draw(pixel, new Vector2(pctW_36 + Width * .20f * i, Height * .83f), new Rectangle(0, 0, (int)(Width * 0.16f), 2), Color.Black); //top
+                spriteBatch.Draw(pixel, new Vector2(pctW_36 + Width * .20f * i, Height * .83f), new Rectangle(0, 0, 2, 25), Color.Black); //left
+                spriteBatch.Draw(pixel, new Vector2(pctW_36 + Width * .20f * i + Width * 0.16f - 2, Height * .83f), new Rectangle(0, 0, 2, 25), Color.Black); //right
+                spriteBatch.Draw(pixel, new Vector2(pctW_36 + Width * .20f * i, Height * .83f + 25 - 2), new Rectangle(0, 0, (int)(Width * 0.16f), 2), Color.Black); //bottom
+
+                shadowText(spriteBatch, "XP", new Vector2(Width * .365f + Width * .20f * i, Height * .81f), statusSize * 1.5f);
+                shadowText(spriteBatch, "HP", new Vector2(Width * .365f + Width * .20f * i, Height * .74f), statusSize * 1.5f);
+
+                shadowText(spriteBatch, HeroParty.theHero[i].XP.ToString() + "/" + HeroParty.theHero[i].XPtoLvl(), new Vector2(Width * .45f + Width * .20f * i, Height * .81f), statusSize * 1.5f);
+                shadowText(spriteBatch, HeroParty.theHero[i].health.ToString() + "/" + HeroParty.theHero[i].MaxHealth().ToString(), new Vector2(Width * .45f + Width * .20f * i, Height * .74f), statusSize * 1.5f);
+
+            }
+
            
-            //[Solid health bars]
-            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.35f, Game1.instance.Height * .83f), new Rectangle(0, 0, (int)(HeroParty.theHero[0].health * Game1.instance.Width * 0.16f+1), 25), Color.Green);
-            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.35f + Game1.instance.Width * 0.16f * HeroParty.theHero[0].health, Game1.instance.Height * .83f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f * (1.0f - HeroParty.theHero[0].health)), 25), Color.Red);
-
-            //[Outline of health bars]
-            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.35f, Game1.instance.Height * .83f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f), 2), Color.Black); //top
-            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.35f, Game1.instance.Height * .83f), new Rectangle(0, 0, 2, 25), Color.Black); //left
-            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.35f + Game1.instance.Width * 0.16f - 2, Game1.instance.Height * .83f), new Rectangle(0, 0, 2, 25), Color.Black); //right
-            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.35f, Game1.instance.Height * .83f + 25 - 2), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f), 2), Color.Black); //bottom
-
-            shadowText(spriteBatch, "HP", new Vector2(Game1.instance.Width * .355f, Game1.instance.Height * .81f), statusSize * 1.5f);
-            shadowText(spriteBatch, (HeroParty.theHero[0].health * 100).ToString() + "/100", new Vector2(Game1.instance.Width * .45f, Game1.instance.Height * .81f), statusSize * 1.5f);
-            
-            //[Solid XP bars]
-            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.35f, Game1.instance.Height * .76f), new Rectangle(0, 0, (int)(HeroParty.theHero[0].health * Game1.instance.Width * 0.16f + 1), 25), Color.Green);
-            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.35f + Game1.instance.Width * 0.16f * HeroParty.theHero[0].health, Game1.instance.Height * .76f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f * (1.0f - HeroParty.theHero[0].health)), 25), Color.Red);
-
-            //[Outline of XP bars]
-            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.35f, Game1.instance.Height * .76f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f), 2), Color.Black); //top
-            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.35f, Game1.instance.Height * .76f), new Rectangle(0, 0, 2, 25), Color.Black); //left
-            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.35f + Game1.instance.Width * 0.16f - 2, Game1.instance.Height * .76f), new Rectangle(0, 0, 2, 25), Color.Black); //right
-            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.35f, Game1.instance.Height * .76f + 25 - 2), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f), 2), Color.Black); //bottom
-
-            shadowText(spriteBatch, "XP", new Vector2(Game1.instance.Width * .355f, Game1.instance.Height * .74f), statusSize * 1.5f);
-            shadowText(spriteBatch, (HeroParty.theHero[0].health * 100).ToString() + "/100", new Vector2(Game1.instance.Width * .45f, Game1.instance.Height * .74f), statusSize * 1.5f);
-
-            
-            /*Character 2*/
-            shadowText(spriteBatch, HeroParty.theHero[1].name, new Vector2(Game1.instance.Width * .56f, Game1.instance.Height * .685f), statusSize);
-
-            //[Solid health bars]
-            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.56f, Game1.instance.Height * .83f), new Rectangle(0, 0, (int)(HeroParty.theHero[1].health * Game1.instance.Width * 0.16f + 1), 25), Color.Green);
-            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.56f + Game1.instance.Width * 0.16f * HeroParty.theHero[1].health, Game1.instance.Height * .83f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f * (1.0f - HeroParty.theHero[1].health)), 25), Color.Red);
-
-            //[Outline of health bars]
-            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.56f, Game1.instance.Height * .83f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f), 2), Color.Black); //top
-            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.56f, Game1.instance.Height * .83f), new Rectangle(0, 0, 2, 25), Color.Black); //left
-            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.56f + Game1.instance.Width * 0.16f - 2, Game1.instance.Height * .83f), new Rectangle(0, 0, 2, 25), Color.Black); //right
-            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.56f, Game1.instance.Height * .83f + 25 - 2), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f), 2), Color.Black); //bottom
-
-            shadowText(spriteBatch, "HP", new Vector2(Game1.instance.Width * .565f, Game1.instance.Height * .81f), statusSize * 1.5f);
-            shadowText(spriteBatch, (HeroParty.theHero[1].health * 100).ToString() + "/100", new Vector2(Game1.instance.Width * .66f, Game1.instance.Height * .81f), statusSize * 1.5f);
-
-            //[Solid XP bars]
-            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.56f, Game1.instance.Height * .76f), new Rectangle(0, 0, (int)(HeroParty.theHero[1].health * Game1.instance.Width * 0.16f + 1), 25), Color.Green);
-            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.56f + Game1.instance.Width * 0.16f * HeroParty.theHero[1].health, Game1.instance.Height * .76f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f * (1.0f - HeroParty.theHero[1].health)), 25), Color.Red);
-
-            //[Outline of XP bars]
-            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.56f, Game1.instance.Height * .76f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f), 2), Color.Black); //top
-            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.56f, Game1.instance.Height * .76f), new Rectangle(0, 0, 2, 25), Color.Black); //left
-            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.56f + Game1.instance.Width * 0.16f - 2, Game1.instance.Height * .76f), new Rectangle(0, 0, 2, 25), Color.Black); //right
-            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.56f, Game1.instance.Height * .76f + 25 - 2), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f), 2), Color.Black); //bottom
-
-            shadowText(spriteBatch, "XP", new Vector2(Game1.instance.Width * .565f, Game1.instance.Height * .74f), statusSize*1.5f);
-            shadowText(spriteBatch, (HeroParty.theHero[1].health * 100).ToString() + "/100", new Vector2(Game1.instance.Width * .66f, Game1.instance.Height * .74f), statusSize*1.5f);
-
-
-            /*Character 3*/
-
-            shadowText(spriteBatch, HeroParty.theHero[2].name, new Vector2(Game1.instance.Width * .76f, Game1.instance.Height * .685f), statusSize);
-            //[Solid health bars]
-            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.76f, Game1.instance.Height * .83f), new Rectangle(0, 0, (int)(HeroParty.theHero[2].health * Game1.instance.Width * 0.16f + 1), 25), Color.Green);
-            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.76f + Game1.instance.Width * 0.16f * HeroParty.theHero[2].health, Game1.instance.Height * .83f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f * (1.0f - HeroParty.theHero[2].health)), 25), Color.Red);
-
-            //[Outline of health bars]
-            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.76f, Game1.instance.Height * .83f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f), 2), Color.Black); //top
-            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.76f, Game1.instance.Height * .83f), new Rectangle(0, 0, 2, 25), Color.Black); //left
-            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.76f + Game1.instance.Width * 0.16f - 2, Game1.instance.Height * .83f), new Rectangle(0, 0, 2, 25), Color.Black); //right
-            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.76f, Game1.instance.Height * .83f + 25 - 2), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f), 2), Color.Black); //bottom
-
-            shadowText(spriteBatch, "HP", new Vector2(Game1.instance.Width * .765f, Game1.instance.Height * .81f), statusSize * 1.5f);
-            shadowText(spriteBatch, (HeroParty.theHero[2].health * 100).ToString() + "/100", new Vector2(Game1.instance.Width * .86f, Game1.instance.Height * .81f), statusSize * 1.5f);
-
-            //[Solid XP bars]
-            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.76f, Game1.instance.Height * .76f), new Rectangle(0, 0, (int)(HeroParty.theHero[2].health * Game1.instance.Width * 0.16f + 1), 25), Color.Green);
-            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.76f + Game1.instance.Width * 0.16f * HeroParty.theHero[2].health, Game1.instance.Height * .76f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f * (1.0f - HeroParty.theHero[2].health)), 25), Color.Red);
-
-            //[Outline of XP bars]
-            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.76f, Game1.instance.Height * .76f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f), 2), Color.Black); //top
-            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.76f, Game1.instance.Height * .76f), new Rectangle(0, 0, 2, 25), Color.Black); //left
-            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.76f + Game1.instance.Width * 0.16f - 2, Game1.instance.Height * .76f), new Rectangle(0, 0, 2, 25), Color.Black); //right
-            spriteBatch.Draw(pixel, new Vector2(Game1.instance.Width * 0.76f, Game1.instance.Height * .76f + 25 - 2), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f), 2), Color.Black); //bottom
-
-            shadowText(spriteBatch, "XP", new Vector2(Game1.instance.Width * .765f, Game1.instance.Height * .74f), statusSize * 1.5f);
-            shadowText(spriteBatch, (HeroParty.theHero[2].health * 100).ToString() + "/100", new Vector2(Game1.instance.Width * .86f, Game1.instance.Height * .74f), statusSize * 1.5f);
             spriteBatch.Draw(backbone, screenRect, Color.White);
 
         }
 
         public void shadowText(SpriteBatch spriteBatch, String text, Vector2 position, Vector2 statusSize)
         {
-            spriteBatch.DrawString(menuText, text, position + new Vector2(1, 1), Color.White, 0.0f, new Vector2(0, 0), new Vector2(Game1.instance.Width * 0.08f / statusSize.X, Game1.instance.Width * 0.08f / statusSize.X), SpriteEffects.None, 0.0f);
-            spriteBatch.DrawString(menuText, text, position + new Vector2(1, -1), Color.White, 0.0f, new Vector2(0, 0), new Vector2(Game1.instance.Width * 0.08f / statusSize.X, Game1.instance.Width * 0.08f / statusSize.X), SpriteEffects.None, 0.0f);
-            spriteBatch.DrawString(menuText, text, position + new Vector2(-1, 1), Color.White, 0.0f, new Vector2(0, 0), new Vector2(Game1.instance.Width * 0.08f / statusSize.X, Game1.instance.Width * 0.08f / statusSize.X), SpriteEffects.None, 0.0f);
-            spriteBatch.DrawString(menuText, text, position + new Vector2(-1, -1), Color.White, 0.0f, new Vector2(0, 0), new Vector2(Game1.instance.Width * 0.08f / statusSize.X, Game1.instance.Width * 0.08f / statusSize.X), SpriteEffects.None, 0.0f);
-            spriteBatch.DrawString(menuText, text, position, Color.Black, 0.0f, new Vector2(0, 0), new Vector2(Game1.instance.Width * 0.08f / statusSize.X, Game1.instance.Width * 0.08f / statusSize.X), SpriteEffects.None, 0.0f);
+            spriteBatch.DrawString(menuText, text, position + new Vector2(1, 1), Color.White, 0.0f, new Vector2(0, 0), new Vector2(pctW_08 / statusSize.X, pctW_08 / statusSize.X), SpriteEffects.None, 0.0f);
+            spriteBatch.DrawString(menuText, text, position + new Vector2(1, -1), Color.White, 0.0f, new Vector2(0, 0), new Vector2(pctW_08 / statusSize.X, pctW_08 / statusSize.X), SpriteEffects.None, 0.0f);
+            spriteBatch.DrawString(menuText, text, position + new Vector2(-1, 1), Color.White, 0.0f, new Vector2(0, 0), new Vector2(pctW_08 / statusSize.X, pctW_08 / statusSize.X), SpriteEffects.None, 0.0f);
+            spriteBatch.DrawString(menuText, text, position + new Vector2(-1, -1), Color.White, 0.0f, new Vector2(0, 0), new Vector2(pctW_08 / statusSize.X, pctW_08 / statusSize.X), SpriteEffects.None, 0.0f);
+
+            spriteBatch.DrawString(menuText, text, position, Color.Black, 0.0f, new Vector2(0, 0), new Vector2(pctW_08 / statusSize.X, pctW_08 / statusSize.X), SpriteEffects.None, 0.0f);
         }
     }
 }
