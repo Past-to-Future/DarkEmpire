@@ -151,8 +151,9 @@ namespace DarkEmpire
 
             if (PlayingState.menu.activeMenu == false)
             {
-                if (count >= 2)
+                if (count >= 5)
                 {
+                    count = 0;
                     for (int i = 1; i <= 100; i++)
                     {
                         PlayingState.npc[i].frame = (PlayingState.npc[i].frame + 1) % 3;
@@ -166,7 +167,7 @@ namespace DarkEmpire
                         if (ymove == 0 && xmove < 0)
                             PlayingState.npc[i].changeDirection(2);
 
-                        PlayingState.npc[i].position += new Vector2(xmove, ymove);
+                        PlayingState.npc[i].position += new Vector2(18*xmove, 18*ymove);
 
                         if (PlayingState.npc[i].position.X >= Game1.instance.Width)
                             PlayingState.npc[i].position.X = 0;

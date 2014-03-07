@@ -44,7 +44,7 @@ namespace DarkEmpire
             menu.Initialize();
 
             for (int i = 1; i <= 100; i++)
-                npc[i] = new Npc(i % 4, 1, new Vector2(i * 2, i + rand.Next(-100, 400)));
+                npc[i] = new Npc(i % 4, 1, new Vector2(rand.Next(0, 800), rand.Next(0, 450)));
         }
 
         public Texture2D npcSprite

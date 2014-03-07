@@ -94,6 +94,12 @@ namespace DarkEmpire
                              Thread.Sleep(200);
                              KeyboardInput.hitInstance.Stop();
                              KeyboardInput.hitInstance.Play();
+                             HeroParty.theEnemy[saveAttack[3]].health -= 1.0f;
+
+                             if (HeroParty.theEnemy[saveAttack[3]].health <= 0.0f)
+                             {
+                                 HeroParty.theEnemy[saveAttack[3]].health = 0.0f; //did he die
+                             }
 
                              Thread.Sleep(1250);
 
@@ -154,7 +160,7 @@ namespace DarkEmpire
                 foreach (TmxLayerTile tile in layer.Tiles)
                 {
                     Rectangle rec = new Rectangle((tile.Gid - 1) % Level.tileInX * Level.tileWidth + (tile.Gid - 1) % Level.tileInX * Level.tileSpacing, tile.Gid / Level.tileInX * Level.tileHeight + tile.Gid / Level.tileInX * Level.tileSpacing, Level.tileWidth, Level.tileHeight);
-                    spriteBatch.Draw(PlayingState.level.platformerTex, new Vector2(tile.X * 70, tile.Y * 70), rec, Color.White);
+                    spriteBatch.Draw(PlayingState.level.platformerTex, new Vector2(tile.X * 70/2, tile.Y * 70/2), rec, Color.White, 0.0f, new Vector2(0,0), 0.5f, SpriteEffects.None, 0.0f);
                 }
             }
 
@@ -263,47 +269,25 @@ namespace DarkEmpire
             shadowText(spriteBatch, "Item", new Vector2(Game1.instance.Width * .08f, Game1.instance.Height * .85f), statusSize*1.5f);
             shadowText(spriteBatch, "Wait", new Vector2(Game1.instance.Width * .08f, Game1.instance.Height * .90f), statusSize*1.5f);
 
+            for (int i = 0; i < 3; i++)
+            {
+                //[Names at the Top]
+                shadowText(spriteBatch, HeroParty.theHero[i].name, new Vector2(Game1.instance.Width * .08f + Game1.instance.Width * .3f*i, Game1.instance.Height * .025f), statusSize);
+                
+                //[Solid health bars]
+                spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .08f + Game1.instance.Width * .3f * i, Game1.instance.Height * .10f), new Rectangle(0, 0, (int)((HeroParty.theHero[0].health / HeroParty.theHero[0].MaxHealth()) * Game1.instance.Width * 0.16f + 1), 25), Color.Green);
+                spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .08f + Game1.instance.Width * .3f * i + Game1.instance.Width * 0.16f * HeroParty.theHero[0].health / HeroParty.theHero[0].MaxHealth(), Game1.instance.Height * .10f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f * (1.0f - HeroParty.theHero[0].health)), 25), Color.Red);
 
-            /* Names at the top*/
-            shadowText(spriteBatch, HeroParty.theHero[0].name, new Vector2(Game1.instance.Width * .08f, Game1.instance.Height * .025f), statusSize);
-            shadowText(spriteBatch, HeroParty.theHero[1].name, new Vector2(Game1.instance.Width * .38f, Game1.instance.Height * .025f), statusSize);
-            shadowText(spriteBatch, HeroParty.theHero[2].name, new Vector2(Game1.instance.Width * .68f, Game1.instance.Height * .025f), statusSize);
+                //[Outline of health bars]
+                spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .08f + Game1.instance.Width * .3f * i, Game1.instance.Height * .10f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f), 2), Color.Black); //top
+                spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .08f + Game1.instance.Width * .3f * i, Game1.instance.Height * .10f), new Rectangle(0, 0, 2, 25), Color.Black); //left
+                spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .08f + Game1.instance.Width * .3f * i + Game1.instance.Width * 0.16f - 2, Game1.instance.Height * .10f), new Rectangle(0, 0, 2, 25), Color.Black); //right
+                spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .08f + Game1.instance.Width * .3f * i, Game1.instance.Height * .10f + 25 - 2), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f), 2), Color.Black); //bottom
 
-            /*Hero One Health Bar*/
-            //[Solid health bars]
-            spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .08f, Game1.instance.Height * .10f), new Rectangle(0, 0, (int)(HeroParty.theHero[0].health * Game1.instance.Width * 0.16f + 1), 25), Color.Green);
-            spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .08f + Game1.instance.Width * 0.16f * HeroParty.theHero[0].health, Game1.instance.Height * .10f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f * (1.0f - HeroParty.theHero[0].health)), 25), Color.Red);
+                //[Draw Hero Sprites]
+                spriteBatch.Draw(PlayingState.instance.npcSprite, HeroParty.theHero[i].position, HeroParty.theHero[i].rect, Color.White, 0.0f, Vector2.Zero, HeroParty.theHero[i].scale, SpriteEffects.None, 0.0f);
 
-            //[Outline of health bars]
-            spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .08f, Game1.instance.Height * .10f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f), 2), Color.Black); //top
-            spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .08f, Game1.instance.Height * .10f), new Rectangle(0, 0, 2, 25), Color.Black); //left
-            spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .08f + Game1.instance.Width * 0.16f - 2, Game1.instance.Height * .10f), new Rectangle(0, 0, 2, 25), Color.Black); //right
-            spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .08f, Game1.instance.Height * .10f + 25 - 2), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f), 2), Color.Black); //bottom
-
-            /*Hero Two Health Bar*/
-            //[Solid health bars]
-            spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .38f, Game1.instance.Height * .10f), new Rectangle(0, 0, (int)(HeroParty.theHero[0].health * Game1.instance.Width * 0.16f + 1), 25), Color.Green);
-            spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .38f + Game1.instance.Width * 0.16f * HeroParty.theHero[0].health, Game1.instance.Height * .10f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f * (1.0f - HeroParty.theHero[0].health)), 25), Color.Red);
-
-            //[Outline of health bars]
-            spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .38f, Game1.instance.Height * .10f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f), 2), Color.Black); //top
-            spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .38f, Game1.instance.Height * .10f), new Rectangle(0, 0, 2, 25), Color.Black); //left
-            spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .38f + Game1.instance.Width * 0.16f - 2, Game1.instance.Height * .10f), new Rectangle(0, 0, 2, 25), Color.Black); //right
-            spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .38f, Game1.instance.Height * .10f + 25 - 2), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f), 2), Color.Black); //bottom
-
-            /*Hero Three Health Bar*/
-            //[Solid health bars]
-            spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .68f, Game1.instance.Height * .10f), new Rectangle(0, 0, (int)(HeroParty.theHero[0].health * Game1.instance.Width * 0.16f + 1), 25), Color.Green);
-            spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .68f + Game1.instance.Width * 0.16f * HeroParty.theHero[0].health, Game1.instance.Height * .10f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f * (1.0f - HeroParty.theHero[0].health)), 25), Color.Red);
-
-            //[Outline of health bars]
-            spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .68f, Game1.instance.Height * .10f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f), 2), Color.Black); //top
-            spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .68f, Game1.instance.Height * .10f), new Rectangle(0, 0, 2, 25), Color.Black); //left
-            spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .68f + Game1.instance.Width * 0.16f - 2, Game1.instance.Height * .10f), new Rectangle(0, 0, 2, 25), Color.Black); //right
-            spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .68f, Game1.instance.Height * .10f + 25 - 2), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.16f), 2), Color.Black); //bottom
-
-            spriteBatch.Draw(PlayingState.instance.npcSprite, HeroParty.theHero[0].position, HeroParty.theHero[0].rect, Color.White, 0.0f, Vector2.Zero, HeroParty.theHero[0].scale, SpriteEffects.None, 0.0f);
-            spriteBatch.Draw(PlayingState.instance.npcSprite, HeroParty.theEnemy[0].position, HeroParty.theEnemy[0].rect, Color.White, 0.0f, Vector2.Zero, HeroParty.theEnemy[0].scale, SpriteEffects.None, 0.0f);
+            }
 
             /*Draw battle bar*/
             spriteBatch.Draw(Menu.pixel, new Vector2(Game1.instance.Width * .9f, Game1.instance.Height * .10f), new Rectangle(0, 0, (int)(Game1.instance.Width * 0.025f), (int)(Game1.instance.Height * 0.8f)), Color.White); //top
@@ -321,19 +305,14 @@ namespace DarkEmpire
                 }
             }
 
-            /*Draw the Hero Sprites*/
-
-            for (int i = 0; i < 3; i++)
-            {
-                spriteBatch.Draw(PlayingState.instance.npcSprite, HeroParty.theHero[i].position, HeroParty.theHero[i].rect, Color.White, 0.0f, Vector2.Zero, HeroParty.theHero[i].scale, SpriteEffects.None, 0.0f);
-            }
-
-            /* Draw the Enemy Sprites*/
-
+            //[Draw the Enemy Sprites]
             for (int i = 0; i < 5; i++)
             {
-                spriteBatch.Draw(PlayingState.instance.npcSprite, HeroParty.theEnemy[i].position, HeroParty.theEnemy[i].rect, Color.White, 0.0f, Vector2.Zero, HeroParty.theEnemy[i].scale, SpriteEffects.None, 0.0f);
-                HeroParty.theEnemy[i].DrawHealthAboveCharacter();
+                if (HeroParty.theEnemy[i].health != 0.0f)
+                {
+                    spriteBatch.Draw(PlayingState.instance.npcSprite, HeroParty.theEnemy[i].position, HeroParty.theEnemy[i].rect, Color.White, 0.0f, Vector2.Zero, HeroParty.theEnemy[i].scale, SpriteEffects.None, 0.0f);
+                    HeroParty.theEnemy[i].DrawHealthAboveCharacter();
+                }
             }
 
         }

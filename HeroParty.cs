@@ -25,10 +25,6 @@ namespace DarkEmpire
             theHero[0] = new Npc(1, 3, new Vector2(Game1.instance.Width * 0.2f, Game1.instance.Height * .2f), 1.0f);
             theHero[1] = new Npc(2, 3, new Vector2(Game1.instance.Width * 0.1f, Game1.instance.Height * .4f), 1.0f);
             theHero[2] = new Npc(3, 3, new Vector2(Game1.instance.Width * 0.2f, Game1.instance.Height * .6f), 1.0f);
- 
-            theHero[0].health = 0.25f;
-            theHero[1].health = 0.5f;
-            theHero[2].health = 0.75f;
 
             theHero[0].setPartyPosition(0);
             theHero[1].setPartyPosition(1);
@@ -44,12 +40,6 @@ namespace DarkEmpire
             theEnemy[2] = new Npc(7, 2, new Vector2(Game1.instance.Width * 0.7f, Game1.instance.Height * .2f), 1.0f);
             theEnemy[3] = new Npc(5, 2, new Vector2(Game1.instance.Width * 0.7f, Game1.instance.Height * .4f), 1.0f);
             theEnemy[4] = new Npc(6, 2, new Vector2(Game1.instance.Width * 0.7f, Game1.instance.Height * .6f), 1.0f);
-
-            theEnemy[0].health = 1.0f;
-            theEnemy[1].health = 1.0f;
-            theEnemy[2].health = 1.0f;
-            theEnemy[3].health = 1.0f;
-            theEnemy[4].health = 1.0f;
 
             theEnemy[0].setPartyPosition(0);
             theEnemy[1].setPartyPosition(1);

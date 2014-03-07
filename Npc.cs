@@ -29,11 +29,46 @@ namespace DarkEmpire
         public static Texture2D pixel = new Texture2D(Game1.instance.GraphicsDevice, 1, 1); //create 1x1 pixel texture
         SpriteBatch spriteBatch = Game1.instance.SpriteBatch;
 
-        public Npc(int ID, int dFace, Vector2 pos, float s = 1.0f)
+        public static int Strength = 1;
+        public static int Vitality = 1;
+        public static int Perception = 1;
+        public static int Agility = 1;
+        public static int Intelligence = 1;
+        public static int Charisma = 1;
+        public static int AP = 1;
+        public static int Level = 1;
+        public static int XP = 1;
+
+        public Npc(int ID, int dFace, Vector2 pos, float s = 1.0f, float role = 0)
         {
+            if (role == 0)//scrub role
+            {
+                Strength = 1;
+                Vitality = 1;
+                Perception = 1;
+                Agility = 1;
+                Intelligence = 1;
+                Charisma = 1;
+                Level = 1;
+                XP = 1;
+            }
+
+            else if(role == 1) //cheater role
+            {
+                Strength = 5;
+                Vitality = 5;
+                Perception = 5;
+                Agility = 5;
+                Intelligence = 5;
+                Charisma = 5;
+                Level = 1;
+                XP = 1;
+            }
+
+            health = Level * (7+2*Vitality); //using this like a percentage
+
             scale = s;
             frame = 1;
-            health = 1.0f; //using this like a percentage
             position = pos;
             directionFace = dFace; //# equals row on sprite sheet
             characterID = ID;
@@ -69,8 +104,8 @@ namespace DarkEmpire
         {
             //Green = Health, Red = Lost Health
             //Bar has been set to be drawn above the sprite by 10% of the scaled height of the sprite 
-            spriteBatch.Draw(pixel, new Vector2(position.X, position.Y - 0.1f * 32 * scale), new Rectangle(0, 0, (int)(32 * scale * health), 10), Color.Green);
-            spriteBatch.Draw(pixel, new Vector2(position.X + 32 * scale * health, position.Y - 0.1f * 32 * scale), new Rectangle(0, 0, (int)(32 * scale * (1.0f - health)), 10), Color.Red);
+            spriteBatch.Draw(pixel, new Vector2(position.X, position.Y - 0.1f * 32 * scale), new Rectangle(0, 0, (int)(32 * scale * health / MaxHealth() ), 10), Color.Green);
+            spriteBatch.Draw(pixel, new Vector2(position.X + 32 * scale * health / MaxHealth(), position.Y - 0.1f * 32 * scale), new Rectangle(0, 0, (int)(32 * scale * (1.0f - health / MaxHealth())), 10), Color.Red);
 
             spriteBatch.Draw(pixel, new Vector2(position.X, position.Y - 0.1f * 32 * scale), new Rectangle(0, 0, (int)(32 * scale), thicknessOfBorder), Color.Black); //top
             spriteBatch.Draw(pixel, new Vector2(position.X, position.Y - 0.1f * 32 * scale), new Rectangle(0, 0, thicknessOfBorder, 10), Color.Black); //left
@@ -78,5 +113,9 @@ namespace DarkEmpire
             spriteBatch.Draw(pixel, new Vector2(position.X, position.Y - 0.1f * 32 * scale + 10 - thicknessOfBorder), new Rectangle(0, 0, (int)(32 * scale), thicknessOfBorder), Color.Black); //bottom
         }
 
+        public float MaxHealth()
+        {
+            return Level * (7 + 2 * Vitality);
+        }
     }
 }
