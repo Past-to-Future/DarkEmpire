@@ -29,6 +29,7 @@ namespace DarkEmpire
         static float Height = Game1.instance.Height;
         float pctW_07 = Width * .07f;
         float pctW_08 = Width * .08f;
+        float pctW_20 = Width * .20f;
         float pctW_36 = Width * .36f;
         float seperation = .0625f; //distance between main menu boxes
 
@@ -95,34 +96,34 @@ namespace DarkEmpire
             /*Character Portraits*/
             for (int i = 0; i < 3; i++)
             {
-                spriteBatch.Draw(c[HeroParty.theHero[i].characterID - 1], new Vector2(Width * .35f + Width*.20f * i, Height * .16f), new Rectangle(0, 0, c[i].Width, c[i].Height), Color.White, 0.0f, Vector2.Zero, new Vector2(Width * 0.20f / c[i].Width, Height * 0.60f / c[i].Height), SpriteEffects.None, 0.0f);
-                shadowText(spriteBatch, HeroParty.theHero[i].name, new Vector2(pctW_36 + Width * .20f * i, Game1.instance.Height * .685f), statusSize);
+                spriteBatch.Draw(c[HeroParty.theHero[i].characterID - 1], new Vector2(Width * .35f + pctW_20 * i, Height * .16f), new Rectangle(0, 0, c[i].Width, c[i].Height), Color.White, 0.0f, Vector2.Zero, new Vector2(Width * 0.20f / c[i].Width, Height * 0.60f / c[i].Height), SpriteEffects.None, 0.0f);
+                shadowText(spriteBatch, HeroParty.theHero[i].name, new Vector2(pctW_36 + pctW_20 * i, Game1.instance.Height * .685f), statusSize);
 
                 //[Solid health bars]
-                spriteBatch.Draw(pixel, new Vector2(pctW_36 + Width * .20f * i, Height * .76f), new Rectangle(0, 0, (int)(HeroParty.theHero[0].HealthPercent() * Width * 0.16f), 25), Color.Green);
-                spriteBatch.Draw(pixel, new Vector2(pctW_36 + Width * .20f * i + Width * 0.16f * HeroParty.theHero[0].HealthPercent(), Height * .76f), new Rectangle(0, 0, (int)(Width * 0.16f * (1.0f - HeroParty.theHero[0].HealthPercent())), 25), Color.Red);
+                spriteBatch.Draw(pixel, new Vector2(pctW_36 + pctW_20 * i, Height * .76f), new Rectangle(0, 0, (int)(HeroParty.theHero[0].HealthPercent() * Width * 0.16f), 25), Color.Green);
+                spriteBatch.Draw(pixel, new Vector2(pctW_36 + pctW_20 * i + Width * 0.16f * HeroParty.theHero[0].HealthPercent(), Height * .76f), new Rectangle(0, 0, (int)(Width * 0.16f * (1.0f - HeroParty.theHero[0].HealthPercent())), 25), Color.Red);
 
                 //[Outline of health bars]
-                spriteBatch.Draw(pixel, new Vector2(pctW_36 + Width * .20f * i, Height * .76f), new Rectangle(0, 0, (int)(Width * 0.16f), 2), Color.Black); //top
-                spriteBatch.Draw(pixel, new Vector2(pctW_36 + Width * .20f * i, Height * .76f), new Rectangle(0, 0, 2, 25), Color.Black); //left
-                spriteBatch.Draw(pixel, new Vector2(pctW_36 + Width * .20f * i + Width * 0.16f - 2, Game1.instance.Height * .76f), new Rectangle(0, 0, 2, 25), Color.Black); //right
-                spriteBatch.Draw(pixel, new Vector2(pctW_36 + Width * .20f * i, Height * .76f + 25 - 2), new Rectangle(0, 0, (int)(Width * 0.16f), 2), Color.Black); //bottom
+                spriteBatch.Draw(pixel, new Vector2(pctW_36 + pctW_20 * i, Height * .76f), new Rectangle(0, 0, (int)(Width * 0.16f), 2), Color.Black); //top
+                spriteBatch.Draw(pixel, new Vector2(pctW_36 + pctW_20 * i, Height * .76f), new Rectangle(0, 0, 2, 25), Color.Black); //left
+                spriteBatch.Draw(pixel, new Vector2(pctW_36 + pctW_20 * i + Width * 0.16f - 2, Game1.instance.Height * .76f), new Rectangle(0, 0, 2, 25), Color.Black); //right
+                spriteBatch.Draw(pixel, new Vector2(pctW_36 + pctW_20 * i, Height * .76f + 25 - 2), new Rectangle(0, 0, (int)(Width * 0.16f), 2), Color.Black); //bottom
 
                 //[Solid XP bars]
-                spriteBatch.Draw(pixel, new Vector2(pctW_36 + Width * .20f * i, Height * .83f), new Rectangle(0, 0, (int)(HeroParty.theHero[i].XPPercent() * Width * 0.16f + 1), 25), Color.Green);
-                spriteBatch.Draw(pixel, new Vector2(pctW_36 + Width * .20f * i + Width * 0.16f * HeroParty.theHero[i].XPPercent(), Height * .83f), new Rectangle(0, 0, (int)(Width * 0.16f * (1.0f - HeroParty.theHero[i].XPPercent())), 25), Color.Red);
+                spriteBatch.Draw(pixel, new Vector2(pctW_36 + pctW_20 * i, Height * .83f), new Rectangle(0, 0, (int)(HeroParty.theHero[i].XPPercent() * Width * 0.16f + 1), 25), Color.Green);
+                spriteBatch.Draw(pixel, new Vector2(pctW_36 + pctW_20 * i + Width * 0.16f * HeroParty.theHero[i].XPPercent(), Height * .83f), new Rectangle(0, 0, (int)(Width * 0.16f * (1.0f - HeroParty.theHero[i].XPPercent())), 25), Color.Red);
 
                 //[Outline of XP bars]
-                spriteBatch.Draw(pixel, new Vector2(pctW_36 + Width * .20f * i, Height * .83f), new Rectangle(0, 0, (int)(Width * 0.16f), 2), Color.Black); //top
-                spriteBatch.Draw(pixel, new Vector2(pctW_36 + Width * .20f * i, Height * .83f), new Rectangle(0, 0, 2, 25), Color.Black); //left
-                spriteBatch.Draw(pixel, new Vector2(pctW_36 + Width * .20f * i + Width * 0.16f - 2, Height * .83f), new Rectangle(0, 0, 2, 25), Color.Black); //right
-                spriteBatch.Draw(pixel, new Vector2(pctW_36 + Width * .20f * i, Height * .83f + 25 - 2), new Rectangle(0, 0, (int)(Width * 0.16f), 2), Color.Black); //bottom
+                spriteBatch.Draw(pixel, new Vector2(pctW_36 + pctW_20 * i, Height * .83f), new Rectangle(0, 0, (int)(Width * 0.16f), 2), Color.Black); //top
+                spriteBatch.Draw(pixel, new Vector2(pctW_36 + pctW_20 * i, Height * .83f), new Rectangle(0, 0, 2, 25), Color.Black); //left
+                spriteBatch.Draw(pixel, new Vector2(pctW_36 + pctW_20 * i + Width * 0.16f - 2, Height * .83f), new Rectangle(0, 0, 2, 25), Color.Black); //right
+                spriteBatch.Draw(pixel, new Vector2(pctW_36 + pctW_20 * i, Height * .83f + 25 - 2), new Rectangle(0, 0, (int)(Width * 0.16f), 2), Color.Black); //bottom
 
-                shadowText(spriteBatch, "XP", new Vector2(Width * .365f + Width * .20f * i, Height * .81f), statusSize * 1.5f);
-                shadowText(spriteBatch, "HP", new Vector2(Width * .365f + Width * .20f * i, Height * .74f), statusSize * 1.5f);
+                shadowText(spriteBatch, "XP", new Vector2(Width * .365f + pctW_20 * i, Height * .81f), statusSize * 1.5f);
+                shadowText(spriteBatch, "HP", new Vector2(Width * .365f + pctW_20 * i, Height * .74f), statusSize * 1.5f);
 
-                shadowText(spriteBatch, HeroParty.theHero[i].XP.ToString() + "/" + HeroParty.theHero[i].XPtoLvl(), new Vector2(Width * .45f + Width * .20f * i, Height * .81f), statusSize * 1.5f);
-                shadowText(spriteBatch, HeroParty.theHero[i].health.ToString() + "/" + HeroParty.theHero[i].MaxHealth().ToString(), new Vector2(Width * .45f + Width * .20f * i, Height * .74f), statusSize * 1.5f);
+                shadowText(spriteBatch, HeroParty.theHero[i].XP.ToString() + "/" + HeroParty.theHero[i].XPtoLvl(), new Vector2(Width * .45f + pctW_20 * i, Height * .81f), statusSize * 1.5f);
+                shadowText(spriteBatch, HeroParty.theHero[i].health.ToString() + "/" + HeroParty.theHero[i].MaxHealth().ToString(), new Vector2(Width * .45f + pctW_20 * i, Height * .74f), statusSize * 1.5f);
 
             }
 

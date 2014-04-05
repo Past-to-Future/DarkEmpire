@@ -18,7 +18,7 @@ namespace DarkEmpire
 {
     class PlayingState : State, IDisposable
     {
-        Texture2D _npcSprite;
+        Texture2D _npcSprite, _battleSprite;
         private SpriteBatch _spriteBatch;
         private SpriteFont _spriteFont;
         public static Npc[] npc = new Npc[900];
@@ -53,10 +53,17 @@ namespace DarkEmpire
             set { _npcSprite = value; }
         }
 
+        public Texture2D battleSprite
+        {
+            get { return _battleSprite; }
+            set { _battleSprite = value; }
+        }
+
         public override void LoadContent()
         {
             _spriteFont = Game.Content.Load<SpriteFont>("console");
             _npcSprite = Game.Content.Load<Texture2D>("npc_sprite");
+            _battleSprite = Game.Content.Load<Texture2D>("battle_sprite");
             keyboardInput = new KeyboardInput();
             keyboardInput.initialize();          
         }

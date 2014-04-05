@@ -28,7 +28,7 @@ namespace DarkEmpire
         public Thread battleThread, attackThread; 
         String status = "Status"; //using the size of the word 'status' as scaling, weird but keeps stuff constant
         Vector2 statusSize;
-
+        public Texture2D background;
         bool paused = true; //player needs to input an attack because a character is eligible to attack
         bool doBattlepause = false; //semophore to handle the two threads
         bool selectEnemy = false, selectItem = false; //to know when player wants to select specifically the enemy to attack
@@ -59,7 +59,7 @@ namespace DarkEmpire
 
          public void initialize()
         {
-            
+            background = Game1.instance.Content.Load<Texture2D>("battle_background");
             pixel.SetData(new[] { Color.White }); //make it white so we can color it
             battlemap = new TmxMap("Content\\battleMap.tmx");
             battleText = Game1.instance.Content.Load<SpriteFont>("BattleSystemFont"); //cannot edit in mono, import the .spritefont included into a dummy xna project and edit, bring .xnb back over
@@ -95,7 +95,9 @@ namespace DarkEmpire
                          float dist = Vector2.Distance(HeroParty.theHero[saveAttack[2]].position, HeroParty.theEnemy[saveAttack[3]].position);
                          if (dist > 64)
                          {
-                             moving += 4 * 0.16f / dist;
+                             moving += 0.5f * 0.16f / dist;
+                             HeroParty.theHero[saveAttack[2]].battleFrame = (HeroParty.theHero[saveAttack[2]].battleFrame + 1) % 2;
+                             HeroParty.theHero[saveAttack[2]].changeBattleStance();
                              HeroParty.theHero[saveAttack[2]].position = Vector2.Lerp(HeroParty.theHero[saveAttack[2]].position, HeroParty.theEnemy[saveAttack[3]].position, moving);
                          }
                          else
@@ -124,6 +126,8 @@ namespace DarkEmpire
                                  HeroParty.theHero[saveAttack[2]].position = new Vector2(pctW_10, Height * .4f);
                              else
                                  HeroParty.theHero[saveAttack[2]].position = new Vector2(pctW_20, Height * .6f);
+                             HeroParty.theHero[saveAttack[2]].battleFrame = 0;
+                             HeroParty.theHero[saveAttack[2]].changeBattleStance();
                              Thread.Sleep(250);
                              attackQueue.Remove(attackQueue[i]);
                          }
@@ -169,16 +173,8 @@ namespace DarkEmpire
         public void draw()
         {
             Game1.instance.GraphicsDevice.Clear(Color.White);
-            foreach (TmxLayer layer in battlemap.Layers)
-            {
-                foreach (TmxLayerTile tile in layer.Tiles)
-                {
-                    Rectangle rec = new Rectangle((tile.Gid - 1) % Level.tileInX * Level.tileWidth + (tile.Gid - 1) % Level.tileInX * Level.tileSpacing, tile.Gid / Level.tileInX * Level.tileHeight + tile.Gid / Level.tileInX * Level.tileSpacing, Level.tileWidth, Level.tileHeight);
-                    spriteBatch.Draw(PlayingState.level.platformerTex, new Vector2(tile.X * 70/2, tile.Y * 70/2), rec, Color.White, 0.0f, new Vector2(0,0), 0.5f, SpriteEffects.None, 0.0f);
-                }
-            }
-
-
+            Rectangle screenRect = new Rectangle(0, 0, Game1.instance.GraphicsDevice.Viewport.Width, Game1.instance.GraphicsDevice.Viewport.Height);
+            spriteBatch.Draw(background, screenRect, Color.White);
             shadowText(spriteBatch, "->", new Vector2(pctW_05, Height * .8f + Height * .05f * battleMenuSelection), statusSize * 1.5f);
             shadowText(spriteBatch, "->", new Vector2(pctW_05 + Width * .30f * heroTurn, Height * .025f), statusSize);
 
@@ -288,7 +284,7 @@ namespace DarkEmpire
                 shadowText(spriteBatch, HeroParty.theHero[i].name, new Vector2(HealthBarX, Game1.instance.Height * .025f), statusSize);
                 
                 //[Solid health bars]
-                spriteBatch.Draw(Menu.pixel, new Vector2(HealthBarX, pctH_10), new Rectangle(0, 0, (int)(HeroParty.theHero[i].HealthPercent() * Game1.instance.Width * 0.16f + 1), 25), Color.Green);
+                spriteBatch.Draw(Menu.pixel, new Vector2(HealthBarX, pctH_10), new Rectangle(0, 0, (int)(HeroParty.theHero[i].HealthPercent() * Game1.instance.Width * 0.16f ), 25), Color.Green);
                 spriteBatch.Draw(Menu.pixel, new Vector2(HealthBarX + Width * 0.16f * HeroParty.theHero[i].HealthPercent(), pctH_10), new Rectangle(0, 0, (int)(Width * 0.16f * (1.0f - HeroParty.theHero[i].HealthPercent() )), 25), Color.Red);
 
                 //[Outline of health bars]
@@ -298,7 +294,7 @@ namespace DarkEmpire
                 spriteBatch.Draw(Menu.pixel, new Vector2(HealthBarX, pctH_10 + 25 - 2), new Rectangle(0, 0, (int)(Width * 0.16f), 2), Color.Black); //bottom
 
                 //[Draw Hero Sprites]
-                spriteBatch.Draw(PlayingState.instance.npcSprite, HeroParty.theHero[i].position, HeroParty.theHero[i].rect, Color.White, 0.0f, Vector2.Zero, HeroParty.theHero[i].scale, SpriteEffects.None, 0.0f);
+                spriteBatch.Draw(PlayingState.instance.battleSprite, HeroParty.theHero[i].position, HeroParty.theHero[i].battleRect, Color.White, 0.0f, Vector2.Zero, HeroParty.theHero[i].scale, SpriteEffects.FlipHorizontally, 0.0f);
 
             }
 

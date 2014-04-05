@@ -16,10 +16,10 @@ namespace DarkEmpire
 {
     public class Npc
     {
-        public Rectangle rect;
+        public Rectangle rect, battleRect;
         public int characterID;
         public int directionFace;
-        public int frame;
+        public int frame, battleFrame;
         public int partyPosition;
         public float health;
         public float scale;
@@ -69,13 +69,15 @@ namespace DarkEmpire
 
             scale = s;
             frame = 1;
+            battleFrame = 1;
             position = pos;
             directionFace = dFace; //# equals row on sprite sheet
             characterID = ID;
             partyPosition = 1;
             name = "dummy";
             //Has to be set to spritesheet and coordinated with artist
-            rect = new Rectangle((characterID - 1) % 4 * 180 + (frame) * 60, characterID / 5 * 240 + (directionFace - 1) % 4 * 60, 60, 60);
+            rect = new Rectangle((characterID - 1) % 4 * 180 + (frame) * 60, characterID / 5 * 240 + (directionFace - 1) % 4 * 60, 60, 60); //npc_sprite
+            battleRect = new Rectangle((battleFrame-1) * 100 , (characterID-1) * 100, 100, 100); //battle_sprite
         }
 
         public void setPartyPosition(int position)
@@ -87,6 +89,11 @@ namespace DarkEmpire
         {
             directionFace = dFace;
             rect = new Rectangle((characterID - 1) % 4 * 180 + (frame) * 60, characterID / 5 * 240 + (directionFace - 1) % 4 * 60, 60, 60);
+        }
+
+        public void changeBattleStance()
+        {
+            battleRect = new Rectangle(battleFrame * 100, (characterID - 1) * 100, 100, 100); //battle_sprit
         }
 
         Random rand = new Random();
