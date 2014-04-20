@@ -28,10 +28,12 @@ namespace DarkEmpire
         {
             _graphics = new GraphicsDeviceManager(this);
 
-            /*_width = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width; //896
+            /*
+            _width = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width; //896
             _height = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height; //504;
             _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-            _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;*/
+            _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            */
 
             _width = 896; //896
             _height = 504; //504;

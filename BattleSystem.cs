@@ -20,6 +20,7 @@ namespace DarkEmpire
     {
         TmxMap battlemap;
         public static Texture2D pixel = new Texture2D(Game1.instance.GraphicsDevice, 1, 1); //create 1x1 pixel texture
+        Texture2D bigGear, smallGear;
         public static SpriteFont battleText; //placeholder if text is different than menu (menu currently used)
         SpriteBatch spriteBatch = Game1.instance.SpriteBatch;
         public bool activeBattle; //Displays the battlefield
@@ -68,6 +69,9 @@ namespace DarkEmpire
             battleThread.Start();
             attackThread.Start();
             statusSize = battleText.MeasureString(status);
+
+            bigGear = Game1.instance.Content.Load<Texture2D>("bigGear");
+            smallGear = Game1.instance.Content.Load<Texture2D>("smallGear");
 
         }
 
@@ -170,13 +174,14 @@ namespace DarkEmpire
             }
         }
 
+        float rotation = 0.0f;
         public void draw()
         {
             Game1.instance.GraphicsDevice.Clear(Color.White);
             Rectangle screenRect = new Rectangle(0, 0, Game1.instance.GraphicsDevice.Viewport.Width, Game1.instance.GraphicsDevice.Viewport.Height);
             spriteBatch.Draw(background, screenRect, Color.White);
             shadowText(spriteBatch, "->", new Vector2(pctW_05, Height * .8f + Height * .05f * battleMenuSelection), statusSize * 1.5f);
-            shadowText(spriteBatch, "->", new Vector2(pctW_05 + Width * .30f * heroTurn, Height * .025f), statusSize);
+            shadowText(spriteBatch, "->", new Vector2(pctW_05 + Width * .275f * heroTurn, Height * .025f), statusSize);
 
             if (selectEnemy)
             {
@@ -279,7 +284,7 @@ namespace DarkEmpire
 
             for (int i = 0; i < 3; i++)
             {
-                float HealthBarX = pctW_08 + Width * .3f * i; 
+                float HealthBarX = pctW_08 + Width * .275f * i; 
                 //[Names at the Top]
                 shadowText(spriteBatch, HeroParty.theHero[i].name, new Vector2(HealthBarX, Game1.instance.Height * .025f), statusSize);
                 
@@ -299,18 +304,18 @@ namespace DarkEmpire
             }
 
             //[Draw battle bar]
-            spriteBatch.Draw(Menu.pixel, new Vector2(pctW_90, pctH_10), new Rectangle(0, 0, (int)(Width * 0.025f), (int)(Height*.80f)), Color.White); //top
+            spriteBatch.Draw(Menu.pixel, new Vector2(Width * .01f, pctH_10), new Rectangle(0, 0, (int)(Width * 0.025f), (int)(Height * .80f)), Color.White); //top
 
             for (int i = 0; i < battleQueue.Count; i++)
             {
                 int[] attack = battleQueue[i];
                 if (attack[0] == 0)
                 {
-                    shadowText(spriteBatch, "Melee:" + i, new Vector2(pctW_90, Height * .90f - (float)attack[1] / 5000f * Game1.instance.Height * .80f), statusSize * 3.0f);
+                    shadowText(spriteBatch, "Melee:" + i, new Vector2(Width*.01f, Height * .90f - (float)attack[1] / 5000f * Game1.instance.Height * .80f), statusSize * 3.0f);
                 }
                 else if (attack[0] == 1)
                 {
-                    shadowText(spriteBatch, "Wait:" + i, new Vector2(pctW_90, Height * .90f - (float)attack[1] / 5000f * Game1.instance.Height * .80f), statusSize * 3.0f);
+                    shadowText(spriteBatch, "Wait:" + i, new Vector2(Width * .01f, Height * .90f - (float)attack[1] / 5000f * Game1.instance.Height * .80f), statusSize * 3.0f);
                 }
             }
 
@@ -323,6 +328,10 @@ namespace DarkEmpire
                     HeroParty.theEnemy[i].DrawHealthAboveCharacter();
                 }
             }
+
+            //[Draw the Big Gear
+            rotation = (rotation + .1f) % 360;
+            spriteBatch.Draw(bigGear, new Vector2(Width, Height/2), null, Color.White, rotation, new Vector2(bigGear.Width/2, bigGear.Height/2), 1.0f, SpriteEffects.None, 0.0f);
 
         }
 
