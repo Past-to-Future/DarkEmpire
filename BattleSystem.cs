@@ -14,6 +14,7 @@ using System.Threading;
 using System.Collections;
 
 
+
 namespace DarkEmpire
 {
     public class BattleSystem
@@ -174,7 +175,12 @@ namespace DarkEmpire
             }
         }
 
-        float rotation = 0.0f;
+        float rotation_1 = 0.0f;
+        float rotation_2 = 0.0f;
+        string rotation_3 = "";
+        int turn = 0;
+        
+        bool spin = false;
         public void draw()
         {
             Game1.instance.GraphicsDevice.Clear(Color.White);
@@ -329,9 +335,210 @@ namespace DarkEmpire
                 }
             }
 
-            //[Draw the Big Gear
-            rotation = (rotation + .1f) % 360;
-            spriteBatch.Draw(bigGear, new Vector2(Width, Height/2), null, Color.White, rotation, new Vector2(bigGear.Width/2, bigGear.Height/2), 1.0f, SpriteEffects.None, 0.0f);
+
+            //[Spin the gear manually] 
+            if (KeyboardInput.inputstate.IsKeyPressed(Keys.Q, null, out KeyboardInput.controlIndex))
+            {
+                
+                //rotation_2 = 0.0f;
+                spin = !spin;
+                
+            }
+            //rotation_1 = rotation_2;
+            
+            if (spin == true)
+            {
+                //rotation_3 = rotation_1.ToString() + "\n" + (rotation_2 + 0.5f).ToString() + "\n";
+                if (turn == 0)
+                {
+                    if (rotation_1 >= 0.362f)
+                    {
+                        rotation_1 = 0.0f;
+                       // rotation_3 += rotation_2.ToString() + "\n";
+                        turn = turn+1;
+                        spin = false;
+                    }
+                }
+
+                if (turn == 1)
+                {
+                    if (rotation_1 >= 0.362f)
+                    {
+                        rotation_1 = 0.0f;
+                       // rotation_3 += rotation_2.ToString() + "\n";
+                        turn = turn + 1;
+                        spin = false;
+                    }
+                }
+
+                if (turn == 2)
+                {
+                    if (rotation_1 >= 0.382f)
+                    {
+                        rotation_1 = 0.0f;
+                        //rotation_3 += rotation_2.ToString() + "\n";
+                        turn = turn + 1;
+                        spin = false;
+                    }
+                }
+
+                if (turn == 3)
+                {
+                    if (rotation_1 >= 0.382f)
+                    {
+                        rotation_1 = 0.0f;
+                        //rotation_3 += rotation_2.ToString() + "\n";
+                        turn = turn + 1;
+                        spin = false;
+                    }
+                }
+
+                if (turn == 4)
+                {
+                    if (rotation_1 >= 0.378f)
+                    {
+                        rotation_1 = 0.0f;
+                        //rotation_3 += rotation_2.ToString() + "\n";
+                        turn = turn + 1;
+                        spin = false;
+                    }
+                }
+
+                if (turn == 5)
+                {
+                    if (rotation_1 >= 0.382f)
+                    {
+                        rotation_1 = 0.0f;
+                        //rotation_3 += rotation_2.ToString() + "\n";
+                        turn = turn + 1;
+                        spin = false;
+                    }
+                }
+
+                if (turn == 6)
+                {
+                    if (rotation_1 >= 0.38f)
+                    {
+                        rotation_1 = 0.0f;
+                       // rotation_3 += rotation_2.ToString() + "\n";
+                        turn = turn + 1;
+                        spin = false;
+                    }
+                }
+
+                if (turn == 7)
+                {
+                    if (rotation_1 >= 0.4f)
+                    {
+                        rotation_1 = 0.0f;
+                       // rotation_3 += rotation_2.ToString() + "\n";
+                        turn = turn + 1;
+                        spin = false;
+                    }
+                }
+
+                if (turn == 8)
+                {
+                    if (rotation_1 >= 0.38f)
+                    {
+                        rotation_1 = 0.0f;
+                        //rotation_3 += rotation_2.ToString() + "\n";
+                        turn = turn + 1;
+                        spin = false;
+                    }
+                }
+
+                if (turn == 9)
+                {
+                    if (rotation_1 >= 0.4f)
+                    {
+                        rotation_1 = 0.0f;
+                        //rotation_3 += rotation_2.ToString() + "\n";
+                        turn = turn + 1;
+                        spin = false;
+                    }
+                }
+
+                if (turn == 10)
+                {
+                    if (rotation_1 >= 0.4f)
+                    {
+                        rotation_1 = 0.0f;
+                       // rotation_3 += rotation_2.ToString() + "\n";
+                        turn = turn + 1;
+                        spin = false;
+                    }
+                }
+
+                if (turn == 11)
+                {
+                    if (rotation_1 >= 0.4f)
+                    {
+                        rotation_1 = 0.0f;
+                        //rotation_3 += rotation_2.ToString() + "\n";
+                        turn = turn + 1;
+                        spin = false;
+                    }
+                }
+
+                if (turn == 12)
+                {
+                    if (rotation_1 >= 0.38f)
+                    {
+                        rotation_1 = 0.0f;
+                       // rotation_3 += rotation_2.ToString() + "\n";
+                        turn = turn + 1;
+                        spin = false;
+                    }
+                }
+
+                if (turn == 13)
+                {
+                    if (rotation_1 >= 0.4f)
+                    {
+                        rotation_1 = 0.0f;
+                       // rotation_3 += rotation_2.ToString() + "\n";
+                        turn = turn + 1;
+                        spin = false;
+                    }
+                }
+
+                if (turn == 14)
+                {
+                    if (rotation_1 >= 0.38f)
+                    {
+                        rotation_1 = 0.0f;
+                       // rotation_3 += rotation_2.ToString() + "\n";
+                        turn = turn + 1;
+                        spin = false;
+                    }
+                }
+
+                if (turn == 15)
+                {
+                    if (rotation_1 >= 0.4f)
+                    {
+                        rotation_1 = 0.0f;
+                        //rotation_3 += rotation_2.ToString() + "\n";
+                        turn = 0;
+                        rotation_2 = 0.0f;
+                        spin = false;
+                    }
+                }
+                rotation_1 = rotation_1 + 0.02f;
+                rotation_2 = rotation_2+0.02f;
+                
+                //spriteBatch.Draw(bigGear, new Vector2(Width, Height / 2), null, Color.White, rotation_1, new Vector2(bigGear.Width / 2, bigGear.Height / 2), 1.0f, SpriteEffects.None, 0.0f);
+                //[Draw the Big Gear
+                
+                //rotation_2 = rotation_1;
+               
+            }
+            if (spin == false)
+            {
+                //System.IO.File.WriteAllText(@"C:\Users\anast_000\Desktop\WriteText.txt", rotation_3);
+            }
+            spriteBatch.Draw(bigGear, new Vector2(Width, Height / 2), null, Color.White, rotation_2, new Vector2(bigGear.Width / 2, bigGear.Height / 2), 1.0f, SpriteEffects.None, 0.0f);
 
         }
 
