@@ -27,7 +27,7 @@ namespace DarkEmpire
         public bool activeBattle; //Displays the battlefield
         static List<int[]> battleQueue = new List<int[]>(); //loads attacks onto timer, if timer runs out they move to attackQueue
         static List<int[]> attackQueue = new List<int[]>(); //responsible to show the attack
-        public Thread battleThread, attackThread; 
+        public Thread battleThread, attackThread;
         String status = "Status"; //using the size of the word 'status' as scaling, weird but keeps stuff constant
         Vector2 statusSize;
         public Texture2D background;
@@ -59,13 +59,13 @@ namespace DarkEmpire
             activeBattle = false;
         }
 
-         public void initialize()
+        public void initialize()
         {
             background = Game1.instance.Content.Load<Texture2D>("battle_background");
             pixel.SetData(new[] { Color.White }); //make it white so we can color it
             battlemap = new TmxMap("Content\\battleMap.tmx");
             battleText = Game1.instance.Content.Load<SpriteFont>("BattleSystemFont"); //cannot edit in mono, import the .spritefont included into a dummy xna project and edit, bring .xnb back over
-            battleThread =  new Thread(new ThreadStart(DoBattle));
+            battleThread = new Thread(new ThreadStart(DoBattle));
             attackThread = new Thread(new ThreadStart(DoAttack));
             battleThread.Start();
             attackThread.Start();
@@ -79,74 +79,74 @@ namespace DarkEmpire
         float moving = 0f;
 
         private void DoAttack()
-         {
-             while (true)
-             {
-                 if (attackQueue.Count > 0 && doBattlepause)
-                 {
+        {
+            while (true)
+            {
+                if (attackQueue.Count > 0 && doBattlepause)
+                {
 
-                     int i = 0;
-                     int[] saveAttack = attackQueue[i];
+                    int i = 0;
+                    int[] saveAttack = attackQueue[i];
 
-                     if (saveAttack[0] == 1)
-                     {
-                         Thread.Sleep(250);
-                         attackQueue.Remove(attackQueue[i]);
-                     }
-                     else
-                     {
+                    if (saveAttack[0] == 1)
+                    {
+                        Thread.Sleep(250);
+                        attackQueue.Remove(attackQueue[i]);
+                    }
+                    else
+                    {
 
 
-                         float dist = Vector2.Distance(HeroParty.theHero[saveAttack[2]].position, HeroParty.theEnemy[saveAttack[3]].position);
-                         if (dist > 64)
-                         {
-                             moving += 0.5f * 0.16f / dist;
-                             HeroParty.theHero[saveAttack[2]].battleFrame = (HeroParty.theHero[saveAttack[2]].battleFrame + 1) % 2;
-                             HeroParty.theHero[saveAttack[2]].changeBattleStance();
-                             HeroParty.theHero[saveAttack[2]].position = Vector2.Lerp(HeroParty.theHero[saveAttack[2]].position, HeroParty.theEnemy[saveAttack[3]].position, moving);
-                         }
-                         else
-                         {
+                        float dist = Vector2.Distance(HeroParty.theHero[saveAttack[2]].position, HeroParty.theEnemy[saveAttack[3]].position);
+                        if (dist > 64)
+                        {
+                            moving += 0.5f * 0.16f / dist;
+                            HeroParty.theHero[saveAttack[2]].battleFrame = (HeroParty.theHero[saveAttack[2]].battleFrame + 1) % 2;
+                            HeroParty.theHero[saveAttack[2]].changeBattleStance();
+                            HeroParty.theHero[saveAttack[2]].position = Vector2.Lerp(HeroParty.theHero[saveAttack[2]].position, HeroParty.theEnemy[saveAttack[3]].position, moving);
+                        }
+                        else
+                        {
 
-                             KeyboardInput.hitInstance.Stop();
-                             KeyboardInput.hitInstance.Play();
-                             Thread.Sleep(200);
-                             KeyboardInput.hitInstance.Stop();
-                             KeyboardInput.hitInstance.Play();
-                             Thread.Sleep(200);
-                             KeyboardInput.hitInstance.Stop();
-                             KeyboardInput.hitInstance.Play();
-                             HeroParty.theEnemy[saveAttack[3]].health -= 1.0f;
+                            KeyboardInput.hitInstance.Stop();
+                            KeyboardInput.hitInstance.Play();
+                            Thread.Sleep(200);
+                            KeyboardInput.hitInstance.Stop();
+                            KeyboardInput.hitInstance.Play();
+                            Thread.Sleep(200);
+                            KeyboardInput.hitInstance.Stop();
+                            KeyboardInput.hitInstance.Play();
+                            HeroParty.theEnemy[saveAttack[3]].health -= 1.0f;
 
-                             if (HeroParty.theEnemy[saveAttack[3]].health <= 0.0f)
-                             {
-                                 HeroParty.theEnemy[saveAttack[3]].health = 0.0f; //did he die
-                             }
+                            if (HeroParty.theEnemy[saveAttack[3]].health <= 0.0f)
+                            {
+                                HeroParty.theEnemy[saveAttack[3]].health = 0.0f; //did he die
+                            }
 
-                             Thread.Sleep(1250);
+                            Thread.Sleep(1250);
 
-                             if (saveAttack[2] == 0)
-                                 HeroParty.theHero[saveAttack[2]].position = new Vector2(pctW_20, Height * .2f);
-                             else if (saveAttack[2] == 1)
-                                 HeroParty.theHero[saveAttack[2]].position = new Vector2(pctW_10, Height * .4f);
-                             else
-                                 HeroParty.theHero[saveAttack[2]].position = new Vector2(pctW_20, Height * .6f);
-                             HeroParty.theHero[saveAttack[2]].battleFrame = 0;
-                             HeroParty.theHero[saveAttack[2]].changeBattleStance();
-                             Thread.Sleep(250);
-                             attackQueue.Remove(attackQueue[i]);
-                         }
-                     }
-                 }
-                 else
-                 {
-                     doBattlepause = false;
-                 }
-                 Thread.Sleep(25);
-             }
-         }
+                            if (saveAttack[2] == 0)
+                                HeroParty.theHero[saveAttack[2]].position = new Vector2(pctW_20, Height * .2f);
+                            else if (saveAttack[2] == 1)
+                                HeroParty.theHero[saveAttack[2]].position = new Vector2(pctW_10, Height * .4f);
+                            else
+                                HeroParty.theHero[saveAttack[2]].position = new Vector2(pctW_20, Height * .6f);
+                            HeroParty.theHero[saveAttack[2]].battleFrame = 0;
+                            HeroParty.theHero[saveAttack[2]].changeBattleStance();
+                            Thread.Sleep(250);
+                            attackQueue.Remove(attackQueue[i]);
+                        }
+                    }
+                }
+                else
+                {
+                    doBattlepause = false;
+                }
+                Thread.Sleep(25);
+            }
+        }
 
-       
+
         private void DoBattle()
         {
             while (true)
@@ -179,7 +179,7 @@ namespace DarkEmpire
         float rotation_2 = 0.0f;
         string rotation_3 = "";
         int turn = 0;
-        
+
         bool spin = false;
         public void draw()
         {
@@ -227,7 +227,7 @@ namespace DarkEmpire
                 }
                 else if (paused && selectItem == false)
                 {
-                    battleMenuSelection = (battleMenuSelection + 1) % 3 ;
+                    battleMenuSelection = (battleMenuSelection + 1) % 3;
                 }
             }
 
@@ -290,13 +290,13 @@ namespace DarkEmpire
 
             for (int i = 0; i < 3; i++)
             {
-                float HealthBarX = pctW_08 + Width * .275f * i; 
+                float HealthBarX = pctW_08 + Width * .275f * i;
                 //[Names at the Top]
                 shadowText(spriteBatch, HeroParty.theHero[i].name, new Vector2(HealthBarX, Game1.instance.Height * .025f), statusSize);
-                
+
                 //[Solid health bars]
-                spriteBatch.Draw(Menu.pixel, new Vector2(HealthBarX, pctH_10), new Rectangle(0, 0, (int)(HeroParty.theHero[i].HealthPercent() * Game1.instance.Width * 0.16f ), 25), Color.Green);
-                spriteBatch.Draw(Menu.pixel, new Vector2(HealthBarX + Width * 0.16f * HeroParty.theHero[i].HealthPercent(), pctH_10), new Rectangle(0, 0, (int)(Width * 0.16f * (1.0f - HeroParty.theHero[i].HealthPercent() )), 25), Color.Red);
+                spriteBatch.Draw(Menu.pixel, new Vector2(HealthBarX, pctH_10), new Rectangle(0, 0, (int)(HeroParty.theHero[i].HealthPercent() * Game1.instance.Width * 0.16f), 25), Color.Green);
+                spriteBatch.Draw(Menu.pixel, new Vector2(HealthBarX + Width * 0.16f * HeroParty.theHero[i].HealthPercent(), pctH_10), new Rectangle(0, 0, (int)(Width * 0.16f * (1.0f - HeroParty.theHero[i].HealthPercent())), 25), Color.Red);
 
                 //[Outline of health bars]
                 spriteBatch.Draw(Menu.pixel, new Vector2(HealthBarX, pctH_10), new Rectangle(0, 0, (int)(Width * 0.16f), 2), Color.Black); //top
@@ -317,7 +317,7 @@ namespace DarkEmpire
                 int[] attack = battleQueue[i];
                 if (attack[0] == 0)
                 {
-                    shadowText(spriteBatch, "Melee:" + i, new Vector2(Width*.01f, Height * .90f - (float)attack[1] / 5000f * Game1.instance.Height * .80f), statusSize * 3.0f);
+                    shadowText(spriteBatch, "Melee:" + i, new Vector2(Width * .01f, Height * .90f - (float)attack[1] / 5000f * Game1.instance.Height * .80f), statusSize * 3.0f);
                 }
                 else if (attack[0] == 1)
                 {
@@ -339,13 +339,13 @@ namespace DarkEmpire
             //[Spin the gear manually] 
             if (KeyboardInput.inputstate.IsKeyPressed(Keys.Q, null, out KeyboardInput.controlIndex))
             {
-                
+
                 //rotation_2 = 0.0f;
                 spin = !spin;
-                
+
             }
             //rotation_1 = rotation_2;
-            
+
             if (spin == true)
             {
                 //rotation_3 = rotation_1.ToString() + "\n" + (rotation_2 + 0.5f).ToString() + "\n";
@@ -354,8 +354,8 @@ namespace DarkEmpire
                     if (rotation_1 >= 0.362f)
                     {
                         rotation_1 = 0.0f;
-                       // rotation_3 += rotation_2.ToString() + "\n";
-                        turn = turn+1;
+                        // rotation_3 += rotation_2.ToString() + "\n";
+                        turn = turn + 1;
                         spin = false;
                     }
                 }
@@ -365,7 +365,7 @@ namespace DarkEmpire
                     if (rotation_1 >= 0.362f)
                     {
                         rotation_1 = 0.0f;
-                       // rotation_3 += rotation_2.ToString() + "\n";
+                        // rotation_3 += rotation_2.ToString() + "\n";
                         turn = turn + 1;
                         spin = false;
                     }
@@ -420,7 +420,7 @@ namespace DarkEmpire
                     if (rotation_1 >= 0.38f)
                     {
                         rotation_1 = 0.0f;
-                       // rotation_3 += rotation_2.ToString() + "\n";
+                        // rotation_3 += rotation_2.ToString() + "\n";
                         turn = turn + 1;
                         spin = false;
                     }
@@ -431,7 +431,7 @@ namespace DarkEmpire
                     if (rotation_1 >= 0.4f)
                     {
                         rotation_1 = 0.0f;
-                       // rotation_3 += rotation_2.ToString() + "\n";
+                        // rotation_3 += rotation_2.ToString() + "\n";
                         turn = turn + 1;
                         spin = false;
                     }
@@ -464,7 +464,7 @@ namespace DarkEmpire
                     if (rotation_1 >= 0.4f)
                     {
                         rotation_1 = 0.0f;
-                       // rotation_3 += rotation_2.ToString() + "\n";
+                        // rotation_3 += rotation_2.ToString() + "\n";
                         turn = turn + 1;
                         spin = false;
                     }
@@ -486,7 +486,7 @@ namespace DarkEmpire
                     if (rotation_1 >= 0.38f)
                     {
                         rotation_1 = 0.0f;
-                       // rotation_3 += rotation_2.ToString() + "\n";
+                        // rotation_3 += rotation_2.ToString() + "\n";
                         turn = turn + 1;
                         spin = false;
                     }
@@ -497,7 +497,7 @@ namespace DarkEmpire
                     if (rotation_1 >= 0.4f)
                     {
                         rotation_1 = 0.0f;
-                       // rotation_3 += rotation_2.ToString() + "\n";
+                        // rotation_3 += rotation_2.ToString() + "\n";
                         turn = turn + 1;
                         spin = false;
                     }
@@ -508,7 +508,7 @@ namespace DarkEmpire
                     if (rotation_1 >= 0.38f)
                     {
                         rotation_1 = 0.0f;
-                       // rotation_3 += rotation_2.ToString() + "\n";
+                        // rotation_3 += rotation_2.ToString() + "\n";
                         turn = turn + 1;
                         spin = false;
                     }
@@ -526,13 +526,13 @@ namespace DarkEmpire
                     }
                 }
                 rotation_1 = rotation_1 + 0.02f;
-                rotation_2 = rotation_2+0.02f;
-                
+                rotation_2 = rotation_2 + 0.02f;
+
                 //spriteBatch.Draw(bigGear, new Vector2(Width, Height / 2), null, Color.White, rotation_1, new Vector2(bigGear.Width / 2, bigGear.Height / 2), 1.0f, SpriteEffects.None, 0.0f);
                 //[Draw the Big Gear
-                
+
                 //rotation_2 = rotation_1;
-               
+
             }
             if (spin == false)
             {
