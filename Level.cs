@@ -49,7 +49,7 @@ namespace DarkEmpire
                 foreach (TmxLayerTile tile in layer.Tiles)
                 {
                     Rectangle rec = new Rectangle((tile.Gid - 1) % tileInX * tileWidth + (tile.Gid - 1) % tileInX * tileSpacing, tile.Gid / tileInX * tileHeight + tile.Gid / tileInX * tileSpacing, tileWidth, tileHeight);
-                    spriteBatch.Draw(_platformerTex, new Vector2(tile.X * 70, tile.Y * 70), rec, Color.White);
+                    spriteBatch.Draw(_platformerTex, new Vector2(tile.X * 70 / 2, tile.Y * 70 / 2), rec, Color.White, 0.0f, new Vector2(0, 0), 0.5f, SpriteEffects.None, 0.0f);
                 }
             }
         }

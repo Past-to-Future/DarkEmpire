@@ -62,6 +62,7 @@ namespace DarkEmpire
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+<<<<<<< HEAD
                 Exit();
 
             base.Update(gameTime);
@@ -171,10 +172,10 @@ namespace DarkEmpire
             keyboardInput.Update(gameTime);
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+=======
+>>>>>>> origin/Tim's-Branch
             {
                 Exit();
-                battlesystem.attackThread.Abort();
-                battlesystem.battleThread.Abort();
             }
 
             base.Update(gameTime);
@@ -184,42 +185,15 @@ namespace DarkEmpire
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            spriteBatch.Begin();
-
-            //If layers are going to be used, need to check which order they draw in, this may do it backwards (easy fix)
-            foreach (TmxLayer layer in map.Layers)
-            {
-                foreach (TmxLayerTile tile in layer.Tiles)
-                {
-                    //Rec stores the section of the sprite sheet only containing the texture of the sprite we want
-                    Rectangle rec = new Rectangle((tile.Gid - 1) % tileInX * tileWidth + (tile.Gid - 1) % tileInX * tileSpacing, tile.Gid / tileInX * tileHeight + tile.Gid / tileInX * tileSpacing, tileWidth, tileHeight);
-                    spriteBatch.Draw(platformerTex, new Vector2(tile.X * 70, tile.Y * 70), rec, Color.White);
-                }
-            }
-
-            for (int i = 1; i <= 899; i++)
-            {
-                if (!powerup)
-                    spriteBatch.Draw(npcSprite, npc[i].position, npc[i].rect, Color.White);
-                else
-                    spriteBatch.Draw(npcSprite, npc[i].position, npc[i].rect, new Color(rand.Next(255), rand.Next(255), rand.Next(255)));
-            }
-
-            spriteBatch.End();
-
-            //Gonna just erase the screen and draw a battle system for now for testing.
-            if (battlesystem.activeBattle)
-            {
-                battlesystem.draw();
-            }
-
             base.Draw(gameTime);
         }
-
-
     }
+<<<<<<< HEAD
 <<<<<<< HEAD
 }
 =======
 }*/
 
+=======
+}
+>>>>>>> origin/Tim's-Branch

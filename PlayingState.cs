@@ -18,13 +18,14 @@ namespace DarkEmpire
 {
     class PlayingState : State, IDisposable
     {
-        Texture2D _npcSprite;
+        Texture2D _npcSprite, _battleSprite;
         private SpriteBatch _spriteBatch;
         private SpriteFont _spriteFont;
         public static Npc[] npc = new Npc[900];
         public static BattleSystem battlesystem;
+        public static Menu menu;
         public static bool powerup = false;
-        public static HeroParty heroParty;
+        public static  HeroParty heroParty;
         public static KeyboardInput keyboardInput;
         public static Level level;
         public static PlayingState instance;
@@ -39,9 +40,11 @@ namespace DarkEmpire
             level = new Level("Level1");
             battlesystem = new BattleSystem();
             battlesystem.initialize();
+            menu = new Menu();
+            menu.Initialize();
 
-            for (int i = 1; i <= 899; i++)
-                npc[i] = new Npc(i % 9, 1, new Vector2(i * 2, i + rand.Next(-100, 400)));
+            for (int i = 1; i <= 100; i++)
+                npc[i] = new Npc(i % 4, 1, new Vector2(rand.Next(0, 800), rand.Next(0, 450)));
         }
 
         public Texture2D npcSprite
@@ -50,10 +53,17 @@ namespace DarkEmpire
             set { _npcSprite = value; }
         }
 
+        public Texture2D battleSprite
+        {
+            get { return _battleSprite; }
+            set { _battleSprite = value; }
+        }
+
         public override void LoadContent()
         {
             _spriteFont = Game.Content.Load<SpriteFont>("console");
             _npcSprite = Game.Content.Load<Texture2D>("npc_sprite");
+            _battleSprite = Game.Content.Load<Texture2D>("battle_sprite");
             keyboardInput = new KeyboardInput();
             keyboardInput.initialize();          
         }
@@ -66,6 +76,7 @@ namespace DarkEmpire
             {
                 battlesystem.attackThread.Abort();
                 battlesystem.battleThread.Abort();
+                Game.Exit();
             }
         }
 
@@ -77,7 +88,7 @@ namespace DarkEmpire
             
             level.Draw();
 
-            for (int i = 1; i <= 899; i++)
+            for (int i = 1; i <= 100; i++)
                 npc[i].draw();
 
             _spriteBatch.End(); 
@@ -89,6 +100,13 @@ namespace DarkEmpire
                 _spriteBatch.Begin(); 
                 _game.GraphicsDevice.Clear(Color.CornflowerBlue); 
                 battlesystem.draw();
+                _spriteBatch.End();
+            }
+
+            if (menu.activeMenu)
+            {
+                _spriteBatch.Begin(); 
+                menu.Draw();
                 _spriteBatch.End();
             }
         }
