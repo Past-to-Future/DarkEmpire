@@ -18,7 +18,7 @@ using System.Collections;
 namespace DarkEmpire
 {
     public class BattleSystem
-    {
+    {   //test
         TmxMap battlemap;
         public static Texture2D pixel = new Texture2D(Game1.instance.GraphicsDevice, 1, 1); //create 1x1 pixel texture
         Texture2D bigGear, smallGear;
