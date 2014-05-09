@@ -44,13 +44,13 @@ namespace DarkEmpire
         public void Initialize()
         {
             background = Game1.instance.Content.Load<Texture2D>("background");
-            box_background = Game1.instance.Content.Load<Texture2D>("light backbone");
-            white_background = Game1.instance.Content.Load<Texture2D>("background white");
-            backbone = Game1.instance.Content.Load<Texture2D>("backbone");
+            box_background = Game1.instance.Content.Load<Texture2D>("Menu/light backbone");
+            white_background = Game1.instance.Content.Load<Texture2D>("Menu/background white");
+            backbone = Game1.instance.Content.Load<Texture2D>("Menu/backbone");
             menuText = Game1.instance.Content.Load<SpriteFont>("console");
-            c[0] = Game1.instance.Content.Load<Texture2D>("Maxum");
-            c[1] = Game1.instance.Content.Load<Texture2D>("Elder");
-            c[2] = Game1.instance.Content.Load<Texture2D>("WizardGirl");
+            c[0] = Game1.instance.Content.Load<Texture2D>("Menu/CharacterSelection/Maxum");
+            c[1] = Game1.instance.Content.Load<Texture2D>("Menu/CharacterSelection/Jasmine");
+            c[2] = Game1.instance.Content.Load<Texture2D>("Menu/CharacterSelection/Aurelia");
             pixel.SetData(new[] { Color.White }); //make it white so we can color it
         }
 
@@ -96,10 +96,8 @@ namespace DarkEmpire
             /*Character Portraits*/
             for (int i = 0; i < 3; i++)
             {
-                if(i==0 || i==1)
-                    spriteBatch.Draw(c[HeroParty.theHero[i].characterID - 1], new Vector2(Width * .345f + Width*0.205f * i, Height * .18f), new Rectangle(0, 0, c[i].Width, c[i].Height), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.0f);
-                else
-                    spriteBatch.Draw(c[HeroParty.theHero[i].characterID - 1], new Vector2(Width * .35f + pctW_20 * i, Height * .16f), new Rectangle(0, 0, c[i].Width, c[i].Height), Color.White, 0.0f, Vector2.Zero, new Vector2(Width * 0.20f / c[i].Width, Height * 0.60f / c[i].Height), SpriteEffects.None, 0.0f);
+                spriteBatch.Draw(c[HeroParty.theHero[i].characterID - 1], new Vector2(Width * .345f + Width*0.205f * i, Height * .18f), new Rectangle(0, 0, c[i].Width, c[i].Height), Color.White, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.0f);
+
                 shadowText(spriteBatch, HeroParty.theHero[i].name, new Vector2(pctW_36 + pctW_20 * i, Game1.instance.Height * .685f), statusSize);
 
                 //[Solid health bars]

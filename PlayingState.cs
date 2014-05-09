@@ -37,7 +37,7 @@ namespace DarkEmpire
             instance = this;
             _spriteBatch = Game1.instance.SpriteBatch;
             heroParty = new HeroParty();
-            level = new Level("Level1");
+            level = new Level("MapData/Level1");
             battlesystem = new BattleSystem();
             battlesystem.initialize();
             menu = new Menu();
