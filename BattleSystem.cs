@@ -39,6 +39,8 @@ namespace DarkEmpire
         static int Enemyselection = 0; //who we gonna kill with our attacks
         static int battleMenuSelection = 0; //determines if we are using an attack, item, or waiting.
 
+        Texture2D[] characterPortrait = new Texture2D[8];
+        
         static Random rand = new Random();
 
         /*Trying to reduce computations on the menu*/
@@ -61,9 +63,14 @@ namespace DarkEmpire
 
         public void initialize()
         {
+            characterPortrait[0] = Game1.instance.Content.Load<Texture2D>("CharacterPortrait/Maxum");
+            characterPortrait[1] = Game1.instance.Content.Load<Texture2D>("CharacterPortrait/Aurelia");
+            characterPortrait[2] = Game1.instance.Content.Load<Texture2D>("CharacterPortrait/Jasmine");
+            characterPortrait[3] = Game1.instance.Content.Load<Texture2D>("CharacterPortrait/Vlad");
+
             background = Game1.instance.Content.Load<Texture2D>("battle_background");
             pixel.SetData(new[] { Color.White }); //make it white so we can color it
-            battlemap = new TmxMap("Content\\battleMap.tmx");
+            battlemap = new TmxMap("Content\\MapData/battleMap.tmx");
             battleText = Game1.instance.Content.Load<SpriteFont>("BattleSystemFont"); //cannot edit in mono, import the .spritefont included into a dummy xna project and edit, bring .xnb back over
             battleThread = new Thread(new ThreadStart(DoBattle));
             attackThread = new Thread(new ThreadStart(DoAttack));
@@ -182,15 +189,18 @@ namespace DarkEmpire
         bool spin = false;
         bool spin_1 = false;
         int turn = 0;
+<<<<<<< HEAD
         int turn_1 = 0;
 
+=======
+        bool spin = false;
+>>>>>>> b4bb4e3fe511e4c5fe48bbd5c9d02fcaf7f34e47
         public void draw()
         {
             Game1.instance.GraphicsDevice.Clear(Color.White);
             Rectangle screenRect = new Rectangle(0, 0, Game1.instance.GraphicsDevice.Viewport.Width, Game1.instance.GraphicsDevice.Viewport.Height);
             spriteBatch.Draw(background, screenRect, Color.White);
             shadowText(spriteBatch, "->", new Vector2(pctW_05, Height * .8f + Height * .05f * battleMenuSelection), statusSize * 1.5f);
-            shadowText(spriteBatch, "->", new Vector2(pctW_05 + Width * .275f * heroTurn, Height * .025f), statusSize);
 
             if (selectEnemy)
             {
@@ -267,9 +277,9 @@ namespace DarkEmpire
                     npcAttackSet[2] = true;
             }
 
-            if (!npcAttackSet[2])
+            if (!npcAttackSet[0])
             {
-                heroTurn = 2;
+                heroTurn = 0;
                 paused = true;
             }
             else if (!npcAttackSet[1])
@@ -277,9 +287,9 @@ namespace DarkEmpire
                 heroTurn = 1;
                 paused = true;
             }
-            else if (!npcAttackSet[0])
+            else if (!npcAttackSet[2])
             {
-                heroTurn = 0;
+                heroTurn = 2;
                 paused = true;
             }
 
@@ -291,9 +301,15 @@ namespace DarkEmpire
             shadowText(spriteBatch, "Item", new Vector2(pctW_08, Height * .85f), statusSize * 1.5f);
             shadowText(spriteBatch, "Wait", new Vector2(pctW_08, Height * .90f), statusSize * 1.5f);
 
+            //shadowText(spriteBatch, "->", new Vector2(pctW_05 + Width * .275f * heroTurn, Height * .025f), statusSize);
+
             for (int i = 0; i < 3; i++)
             {
-                float HealthBarX = pctW_08 + Width * .275f * i;
+                float HealthBarX = pctW_08 + Width * .27f * i;
+                if(i==heroTurn)
+                    spriteBatch.Draw(characterPortrait[i], new Vector2(HealthBarX-70f,Game1.instance.Height * .025f), null , new Color(0,1,0,0.90f), 0.0f, Vector2.Zero, HeroParty.theHero[i].scale, SpriteEffects.FlipHorizontally, 0.0f);
+                else
+                    spriteBatch.Draw(characterPortrait[i], new Vector2(HealthBarX - 70f, Game1.instance.Height * .025f), null, Color.White, 0.0f, Vector2.Zero, HeroParty.theHero[i].scale, SpriteEffects.FlipHorizontally, 0.0f);
                 //[Names at the Top]
                 shadowText(spriteBatch, HeroParty.theHero[i].name, new Vector2(HealthBarX, Game1.instance.Height * .025f), statusSize);
 
@@ -313,18 +329,18 @@ namespace DarkEmpire
             }
 
             //[Draw battle bar]
-            spriteBatch.Draw(Menu.pixel, new Vector2(Width * .01f, pctH_10), new Rectangle(0, 0, (int)(Width * 0.025f), (int)(Height * .80f)), Color.White); //top
+            spriteBatch.Draw(Menu.pixel, new Vector2(Width * .01f, pctH_10*2), new Rectangle(0, 0, (int)(Width * 0.025f), (int)(Height * .70f)), new Color(0,0,0,0.24f));//Color.White); //top
 
             for (int i = 0; i < battleQueue.Count; i++)
             {
                 int[] attack = battleQueue[i];
                 if (attack[0] == 0)
                 {
-                    shadowText(spriteBatch, "Melee:" + i, new Vector2(Width * .01f, Height * .90f - (float)attack[1] / 5000f * Game1.instance.Height * .80f), statusSize * 3.0f);
+                    shadowText(spriteBatch, "Melee:" + i, new Vector2(Width * .01f, Height * .90f - (float)attack[1] / 5000f * Game1.instance.Height * .70f), statusSize * 3.0f);
                 }
                 else if (attack[0] == 1)
                 {
-                    shadowText(spriteBatch, "Wait:" + i, new Vector2(Width * .01f, Height * .90f - (float)attack[1] / 5000f * Game1.instance.Height * .80f), statusSize * 3.0f);
+                    shadowText(spriteBatch, "Wait:" + i, new Vector2(Width * .01f, Height * .90f - (float)attack[1] / 5000f * Game1.instance.Height * .70f), statusSize * 3.0f);
                 }
             }
 
@@ -766,10 +782,20 @@ namespace DarkEmpire
             {
                 //System.IO.File.WriteAllText(@"C:\Users\anast_000\Desktop\WriteText.txt", rotation_3);
             }
+<<<<<<< HEAD
             spriteBatch.Draw(bigGear, new Vector2(Width, (Height / 2)-4), null, Color.White, rotation_2, new Vector2(bigGear.Width /2, bigGear.Height / 2), 1.0f, SpriteEffects.None, 0.0f);
             spriteBatch.Draw(smallGear, new Vector2(Width, (Height / 2)+310), null, Color.White, rotation_4, new Vector2(smallGear.Width / 2, smallGear.Height / 2), 1.0f, SpriteEffects.None, 0.0f);
             //spriteBatch.Draw(smallGear, new Vector2(Width - 10, Height / 2), null, Color.White, rotation_2, new Vector2(bigGear.Width / 2, bigGear.Height / 2), 1.0f, SpriteEffects.None, 0.0f);
 
+=======
+            spriteBatch.Draw(bigGear, new Vector2(Width, Height / 2), null, Color.White, rotation_2, new Vector2(bigGear.Width / 2, bigGear.Height / 2), 1.0f, SpriteEffects.None, 0.0f);
+            float xposition = -bigGear.Width / 2+32; 
+            float yposition = 0;
+            float xrotation = xposition * (float)Math.Cos(-rotation_2) + yposition * (float)Math.Sin(-rotation_2);
+            float yrotation = (float)-Math.Sin(-rotation_2) * xposition + yposition * (float)Math.Cos(-rotation_2);
+            spriteBatch.Draw(characterPortrait[0], new Vector2(Width + xrotation, Height / 2 + yrotation), null, Color.White, rotation_2, new Vector2(characterPortrait[0].Width / 2, characterPortrait[0].Height / 2), 0.5f, SpriteEffects.None, 0.0f);
+            
+>>>>>>> b4bb4e3fe511e4c5fe48bbd5c9d02fcaf7f34e47
         }
 
         public static void AddAttack(int attackNumber)
