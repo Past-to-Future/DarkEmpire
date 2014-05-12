@@ -31,8 +31,8 @@ namespace DarkEmpire
             theHero[2].setPartyPosition(2);
 
             theHero[0].name = "Maxum";
-            theHero[1].name = "Jasmine";
-            theHero[2].name = "Aurelia";
+            theHero[1].name = "Aurelia";
+            theHero[2].name = "Jasmine";
 
             theEnemy = new Npc[5];
             theEnemy[0] = new Npc(5, 2, new Vector2(Game1.instance.Width * 0.6f, Game1.instance.Height * .3f), 1.0f);

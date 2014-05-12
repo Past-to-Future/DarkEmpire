@@ -299,9 +299,9 @@ namespace DarkEmpire
             {
                 float HealthBarX = pctW_08 + Width * .27f * i;
                 if(i==heroTurn)
-                    spriteBatch.Draw(characterPortrait[i], new Vector2(HealthBarX-70f,Game1.instance.Height * .025f), null , new Color(0,1,0,0.90f), 0.0f, Vector2.Zero, HeroParty.theHero[i].scale, SpriteEffects.FlipHorizontally, 0.0f);
+                    spriteBatch.Draw(characterPortrait[i], new Vector2(HealthBarX-70f,Game1.instance.Height * .025f), null , new Color(0,1,0,0.90f), 0.0f, Vector2.Zero, HeroParty.theHero[i].scale, SpriteEffects.None, 0.0f);
                 else
-                    spriteBatch.Draw(characterPortrait[i], new Vector2(HealthBarX - 70f, Game1.instance.Height * .025f), null, Color.White, 0.0f, Vector2.Zero, HeroParty.theHero[i].scale, SpriteEffects.FlipHorizontally, 0.0f);
+                    spriteBatch.Draw(characterPortrait[i], new Vector2(HealthBarX - 70f, Game1.instance.Height * .025f), null, Color.White, 0.0f, Vector2.Zero, HeroParty.theHero[i].scale, SpriteEffects.None, 0.0f);
                 //[Names at the Top]
                 shadowText(spriteBatch, HeroParty.theHero[i].name, new Vector2(HealthBarX, Game1.instance.Height * .025f), statusSize);
 
@@ -549,7 +549,7 @@ namespace DarkEmpire
             {
                 //System.IO.File.WriteAllText(@"C:\Users\anast_000\Desktop\WriteText.txt", rotation_3);
             }
-            spriteBatch.Draw(bigGear, new Vector2(Width, Height / 2), null, Color.White, rotation_2, new Vector2(bigGear.Width / 2, bigGear.Height / 2), 1.0f, SpriteEffects.None, 0.0f);
+            spriteBatch.Draw(bigGear, new Vector2(Width, Height / 2), null, new Color(1.0f, 1.0f, 1.0f, 1.0f), rotation_2, new Vector2(bigGear.Width / 2, bigGear.Height / 2), 1.0f, SpriteEffects.None, 0.0f);
             float xposition = -bigGear.Width / 2+32; 
             float yposition = 0;
             float xrotation = xposition * (float)Math.Cos(-rotation_2) + yposition * (float)Math.Sin(-rotation_2);
@@ -566,6 +566,7 @@ namespace DarkEmpire
             attack[2] = heroTurn; //which npc doing the attack
             attack[3] = Enemyselection; //which enemy to hit
             battleQueue.Add(attack);
+
         }
 
         public void shadowText(SpriteBatch spriteBatch, String text, Vector2 position, Vector2 statusSize)
