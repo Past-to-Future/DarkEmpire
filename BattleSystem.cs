@@ -765,13 +765,6 @@ namespace DarkEmpire
                         rotation_4 = rotation_4 + 0.055f;
                 }
                 rotation_3 = rotation_3 + 0.02f;
-                
-
-                //spriteBatch.Draw(bigGear, new Vector2(Width, Height / 2), null, Color.White, rotation_1, new Vector2(bigGear.Width / 2, bigGear.Height / 2), 1.0f, SpriteEffects.None, 0.0f);
-                //[Draw the Big Gear
-
-                //rotation_2 = rotation_1;
-
             }
 
 
@@ -779,17 +772,20 @@ namespace DarkEmpire
             {
                 //System.IO.File.WriteAllText(@"C:\Users\anast_000\Desktop\WriteText.txt", rotation_3);
             }
-            spriteBatch.Draw(bigGear, new Vector2(Width, Height / 2), null, new Color(1.0f, 1.0f, 1.0f, 1.0f), rotation_2, new Vector2(bigGear.Width / 2, bigGear.Height / 2), 1.0f, SpriteEffects.None, 0.0f);
+
             spriteBatch.Draw(bigGear, new Vector2(Width, (Height / 2)-4), null, Color.White, rotation_2, new Vector2(bigGear.Width /2, bigGear.Height / 2), 1.0f, SpriteEffects.None, 0.0f);
             spriteBatch.Draw(smallGear, new Vector2(Width, (Height / 2)+310), null, Color.White, rotation_4, new Vector2(smallGear.Width / 2, smallGear.Height / 2), 1.0f, SpriteEffects.None, 0.0f);
-            //spriteBatch.Draw(smallGear, new Vector2(Width - 10, Height / 2), null, Color.White, rotation_2, new Vector2(bigGear.Width / 2, bigGear.Height / 2), 1.0f, SpriteEffects.None, 0.0f);
 
-            spriteBatch.Draw(bigGear, new Vector2(Width, Height / 2), null, Color.White, rotation_2, new Vector2(bigGear.Width / 2, bigGear.Height / 2), 1.0f, SpriteEffects.None, 0.0f);
-            float xposition = -bigGear.Width / 2+32; 
-            float yposition = 0;
-            float xrotation = xposition * (float)Math.Cos(-rotation_2) + yposition * (float)Math.Sin(-rotation_2);
-            float yrotation = (float)-Math.Sin(-rotation_2) * xposition + yposition * (float)Math.Cos(-rotation_2);
-            spriteBatch.Draw(characterPortrait[0], new Vector2(Width + xrotation, Height / 2 + yrotation), null, Color.White, rotation_2, new Vector2(characterPortrait[0].Width / 2, characterPortrait[0].Height / 2), 0.5f, SpriteEffects.None, 0.0f);
+            for (int i = 0; i < battleQueue.Count; i++)
+            {
+                float xposition = -bigGear.Width / 2 + 32;
+                float yposition = 0;
+                float rotationOrigin = (float)Math.PI*(i-3) / 8f + rotation_2;
+                float xrotation = xposition * (float)Math.Cos(-rotationOrigin) + yposition * (float)Math.Sin(-rotationOrigin);
+                float yrotation = (float)-Math.Sin(-rotationOrigin) * xposition + yposition * (float)Math.Cos(-rotationOrigin);
+
+                spriteBatch.Draw(characterPortrait[battleQueue[i][2]], new Vector2(Width + xrotation, Height / 2 + yrotation - 4), null, Color.White, rotationOrigin, new Vector2(characterPortrait[0].Width / 2, characterPortrait[0].Height / 2), 0.5f, SpriteEffects.None, 0.0f);
+            }
             
         }
 
@@ -802,6 +798,17 @@ namespace DarkEmpire
             attack[3] = Enemyselection; //which enemy to hit
             battleQueue.Add(attack);
 
+            for (int i = 0; i < battleQueue.Count-1; i++)
+            {
+                int[] dummy = new int[4];
+                dummy = battleQueue[i];
+                if (dummy[1] > battleQueue[i + 1][1])
+                {
+                    battleQueue[i] = battleQueue[i + 1];
+                    battleQueue[i + 1] = dummy;
+                }
+
+            }
         }
 
         public void shadowText(SpriteBatch spriteBatch, String text, Vector2 position, Vector2 statusSize)
