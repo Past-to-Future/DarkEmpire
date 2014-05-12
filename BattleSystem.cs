@@ -184,9 +184,20 @@ namespace DarkEmpire
 
         float rotation_1 = 0.0f;
         float rotation_2 = 0.0f;
-        string rotation_3 = "";
-        int turn = 0;
+        float rotation_3 = 0.0f;
+        float rotation_4 = 0.0f;
         bool spin = false;
+        bool spin_1 = false;
+        int turn = 0;
+<<<<<<< HEAD
+<<<<<<< HEAD
+        int turn_1 = 0;
+
+=======
+=======
+>>>>>>> b4bb4e3fe511e4c5fe48bbd5c9d02fcaf7f34e47
+        bool spin = false;
+>>>>>>> b4bb4e3fe511e4c5fe48bbd5c9d02fcaf7f34e47
         public void draw()
         {
             Game1.instance.GraphicsDevice.Clear(Color.White);
@@ -353,6 +364,7 @@ namespace DarkEmpire
 
                 //rotation_2 = 0.0f;
                 spin = !spin;
+                spin_1 = !spin_1;
 
             }
             //rotation_1 = rotation_2;
@@ -537,7 +549,8 @@ namespace DarkEmpire
                     }
                 }
                 rotation_1 = rotation_1 + 0.02f;
-                rotation_2 = rotation_2 + 0.02f;
+                rotation_2 = rotation_2 - 0.02f;
+                
 
                 //spriteBatch.Draw(bigGear, new Vector2(Width, Height / 2), null, Color.White, rotation_1, new Vector2(bigGear.Width / 2, bigGear.Height / 2), 1.0f, SpriteEffects.None, 0.0f);
                 //[Draw the Big Gear
@@ -545,17 +558,257 @@ namespace DarkEmpire
                 //rotation_2 = rotation_1;
 
             }
+
+            if (spin_1 == true)
+            {
+                //rotation_3 = rotation_1.ToString() + "\n" + (rotation_2 + 0.5f).ToString() + "\n";
+                if (turn_1 == 0)
+                {
+                    if (rotation_3 >= 0.362f)
+                    {
+                        rotation_3 = 0.0f;
+                        // rotation_3 += rotation_2.ToString() + "\n";
+                        turn_1 = turn_1 + 1;
+                        spin_1 = false;
+                    }
+                    else
+                        rotation_4 = rotation_4 + 0.054f;
+                }
+
+                if (turn_1 == 1)
+                {
+                    if (rotation_3 >= 0.362f)
+                    {
+                        rotation_3 = 0.0f;
+                        // rotation_3 += rotation_2.ToString() + "\n";
+                        turn_1 = turn_1 + 1;
+                        spin_1 = false;
+                    }
+                    else
+                        rotation_4 = rotation_4 + 0.052f;
+                }
+
+                if (turn_1 == 2)
+                {
+                    if (rotation_3 >= 0.382f)
+                    {
+                        rotation_3 = 0.0f;
+                        //rotation_3 += rotation_2.ToString() + "\n";
+                        turn_1 = turn_1 + 1;
+                        spin_1 = false;
+                    }
+                    else
+                        rotation_4 = rotation_4 + 0.052f;
+                }
+
+                if (turn_1 == 3)
+                {
+                    if (rotation_3 >= 0.382f)
+                    {
+                        rotation_3 = 0.0f;
+                        //rotation_3 += rotation_2.ToString() + "\n";
+                        turn_1 = turn_1 + 1;
+                        spin_1 = false;
+                    }
+                    else
+                        rotation_4 = rotation_4 + 0.052f;
+                }
+
+                if (turn_1 == 4)
+                {
+                    if (rotation_3 >= 0.378f)
+                    {
+                        rotation_3 = 0.0f;
+                        //rotation_3 += rotation_2.ToString() + "\n";
+                        turn_1 = turn_1 + 1;
+                        spin_1 = false;
+                    }
+                    else
+                        rotation_4 = rotation_4 + 0.052f;
+                }
+
+                if (turn_1 == 5)
+                {
+                    if (rotation_3 >= 0.382f)
+                    {
+                        rotation_3 = 0.0f;
+                        //rotation_3 += rotation_2.ToString() + "\n";
+                        turn_1 = turn_1 + 1;
+                        spin_1 = false;
+                    }
+                    else
+                        rotation_4 = rotation_4 + 0.053f;
+                }
+
+                if (turn_1 == 6)
+                {
+                    if (rotation_3 >= 0.38f)
+                    {
+                        rotation_3 = 0.0f;
+                        // rotation_3 += rotation_2.ToString() + "\n";
+                        turn_1 = turn_1 + 1;
+                        spin_1 = false;
+                    }
+                    else
+                        rotation_4 = rotation_4 + 0.053f;
+                }
+
+                if (turn_1 == 7)
+                {
+                    if (rotation_3 >= 0.4f)
+                    {
+                        rotation_3 = 0.0f;
+                        // rotation_3 += rotation_2.ToString() + "\n";
+                        turn_1 = turn_1 + 1;
+                        spin_1 = false;
+                    }
+                    else
+                        rotation_4 = rotation_4 + 0.053f;
+                }
+
+                if (turn_1 == 8)
+                {
+                    if (rotation_3 >= 0.38f)
+                    {
+                        rotation_3 = 0.0f;
+                        //rotation_3 += rotation_2.ToString() + "\n";
+                        turn_1 = turn_1 + 1;
+                        spin_1 = false;
+                    }
+                    else
+                        rotation_4 = rotation_4 + 0.052f;
+                }
+
+                if (turn_1 == 9)
+                {
+                    if (rotation_3 >= 0.4f)
+                    {
+                        rotation_3 = 0.0f;
+                        //rotation_3 += rotation_2.ToString() + "\n";
+                        turn_1 = turn_1 + 1;
+                        spin_1 = false;
+                    }
+                    else
+                        rotation_4 = rotation_4 + 0.055f;
+                }
+
+                if (turn_1 == 10)
+                {
+                    if (rotation_3 >= 0.4f)
+                    {
+                        rotation_3 = 0.0f;
+                        // rotation_3 += rotation_2.ToString() + "\n";
+                        turn_1 = turn_1 + 1;
+                        spin_1 = false;
+                    }
+                    else
+                        rotation_4 = rotation_4 + 0.055f;
+                }
+
+                if (turn_1 == 11)
+                {
+                    if (rotation_3 >= 0.4f)
+                    {
+                        rotation_3 = 0.0f;
+                        //rotation_3 += rotation_2.ToString() + "\n";
+                        turn_1 = turn_1 + 1;
+                        spin_1 = false;
+                    }
+                    else
+                        rotation_4 = rotation_4 + 0.055f;
+                }
+
+                if (turn_1 == 12)
+                {
+                    if (rotation_3 >= 0.38f)
+                    {
+                        rotation_3 = 0.0f;
+                        // rotation_3 += rotation_2.ToString() + "\n";
+                        turn_1 = turn_1 + 1;
+                        spin_1 = false;
+                    }
+                    else
+                        rotation_4 = rotation_4 + 0.054f;
+                }
+
+                if (turn_1 == 13)
+                {
+                    if (rotation_3 >= 0.4f)
+                    {
+                        rotation_3 = 0.0f;
+                        // rotation_3 += rotation_2.ToString() + "\n";
+                        turn_1 = turn_1 + 1;
+                        spin_1 = false;
+                    }
+                    else
+                        rotation_4 = rotation_4 + 0.055f;
+                }
+
+                if (turn_1 == 14)
+                {
+                    if (rotation_3 >= 0.38f)
+                    {
+                        rotation_3 = 0.0f;
+                        // rotation_3 += rotation_2.ToString() + "\n";
+                        turn_1 = turn_1 + 1;
+                        spin_1 = false;
+                    }
+                    else
+                        rotation_4 = rotation_4 + 0.055f;
+                }
+
+                if (turn_1 == 15)
+                {
+                    if (rotation_3 >= 0.4f)
+                    {
+                        rotation_3 = 0.0f;
+                        //rotation_3 += rotation_2.ToString() + "\n";
+                        turn_1 = 0;
+                        rotation_4 = 0.0f;
+                        spin_1 = false;
+                    }
+                    else
+                        rotation_4 = rotation_4 + 0.055f;
+                }
+                rotation_3 = rotation_3 + 0.02f;
+                
+
+                //spriteBatch.Draw(bigGear, new Vector2(Width, Height / 2), null, Color.White, rotation_1, new Vector2(bigGear.Width / 2, bigGear.Height / 2), 1.0f, SpriteEffects.None, 0.0f);
+                //[Draw the Big Gear
+
+                //rotation_2 = rotation_1;
+
+            }
+
+
             if (spin == false)
             {
                 //System.IO.File.WriteAllText(@"C:\Users\anast_000\Desktop\WriteText.txt", rotation_3);
             }
+<<<<<<< HEAD
             spriteBatch.Draw(bigGear, new Vector2(Width, Height / 2), null, new Color(1.0f, 1.0f, 1.0f, 1.0f), rotation_2, new Vector2(bigGear.Width / 2, bigGear.Height / 2), 1.0f, SpriteEffects.None, 0.0f);
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+            spriteBatch.Draw(bigGear, new Vector2(Width, (Height / 2)-4), null, Color.White, rotation_2, new Vector2(bigGear.Width /2, bigGear.Height / 2), 1.0f, SpriteEffects.None, 0.0f);
+            spriteBatch.Draw(smallGear, new Vector2(Width, (Height / 2)+310), null, Color.White, rotation_4, new Vector2(smallGear.Width / 2, smallGear.Height / 2), 1.0f, SpriteEffects.None, 0.0f);
+            //spriteBatch.Draw(smallGear, new Vector2(Width - 10, Height / 2), null, Color.White, rotation_2, new Vector2(bigGear.Width / 2, bigGear.Height / 2), 1.0f, SpriteEffects.None, 0.0f);
+
+=======
+=======
+>>>>>>> b4bb4e3fe511e4c5fe48bbd5c9d02fcaf7f34e47
+            spriteBatch.Draw(bigGear, new Vector2(Width, Height / 2), null, Color.White, rotation_2, new Vector2(bigGear.Width / 2, bigGear.Height / 2), 1.0f, SpriteEffects.None, 0.0f);
+>>>>>>> 22ae18386cf07e22e4c4ebf05e2c234e798347aa
             float xposition = -bigGear.Width / 2+32; 
             float yposition = 0;
             float xrotation = xposition * (float)Math.Cos(-rotation_2) + yposition * (float)Math.Sin(-rotation_2);
             float yrotation = (float)-Math.Sin(-rotation_2) * xposition + yposition * (float)Math.Cos(-rotation_2);
             spriteBatch.Draw(characterPortrait[0], new Vector2(Width + xrotation, Height / 2 + yrotation), null, Color.White, rotation_2, new Vector2(characterPortrait[0].Width / 2, characterPortrait[0].Height / 2), 0.5f, SpriteEffects.None, 0.0f);
             
+<<<<<<< HEAD
+>>>>>>> b4bb4e3fe511e4c5fe48bbd5c9d02fcaf7f34e47
+=======
+>>>>>>> b4bb4e3fe511e4c5fe48bbd5c9d02fcaf7f34e47
         }
 
         public static void AddAttack(int attackNumber)
