@@ -189,15 +189,9 @@ namespace DarkEmpire
         bool spin = false;
         bool spin_1 = false;
         int turn = 0;
-<<<<<<< HEAD
-<<<<<<< HEAD
         int turn_1 = 0;
 
-=======
-=======
->>>>>>> b4bb4e3fe511e4c5fe48bbd5c9d02fcaf7f34e47
-        bool spin = false;
->>>>>>> b4bb4e3fe511e4c5fe48bbd5c9d02fcaf7f34e47
+
         public void draw()
         {
             Game1.instance.GraphicsDevice.Clear(Color.White);
@@ -785,30 +779,18 @@ namespace DarkEmpire
             {
                 //System.IO.File.WriteAllText(@"C:\Users\anast_000\Desktop\WriteText.txt", rotation_3);
             }
-<<<<<<< HEAD
             spriteBatch.Draw(bigGear, new Vector2(Width, Height / 2), null, new Color(1.0f, 1.0f, 1.0f, 1.0f), rotation_2, new Vector2(bigGear.Width / 2, bigGear.Height / 2), 1.0f, SpriteEffects.None, 0.0f);
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
             spriteBatch.Draw(bigGear, new Vector2(Width, (Height / 2)-4), null, Color.White, rotation_2, new Vector2(bigGear.Width /2, bigGear.Height / 2), 1.0f, SpriteEffects.None, 0.0f);
             spriteBatch.Draw(smallGear, new Vector2(Width, (Height / 2)+310), null, Color.White, rotation_4, new Vector2(smallGear.Width / 2, smallGear.Height / 2), 1.0f, SpriteEffects.None, 0.0f);
             //spriteBatch.Draw(smallGear, new Vector2(Width - 10, Height / 2), null, Color.White, rotation_2, new Vector2(bigGear.Width / 2, bigGear.Height / 2), 1.0f, SpriteEffects.None, 0.0f);
 
-=======
-=======
->>>>>>> b4bb4e3fe511e4c5fe48bbd5c9d02fcaf7f34e47
             spriteBatch.Draw(bigGear, new Vector2(Width, Height / 2), null, Color.White, rotation_2, new Vector2(bigGear.Width / 2, bigGear.Height / 2), 1.0f, SpriteEffects.None, 0.0f);
->>>>>>> 22ae18386cf07e22e4c4ebf05e2c234e798347aa
             float xposition = -bigGear.Width / 2+32; 
             float yposition = 0;
             float xrotation = xposition * (float)Math.Cos(-rotation_2) + yposition * (float)Math.Sin(-rotation_2);
             float yrotation = (float)-Math.Sin(-rotation_2) * xposition + yposition * (float)Math.Cos(-rotation_2);
             spriteBatch.Draw(characterPortrait[0], new Vector2(Width + xrotation, Height / 2 + yrotation), null, Color.White, rotation_2, new Vector2(characterPortrait[0].Width / 2, characterPortrait[0].Height / 2), 0.5f, SpriteEffects.None, 0.0f);
             
-<<<<<<< HEAD
->>>>>>> b4bb4e3fe511e4c5fe48bbd5c9d02fcaf7f34e47
-=======
->>>>>>> b4bb4e3fe511e4c5fe48bbd5c9d02fcaf7f34e47
         }
 
         public static void AddAttack(int attackNumber)
