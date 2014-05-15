@@ -36,19 +36,22 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="BattleSystem.cs" />
+    <Compile Include="CharacterData\Stats.cs" />
     <Compile Include="DarkEmpireGame.cs" />
     <Compile Include="Game1.cs" />
-    <Compile Include="HeroParty.cs" />
-    <Compile Include="InputState.cs" />
+    <Compile Include="CharacterData\HeroParty.cs" />
+    <Compile Include="Item.cs" />
+    <Compile Include="ItemInfo.cs" />
+    <Compile Include="States\InputState.cs" />
     <Compile Include="KeyboardInput.cs" />
     <Compile Include="Level.cs" />
-    <Compile Include="Manager.cs" />
+    <Compile Include="States\Manager.cs" />
     <Compile Include="Menu.cs" />
-    <Compile Include="Npc.cs" />
-    <Compile Include="PlayingState.cs" />
+    <Compile Include="CharacterData\Npc.cs" />
+    <Compile Include="States\PlayingState.cs" />
     <Compile Include="soundEngine.cs" />
-    <Compile Include="State.cs" />
-    <Compile Include="StateManager.cs" />
+    <Compile Include="States\State.cs" />
+    <Compile Include="States\StateManager.cs" />
     <Compile Include="Tiled\ImageLayer.cs" />
     <Compile Include="Tiled\Layer.cs" />
     <Compile Include="Tiled\ObjectGroup.cs" />
@@ -57,7 +60,9 @@
     <Compile Include="Tiled\TiledCore.cs" />
     <Compile Include="Tiled\Map.cs" />
     <Compile Include="Tiled\TileSet.cs" />
-    <Compile Include="TitleState.cs" />
+    <Compile Include="States\TitleState.cs" />
+    <Compile Include="Weapon.cs" />
+    <Compile Include="WeaponInfo.cs" />
     <Compile Include="Zlib\CRC32.cs" />
     <Compile Include="Zlib\Deflate.cs" />
     <Compile Include="Zlib\GZipStream.cs" />
